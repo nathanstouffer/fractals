@@ -7,8 +7,8 @@ Here are some cool fractals that I made.
 
 # mandelbrot set
 
-![Mandelbrot set](img/mandelbrot-darkblue-5000.bmp)
+![Mandelbrot set](img/mandelbrot/mandelbrot-darkblue-5000.bmp)
 
 # tetration
 
-![tetration](img/powertower-bw-1000.bmp)
+![tetration](img/powertower/powertower-bw-1000.bmp)
