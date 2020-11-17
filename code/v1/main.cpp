@@ -9,19 +9,23 @@
 #include "fractal.h"
 
 // left, right, top, and bottom define the window of the complex plane that we view
-#define LEFT -2.5
-#define RIGHT 1
-#define TOP 1.25
-#define BOTTOM -1.25
+#define LEFT -4.5
+#define RIGHT 3
+#define TOP 4
+#define BOTTOM -4
 // width and height define the resolution of the image (compute based on ratio between width/height of the rectangle)
-#define WIDTH 5000
+#define WIDTH 1000
 #define HEIGHT (int)(WIDTH*(TOP-BOTTOM)/(RIGHT-LEFT))
-// background color
-#define BCKGRND 0,0,0
-// fractal hue
+// converging color (should be in 255 format)
+#define CONV 255,255,255
+// diverging color
 #define RED 0
 #define GREEN 0
-#define BLUE 0.6
+#define BLUE 0
+// define options
+#define MANDELBROT 0
+#define POWERTOWER 1
+#define NEWTON 2
 
 
 void render(bitmap_image& image, FractalGen* generator) {
@@ -49,17 +53,44 @@ void render(bitmap_image& image, FractalGen* generator) {
 
 int main(int argc, char** argv) {
 
+    int option = POWERTOWER;
+
     // create an image 640 pixels wide by 480 pixels tall
     bitmap_image image(WIDTH, HEIGHT);
-    rgb_t bckgrnd = make_colour(BCKGRND);
+    rgb_t conv = make_colour(CONV);
 
-    Mandelbrot mand(bckgrnd, RED, GREEN, BLUE);
+    // Mandelbrot set
+    Mandelbrot mand(conv, RED, GREEN, BLUE);
+    // tetration (power tower)
+    PowerTower power(conv, RED, GREEN, BLUE);
 
-    FractalGen* fg = &mand;
+    // set up fractal gen pointer
+    FractalGen* fg;
 
     // render the fractal
-    render(image, fg);
-    image.save_image("../../../img/mandelbrot.bmp");
-    std::cout << "Success for mandelbrot.bmp" << std::endl;
+    switch (option) {
+        case MANDELBROT:
+            fg = &mand;
+            std::cout << "Starting mandelbrot" << std::endl;
+            render(image, fg);
+            image.save_image("../../../img//mandelbrot/mandelbrot.bmp");
+            std::cout << "Success for mandelbrot" << std::endl;
+            break;
+        case POWERTOWER:
+            fg = &power;
+            std::cout << "Starting power tower" << std::endl;
+            render(image, fg);
+            image.save_image("../../../img/powertower/powertower.bmp");
+            std::cout << "Success for power tower" << std::endl;
+            break;
+        case NEWTON:
+            render(image, fg);
+            std::cout << "String newton" << std::endl;
+            image.save_image("../../../img/newton/newton.bmp");
+            std::cout << "Success for newton" << std::endl;
+            break;
+        default:
+            std::cout << "No option selected" << std::endl;
+    }
     return 0;
 }

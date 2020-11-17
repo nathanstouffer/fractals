@@ -49,3 +49,7 @@ build*
 *.aux
 *.log
 *.synctex.gz
+
+# img
+*20000.bmp
+*25000.bmp
