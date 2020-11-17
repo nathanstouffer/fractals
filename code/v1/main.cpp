@@ -14,14 +14,14 @@
 #define TOP 1.25
 #define BOTTOM -1.25
 // width and height define the resolution of the image (compute based on ratio between width/height of the rectangle)
-#define WIDTH 20000
+#define WIDTH 5000
 #define HEIGHT (int)(WIDTH*(TOP-BOTTOM)/(RIGHT-LEFT))
 // background color
 #define BCKGRND 0,0,0
 // fractal hue
-#define RED 0.1
-#define GREEN 0.3
-#define BLUE 1
+#define RED 0
+#define GREEN 0
+#define BLUE 0.6
 
 
 void render(bitmap_image& image, FractalGen* generator) {

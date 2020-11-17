@@ -35,7 +35,7 @@ class Mandelbrot : public FractalGen {
 
         rgb_t color_complex_num(std::complex<double> num){
             std::complex<double> z(0.0, 0.0);                                   // start the 0-orbit
-            int cap = 200;                                                      // set an iteration cap
+            int cap = 500;                                                      // set an iteration cap
             int i;
             for (i = 0; i < cap && abs(z) <= 2; i++) {                          // iterate 0 on z_n+1 = z_n^2 + num
                 z = pow(z, 2) + num;
