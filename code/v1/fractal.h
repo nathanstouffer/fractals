@@ -35,18 +35,19 @@ class Mandelbrot : public FractalGen {
 
         rgb_t color_complex_num(std::complex<double> num){
             std::complex<double> z(0.0, 0.0);                                   // start the 0-orbit
-            int cap = 1000;                                                     // set an iteration cap
+            int cap = 200;                                                      // set an iteration cap
             int i;
             for (i = 0; i < cap && abs(z) <= 2; i++) {                          // iterate 0 on z_n+1 = z_n^2 + num
                 z = pow(z, 2) + num;
             }
             if (abs(z) <= 2) { return this->bckgrnd; }                          // if orbit has not diverged to infinity, return the background color
             else {                                                              // otherwise, compute the scaled color
-                double scalar = 1/(double)i;
+                double div = cap/(double)i;
                 //scalar = 1/(abs(z)-2);
-                int r = (int) std::min(255*scalar*this->r, 255.0);
-                int g = (int) std::min(255*scalar*this->g, 255.0);
-                int b = (int) std::min(255*scalar*this->b, 255.0);
+                //scalar = 0;
+                int r = (int) 255*(this->r + (1/div)*(1-this->r));
+                int g = (int) 255*(this->g + (1/div)*(1-this->g));
+                int b = (int) 255*(this->b + (1/div)*(1-this->b));
                 rgb_t color = make_colour(r, g, b);
                 return color;
             }

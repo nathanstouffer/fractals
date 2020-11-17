@@ -4,17 +4,18 @@
 #include <bitmap/bitmap_image.hpp>
 #include <cmath>
 #include <complex>
+#include <ctime>
 
 #include "fractal.h"
 
-// width and height define the resolution of the image
-#define WIDTH 1000
-#define HEIGHT 1000
 // left, right, top, and bottom define the window of the complex plane that we view
-#define LEFT -2
-#define RIGHT 2
-#define TOP 2
-#define BOTTOM -2
+#define LEFT -2.5
+#define RIGHT 1
+#define TOP 1.25
+#define BOTTOM -1.25
+// width and height define the resolution of the image (compute based on ratio between width/height of the rectangle)
+#define WIDTH 20000
+#define HEIGHT (int)(WIDTH*(TOP-BOTTOM)/(RIGHT-LEFT))
 // background color
 #define BCKGRND 0,0,0
 // fractal hue
@@ -28,8 +29,14 @@ void render(bitmap_image& image, FractalGen* generator) {
     double y_step = (double)(TOP - BOTTOM)/HEIGHT;
     //std::cout << "x step: " << x_step << std::endl;
     //std::cout << "y step: " << y_step << std::endl;
+    time_t start = std::time(NULL);                                             // get start time
     // loop over all pixels
     for (unsigned int i = 0; i < WIDTH; i++) {
+        if (i % (WIDTH/10) == 0) {                                              // intermittent status update
+            time_t current = std::time(NULL);                                   // get current time
+            std::cout << (int)(100*i/(double)WIDTH) << "% complete  "
+                    << current-start << " seconds passed" << std::endl;
+        }
         for (unsigned int j = 0; j < HEIGHT; j++) {
             std::complex<double> num(LEFT + i*x_step, BOTTOM + j*y_step);
             // compute convergence
@@ -52,7 +59,7 @@ int main(int argc, char** argv) {
 
     // render the fractal
     render(image, fg);
-    image.save_image("../../../img/test.bmp");
-    std::cout << "Success for test.bmp" << std::endl;
+    image.save_image("../../../img/mandelbrot.bmp");
+    std::cout << "Success for mandelbrot.bmp" << std::endl;
     return 0;
 }
