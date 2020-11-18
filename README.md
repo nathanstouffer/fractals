@@ -5,10 +5,8 @@ Note that the *bitmap_image.hpp* file is an open source file that I did not writ
 
 Here are some cool fractals that I made.
 
-# mandelbrot set
+| **mandelbrot set**                                                               | **tetration**                                                              |
+|----------------------------------------------------------------------------------|----------------------------------------------------------------------------|
+| <img src="img/mandelbrot/mandelbrot-darkblue-5000.bmp" width="400" height="286"> | <img src="img/powertower/powertower-bw-1000.bmp" width="400" height="427"> |
 
-![Mandelbrot set](img/mandelbrot/mandelbrot-darkblue-5000.bmp)
 
-# tetration
-
-![tetration](img/powertower/powertower-bw-1000.bmp)
