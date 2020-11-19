@@ -4,6 +4,8 @@ project(fractal VERSION 1.0)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+add_compile_options(-pthread)
+
 set(DEPS_DIR "../deps")
 
 set(CSCI441_DIR ${DEPS_DIR}/csci441)

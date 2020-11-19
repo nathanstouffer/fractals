@@ -76,7 +76,7 @@ class PowerTower : public FractalGen {
         rgb_t color_complex_num(std::complex<double> num){
             std::complex<double> z = num;                                       // start the input
             std::complex<double> prev = z;                                      // set up previous value
-            int iter_cap = 500;                                                 // set an iteration cap
+            int iter_cap = 200;                                                 // set an iteration cap
             double mag_cap = 50;                                                // set up a magnitude cap
             int i;
             for (i = 0; i < iter_cap && abs(z) < mag_cap; i++) {                // iterate 0 on z_n+1 = num^z_n
