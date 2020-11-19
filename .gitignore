@@ -51,5 +51,6 @@ build*
 *.synctex.gz
 
 # img
-*20000.bmp
-*25000.bmp
+*.bmp
+*.bmp
+*.bmp
