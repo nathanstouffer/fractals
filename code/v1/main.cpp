@@ -10,19 +10,19 @@
 #include "fractal.h"
 
 // left, right, top, and bottom define the window of the complex plane that we view
-#define LEFT -5
-#define RIGHT LEFT+6.293333333333333
-#define TOP 1.77
-#define BOTTOM -1.77
+#define LEFT -3
+#define RIGHT LEFT+4.1
+#define TOP (RIGHT-LEFT)/1920*1080/2
+#define BOTTOM -(RIGHT-LEFT)/1920*1080/2
 // width and height define the resolution of the image (compute based on ratio between width/height of the rectangle)
-#define WIDTH 1000
+#define WIDTH 5000
 #define HEIGHT (int)(WIDTH*(TOP-BOTTOM)/(RIGHT-LEFT))
 // converging color (should be in 255 format)
 #define CONV 0,0,0
 // diverging color
-#define RED 0.75
-#define GREEN 0.75
-#define BLUE 0
+#define RED 0.35
+#define GREEN 0
+#define BLUE 0.35
 // define options
 #define MANDELBROT 0
 #define POWERTOWER 1
@@ -74,7 +74,7 @@ void render(bitmap_image* image, FractalGen* generator) {
 
 int main(int argc, char** argv) {
 
-    int option = POWERTOWER;
+    int option = MANDELBROT;
 
     // create an image 640 pixels wide by 480 pixels tall
     bitmap_image tmp(WIDTH, HEIGHT);

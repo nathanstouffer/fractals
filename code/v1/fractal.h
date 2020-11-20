@@ -34,6 +34,11 @@ class Mandelbrot : public FractalGen {
         }
 
         rgb_t color_complex_num(std::complex<double> num){
+            // quick check to decrease computation time
+            if (abs(num) < 0.2) { return this->conv; }
+            else if (num.real() < 0){
+                if (abs(num) < 0.6) { return this->conv; }
+            }
             std::complex<double> z(0.0, 0.0);                                   // start the 0-orbit
             int cap = 500;                                                      // set an iteration cap
             int i;
