@@ -7,8 +7,8 @@ Here are some cool fractals that I made.
 
 **Tetration**
 
-![powertower-yellow](./img/powertower/powertower-yellow-1000.bmp)
-![powertower-bw](./img/powertower/powertower-bw-1000.bmp)
+![powertower-yellow](./img/powertower/powertower-yellow-2000.bmp)
+![powertower-bw](./img/powertower/powertower-bw-2000.bmp)
 
 
 **Mandelbrot**
