@@ -11,18 +11,18 @@
 
 // left, right, top, and bottom define the window of the complex plane that we view
 #define LEFT -3
-#define RIGHT LEFT+4.1
-#define TOP (RIGHT-LEFT)/1920*1080/2
-#define BOTTOM -(RIGHT-LEFT)/1920*1080/2
+#define RIGHT LEFT+4
+#define TOP ((double)(RIGHT-LEFT))/1920*1080/2
+#define BOTTOM -((double)(RIGHT-LEFT))/1920*1080/2
 // width and height define the resolution of the image (compute based on ratio between width/height of the rectangle)
-#define WIDTH 5000
+#define WIDTH 2000
 #define HEIGHT (int)(WIDTH*(TOP-BOTTOM)/(RIGHT-LEFT))
-// converging color (should be in 255 format)
+// not diverging color (should be in 255 format)
 #define CONV 0,0,0
 // diverging color
-#define RED 0.35
+#define RED 0.4
 #define GREEN 0
-#define BLUE 0.35
+#define BLUE 0.4
 // define options
 #define MANDELBROT 0
 #define POWERTOWER 1
