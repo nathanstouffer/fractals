@@ -15,3 +15,7 @@ Here are some cool fractals that I made.
 
 ![mandelbrot-darkblue](./img/mandelbrot/mandelbrot-darkblue-2000.bmp)
 ![mandelbrot-purple](./img/mandelbrot/mandelbrot-purple-2000.bmp)
+
+**Newton**
+
+![newton-rgb](./img/newton/newton-z-cubed-minus-1-rgb-2000.bmp)
