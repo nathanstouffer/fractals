@@ -99,27 +99,55 @@ class PowerTower : public FractalGen {
             }
         }
 
-        /*rgb_t color_complex_num(std::complex<double> num){
-            double eps = 0.0000000001;
-            std::complex<double> z = num;                                       // start the input
-            std::complex<double> prev = z;                                      // set up previous value
-            int iter_cap = 500;                                                 // set an iteration cap
+};
+
+/* class that colors a complex number c according to newton's method for finding zeros
+ * of a function
+ */
+class Newton : public FractalGen {
+
+    private:
+
+        rgb_t div;
+        std::complex<double> func(std::complex<double> num)  { return pow(num, 3) - std::complex<double>(1, 0); }
+        std::complex<double> deriv(std::complex<double> num) { return std::complex<double>(3, 0)*pow(num, 2);   }
+
+        // zeros and colors
+        std::complex<double> zeros [3] = { std::complex<double>(1, 0),
+                                           std::complex<double>(-1/2, sqrt(3)/2),
+                                           std::complex<double>(-1/2, -sqrt(3)/2) };
+       rgb_t colors [3] = { make_colour(255, 0, 0),
+                            make_colour(0, 255, 0),
+                            make_colour(0, 0, 255) };
+
+        std::complex<double> newtons_method(std::complex<double> num) {
+            int cap = 25;
             int i;
-            double diff = 1;
-            for (i = 0; i < iter_cap && diff > eps; i++) {                      // iterate 0 on z_n+1 = num^z_n
-                z = pow(num, z);                                                // exponentiate
-                diff = abs(z - prev);                                           // compute the difference between the magnitudes of iterations
-                prev = z;                                                       // update previous value
+            for (i = 0; i < cap; i++) {
+                num = num - this->func(num)/this->deriv(num);
             }
-            if (diff <= eps) { return this->bckgrnd; }                          // if orbit has not diverged to infinity, return the background color
-            else {                                                              // otherwise, compute the scaled color
-                double div = iter_cap/(double)i;
-                div = 1000;
-                int r = (int) 255*(this->r + (1/div)*(1-this->r));
-                int g = (int) 255*(this->g + (1/div)*(1-this->g));
-                int b = (int) 255*(this->b + (1/div)*(1-this->b));
-                rgb_t color = make_colour(r, g, b);
-                return color;
+            return num;
+        }
+
+    public:
+
+        // constructor
+        Newton(rgb_t div) { this->div = div; }
+
+        rgb_t color_complex_num(std::complex<double> num) {
+            double eps = 0.0000001;
+            std::complex<double> zero = this->newtons_method(num);
+            int z;
+            int index = -1;
+            for (z = 0; z < 3; z++) {
+                if (zero.real() - this->zeros[z].real() <= eps) {
+                    if (zero.imag() - this->zeros[z].imag() <= eps) {
+                        index = z;
+                    }
+                }
             }
-        }*/
+            if (index == -1) { return div; }
+            else { return this->colors[index]; }
+        }
+
 };

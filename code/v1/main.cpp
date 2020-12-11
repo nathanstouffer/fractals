@@ -10,19 +10,19 @@
 #include "fractal.h"
 
 // left, right, top, and bottom define the window of the complex plane that we view
-#define LEFT -3
-#define RIGHT LEFT+4
+#define LEFT -11
+#define RIGHT LEFT+14
 #define TOP ((double)(RIGHT-LEFT))/1920*1080/2
 #define BOTTOM -((double)(RIGHT-LEFT))/1920*1080/2
 // width and height define the resolution of the image (compute based on ratio between width/height of the rectangle)
 #define WIDTH 2000
 #define HEIGHT (int)(WIDTH*(TOP-BOTTOM)/(RIGHT-LEFT))
 // not diverging color (should be in 255 format)
-#define CONV 0,0,0
+#define CONV 255,255,255
 // diverging color
-#define RED 0.4
+#define RED 0
 #define GREEN 0
-#define BLUE 0.4
+#define BLUE 0
 // define options
 #define MANDELBROT 0
 #define POWERTOWER 1
@@ -74,7 +74,7 @@ void render(bitmap_image* image, FractalGen* generator) {
 
 int main(int argc, char** argv) {
 
-    int option = MANDELBROT;
+    int option = NEWTON;
 
     // create an image 640 pixels wide by 480 pixels tall
     bitmap_image tmp(WIDTH, HEIGHT);
@@ -85,6 +85,8 @@ int main(int argc, char** argv) {
     Mandelbrot mand(conv, RED, GREEN, BLUE);
     // tetration (power tower)
     PowerTower power(conv, RED, GREEN, BLUE);
+    // newton's method in the complex plane
+    Newton newt(conv);
 
     // set up fractal gen pointer
     FractalGen* fg;
@@ -106,8 +108,9 @@ int main(int argc, char** argv) {
             std::cout << "Success for power tower" << std::endl;
             break;
         case NEWTON:
+            fg = &newt;
+            std::cout << "Starting newton" << std::endl;
             render(image, fg);
-            std::cout << "String newton" << std::endl;
             image->save_image("../../../img/newton/newton.bmp");
             std::cout << "Success for newton" << std::endl;
             break;
