@@ -116,12 +116,12 @@ class Newton : public FractalGen {
         std::complex<double> zeros [3] = { std::complex<double>(1, 0),
                                            std::complex<double>(-1/2, sqrt(3)/2),
                                            std::complex<double>(-1/2, -sqrt(3)/2) };
-       rgb_t colors [3] = { make_colour(255, 0, 0),
-                            make_colour(0, 255, 0),
-                            make_colour(0, 0, 255) };
+       rgb_t colors [3] = { make_colour(210, 0, 0),
+                            make_colour(0, 210, 0),
+                            make_colour(0, 0, 210) };
 
         std::complex<double> newtons_method(std::complex<double> num) {
-            int cap = 25;
+            int cap = 100;
             int i;
             for (i = 0; i < cap; i++) {
                 num = num - this->func(num)/this->deriv(num);
