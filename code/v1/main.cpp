@@ -10,13 +10,13 @@
 #include "fractal.h"
 
 // left, right, top, and bottom define the window of the complex plane that we view
-#define LEFT -9.5
-#define RIGHT LEFT+14
+#define LEFT -20
+#define RIGHT LEFT+40
 #define TOP ((double)(RIGHT-LEFT))/1920*1080/2
 #define BOTTOM -((double)(RIGHT-LEFT))/1920*1080/2
 // width and height define the resolution of the image (compute based on ratio between width/height of the rectangle)
 // desktop backgrounds should have a width of 25000
-#define WIDTH 25000
+#define WIDTH 2000
 #define HEIGHT (int)(WIDTH*(TOP-BOTTOM)/(RIGHT-LEFT))
 // not diverging color (should be in 255 format)
 #define CONV 0,0,0

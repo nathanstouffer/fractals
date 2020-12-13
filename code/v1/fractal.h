@@ -109,24 +109,48 @@ class Newton : public FractalGen {
     private:
 
         rgb_t div;
-        std::complex<double> func(std::complex<double> num)  { return pow(num, 3) - std::complex<double>(1, 0); }
-        std::complex<double> deriv(std::complex<double> num) { return std::complex<double>(3, 0)*pow(num, 2);   }
+        std::complex<double> func(std::complex<double> z)  { return std::complex<double>(1, 0)*pow(z, 4)
+                                                                  + std::complex<double>(0, 0)*pow(z, 3)
+                                                                  + std::complex<double>(0, 0)*pow(z, 2)
+                                                                  + std::complex<double>(0, 0)*z
+                                                                  + std::complex<double>(-1, 0); }
+
+        std::complex<double> deriv(std::complex<double> z) { return std::complex<double>(4, 0)*pow(z, 3)
+                                                                  + std::complex<double>(0, 0)*pow(z, 2)
+                                                                  + std::complex<double>(0, 0)*z
+                                                                  + std::complex<double>(0, 0);   }
 
         // zeros and colors
-        std::complex<double> zeros [3] = { std::complex<double>(1, 0),
-                                           std::complex<double>(-1/2, sqrt(3)/2),
-                                           std::complex<double>(-1/2, -sqrt(3)/2) };
-       rgb_t colors [3] = { make_colour(210, 0, 0),
-                            make_colour(0, 210, 0),
-                            make_colour(0, 0, 210) };
+        std::complex<double> zeros [4] = { std::complex<double>(-1, 0),
+                                           std::complex<double>(1, 0),
+                                           std::complex<double>(0, -1),
+                                           std::complex<double>(0, 1) };
+       rgb_t colors [4] = { make_colour(0, 5, 30),
+                            make_colour(0, 10, 170),
+                            make_colour(36, 70, 255),
+                            make_colour(0, 10, 70) };
 
-        std::complex<double> newtons_method(std::complex<double> num) {
+        std::complex<double> newtons_method(std::complex<double> num, double eps) {
+            std::complex<double> prev;
             int cap = 100;
             int i;
             for (i = 0; i < cap; i++) {
+                prev = num;
                 num = num - this->func(num)/this->deriv(num);
+                if (abs(num - prev) <= eps) { return num; }
             }
             return num;
+        }
+
+        // method to return the index of the zeros array within eps (a small value)
+        int index(std::complex<double> num, double eps) {
+            int index = -1;
+            int length = sizeof(this->zeros)/sizeof(this->zeros[0]);
+            int z;
+            for (z = 0; z < length; z++) {
+                if (abs(num - this->zeros[z]) <= eps) { index = z; }
+            }
+            return index;
         }
 
     public:
@@ -135,17 +159,9 @@ class Newton : public FractalGen {
         Newton(rgb_t div) { this->div = div; }
 
         rgb_t color_complex_num(std::complex<double> num) {
-            double eps = 0.0000001;
-            std::complex<double> zero = this->newtons_method(num);
-            int z;
-            int index = -1;
-            for (z = 0; z < 3; z++) {
-                if (zero.real() - this->zeros[z].real() <= eps) {
-                    if (zero.imag() - this->zeros[z].imag() <= eps) {
-                        index = z;
-                    }
-                }
-            }
+            double eps = 0.000000001;
+            std::complex<double> zero = this->newtons_method(num, eps);
+            int index = this->index(zero, eps);
             if (index == -1) { return div; }
             else { return this->colors[index]; }
         }
