@@ -20,5 +20,5 @@ Here are some cool fractals that I made.
 
 ![newton-rgb](./img/newton/newton-z-cubed-minus-1-rgb-2000.bmp)
 ![newton-pcp](./img/newton/newton-1-pcp-2000.bmp)
-![newton-green](./img/newton/newton-1-green-2000.bmp)
-![newton-blue](./img/newton/newton-1-blue-2000.bmp)
+![newton-green](./img/newton/newton-2-green-2000.bmp)
+![newton-blue](./img/newton/newton-3-blue-2000.bmp)
