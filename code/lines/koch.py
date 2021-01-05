@@ -3,17 +3,17 @@ import turtle
 third = 0.333333333333333
 ang = 60
 
-def seg(turt, mag, height):
+def segment(turt, mag, height):
     if (height == 0):
         draw(turt, mag)
     else:
-        seg(turt, third*mag, height-1)
+        segment(turt, third*mag, height-1)
         turt.left(ang)
-        seg(turt, third*mag, height-1)
+        segment(turt, third*mag, height-1)
         turt.right(2*ang)
-        seg(turt, third*mag, height-1)
+        segment(turt, third*mag, height-1)
         turt.left(ang)
-        seg(turt, third*mag, height-1)
+        segment(turt, third*mag, height-1)
 
 def draw(turt, mag):
     turt.forward(mag)
@@ -38,7 +38,7 @@ turt.sety(-0.3*mag)
 turt.pendown()
 turt.speed(0)
 
-seg(turt, mag, 4)
+segment(turt, mag, 4)
 
 screen.tracer(True)
 canvas = screen.getcanvas()
