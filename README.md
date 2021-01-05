@@ -15,6 +15,7 @@ Here are some cool fractals that I made using various methods.
 
 ![mandelbrot-darkblue](./img/mandelbrot/mandelbrot-darkblue-2000.bmp)
 ![mandelbrot-purple](./img/mandelbrot/mandelbrot-purple-2000.bmp)
+![mandelbrot-bw](./img/mandelbrot/mandelbrot-bw-2000.bmp)
 
 **Newton**
 
