@@ -28,6 +28,8 @@ Here are some cool fractals that I made using various methods.
 
 ![koch-red](./img/koch/koch-line-red-4.png)
 ![koch-green](./img/koch/koch-line-green-5.png)
+![koch-pink](./img/koch/koch-snowflake-pink-4.png)
+![koch-purple](./img/koch/koch-snowflake-purple-4.png)
 
 **Sierpinski**
 
