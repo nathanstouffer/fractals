@@ -52,5 +52,4 @@ build*
 
 # img
 *.bmp
-*.bmp
-*.bmp
+desktop/
