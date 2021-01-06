@@ -11,25 +11,25 @@
 
 // X and Y are the bottom left hand corners of the image and W is the width
 // the height H is computed
-#define X -1.15
-#define Y -0.5
-#define W 2
+#define X -1.14649
+#define Y 0.278499
+#define W 0.001078
 #define H W*(9.0/16.0)
 // left, right, top, and bottom define the window of the complex plane that we view
-#define LEFT X
-#define RIGHT X+W
-#define TOP Y+H
-#define BOTTOM Y
+#define LEFT (X-W/2.0)
+#define RIGHT (X+W/2.0)
+#define TOP (Y+H/2.0)
+#define BOTTOM (Y-H/2.0)
 // width and height define the resolution of the image (compute based on ratio between width/height of the rectangle)
 // desktop backgrounds should have a width of 25000
-#define WIDTH 2000
+#define WIDTH 25000
 #define HEIGHT (int)(WIDTH*(TOP-BOTTOM)/(RIGHT-LEFT))
 // not diverging color (should be in 255 format)
 #define CONV 0,0,0
 // diverging color
-#define RED 0.01
-#define GREEN 0.01
-#define BLUE 0.01
+#define RED 0
+#define GREEN 0.4
+#define BLUE 0.4
 // define options
 #define MANDELBROT 0
 #define POWERTOWER 1
@@ -48,7 +48,7 @@ void color_pixels(bitmap_image* image, FractalGen* generator, unsigned int i, in
     double x_step = (double)(RIGHT - LEFT)/WIDTH;
     double y_step = (double)(TOP - BOTTOM)/HEIGHT;
     for (unsigned int j = min_j; j < max_j; j++) {
-        std::complex<double> num(LEFT + i*x_step, BOTTOM + j*y_step);
+        std::complex<double> num(LEFT + i*x_step, TOP - j*y_step);
         // compute convergence
         rgb_t color = generator->color_complex_num(num);
         // set color

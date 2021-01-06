@@ -135,14 +135,13 @@ int main(void) {
 
         // test if enter has been clicked
         if (isPressed(window, GLFW_KEY_ENTER) && prev_enter == false) {
-            float x = -trans.values[12];
+            float x = -trans.values[12]*1.77777777777777;
             float y = -trans.values[13];
-            float width = 2/zoom.values[0];
+            float width = (3.5)/zoom.values[0];
             std::cout << "\n\n----- info -----" << std::endl;
-            std::cout << "center ------- " << "x: " << x << " y: " << std::endl;
-            std::cout << "left corner -- " << "x: " << x-width/2 << "  y: " << y-width*(9.0/16)/2 << std::endl;
-            std::cout << "width -------- " << width << std::endl;
+            std::cout << "center ------- " << "x: " << x << " y: " << y << std::endl;
             std::cout << "zoom  -------- " << zoom.values[0] << std::endl;
+            std::cout << "width -------- " << width << std::endl;
         }
         prev_enter = isPressed(window, GLFW_KEY_ENTER);
 
