@@ -9,11 +9,13 @@
 
 #include "fractal.h"
 
-// left, right, top, and bottom define the window of the complex plane that we view
-#define X -5.0
-#define Y -2.0
-#define W 7.0
+// X and Y are the bottom left hand corners of the image and W is the width
+// the height H is computed
+#define X -1.15
+#define Y -0.5
+#define W 2
 #define H W*(9.0/16.0)
+// left, right, top, and bottom define the window of the complex plane that we view
 #define LEFT X
 #define RIGHT X+W
 #define TOP Y+H

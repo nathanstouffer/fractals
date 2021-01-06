@@ -1,3 +1,0 @@
-use shaders/raster stuff to create two things
-1 - still save fractals to a png
-2 - interactive fractals? maybe we can do it
