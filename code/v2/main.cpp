@@ -9,8 +9,6 @@
 #include <csci441/shader.h>
 #include <csci441/matrix4.h>
 
-#include "camera.h"
-
 #define SCALE 0.025
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
