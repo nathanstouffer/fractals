@@ -109,7 +109,7 @@ int main(void) {
     glEnableVertexAttribArray(1);
 
     // create the shaders
-    Shader shader("../vert.glsl", "../frag.glsl");
+    Shader shader("../mandelVert.glsl", "../mandelFrag.glsl");
 
     Matrix4 view, undistort, trans, zoom;
     undistort.scale(1/1.7777777777777777, 1, 1);
