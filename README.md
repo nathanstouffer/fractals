@@ -38,3 +38,4 @@ Here are some cool fractals that I made using various methods.
 
 ![sierpinski-orange](./img/sierpinski/sierpinski-orange-6.png)
 ![sierpinski-white](./img/sierpinski/sierpinski-white-7.png)
+![sierpinski-green](./img/sierpinski/sierpinski-green-2500.png)
