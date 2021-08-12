@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_compile_options(-pthread)
 
-set(DEPS_DIR "../deps")
+set(DEPS_DIR "../../deps")
 
 set(CSCI441_DIR ${DEPS_DIR}/csci441)
 include_directories(${CSCI441_DIR}/include)

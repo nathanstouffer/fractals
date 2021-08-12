@@ -9,11 +9,12 @@
 
 #include "fractal.h"
 
-// X and Y are the bottom left hand corners of the image and W is the width
+// X is the left hand side of the image and W is the width
+// Y is the vertical offset from 0
 // the height H is computed
-#define X -1.14649
-#define Y 0.278499
-#define W 0.001078
+#define X -0.75
+#define Y -0.001
+#define W 4
 #define H W*(9.0/16.0)
 // left, right, top, and bottom define the window of the complex plane that we view
 #define LEFT (X-W/2.0)
@@ -22,18 +23,16 @@
 #define BOTTOM (Y-H/2.0)
 // width and height define the resolution of the image (compute based on ratio between width/height of the rectangle)
 // desktop backgrounds should have a width of 25000
-#define WIDTH 25000
+#define WIDTH 1000
 #define HEIGHT (int)(WIDTH*(TOP-BOTTOM)/(RIGHT-LEFT))
 // not diverging color (should be in 255 format)
 #define CONV 0,0,0
-// diverging color
-#define RED 0
-#define GREEN 0.4
-#define BLUE 0.4
+// saturation and value
+#define SATURATION 0.95
+#define VALUE 0.8
 // define options
 #define MANDELBROT 0
 #define POWERTOWER 1
-#define NEWTON 2
 // number of threads
 #define NUMTHREADS 10
 
@@ -89,11 +88,9 @@ int main(int argc, char** argv) {
     rgb_t conv = make_colour(CONV);
 
     // Mandelbrot set
-    Mandelbrot mand(conv, RED, GREEN, BLUE);
+    Mandelbrot mand(conv, SATURATION, VALUE);
     // tetration (power tower)
-    PowerTower power(conv, RED, GREEN, BLUE);
-    // newton's method in the complex plane
-    Newton newt(conv);
+    PowerTower power(conv, SATURATION, VALUE);
 
     // set up fractal gen pointer
     FractalGen* fg;
@@ -104,22 +101,15 @@ int main(int argc, char** argv) {
             fg = &mand;
             std::cout << "Starting mandelbrot" << std::endl;
             render(image, fg);
-            image->save_image("../../../img/mandelbrot/mandelbrot.bmp");
+            image->save_image("../../../../img/mandelbrot/mandelbrot.bmp");
             std::cout << "Success for mandelbrot" << std::endl;
             break;
         case POWERTOWER:
             fg = &power;
             std::cout << "Starting power tower" << std::endl;
             render(image, fg);
-            image->save_image("../../../img/powertower/powertower.bmp");
+            image->save_image("../../../../img/powertower/powertower.bmp");
             std::cout << "Success for power tower" << std::endl;
-            break;
-        case NEWTON:
-            fg = &newt;
-            std::cout << "Starting newton" << std::endl;
-            render(image, fg);
-            image->save_image("../../../img/newton/newton.bmp");
-            std::cout << "Success for newton" << std::endl;
             break;
         default:
             std::cout << "No option selected" << std::endl;
