@@ -5,6 +5,11 @@ Note that the *bitmap_image.hpp* file is an open source file that I did not writ
 
 Here are some cool fractals that I made using various methods.
 
+ * *src/dynamics* contains fractals made using dynamical systems
+ * *src/lines* uses the turtles library combined with recursion to make some fractals
+ * *src/v1* creates fractals by coloring the complex plane and outputs the image to a bitmap
+ * *src/v2* same as *src/v1* except we adapt the method to glsl shaders for real-time user interaction
+
 **Tetration**
 
 ![powertower-yellow](./img/powertower/powertower-yellow-2000.bmp)
@@ -16,9 +21,16 @@ Here are some cool fractals that I made using various methods.
 ![mandelbrot-darkblue](./img/mandelbrot/mandelbrot-darkblue-2000.bmp)
 ![mandelbrot-purple](./img/mandelbrot/mandelbrot-purple-2000.bmp)
 ![mandelbrot-bw](./img/mandelbrot/mandelbrot-bw-2000.bmp)
+
 ![mandelbrot-bw-spiralzoom](./img/mandelbrot/mandelbrot-bw-spiralzoom-4000.bmp)
 ![mandelbrot-green-diagonalright](./img/mandelbrot/mandelbrot-green-diagonalrightzoom-4000.bmp)
 ![mandelbrot-teal-spikyzoom](./img/mandelbrot/mandelbrot-teal-spikyzoom-2000.bmp)
+
+![mandelbrot-hsv-spiralzoom](./img/mandelbrot/mandelbrot-hsv-spiralzoom-2000.bmp)
+![mandelbrot-hsv-diagonalright](./img/mandelbrot/mandelbrot-hsv-diagonalrightzoom-4000.bmp)
+![mandelbrot-hsv-spikyzoom](./img/mandelbrot/mandelbrot-hsv-spikyzoom-2000.bmp)
+![mandelbrot-hsv-curlzoom](./img/mandelbrot/mandelbrot-hsv-curlzoom-2000.bmp)
+
 
 **Newton**
 
