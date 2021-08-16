@@ -19,7 +19,7 @@ class FractalGen {
         //     --- s \in [0, 1]
         //     --- v \in [0, 1]
         rgb_t hsv_to_rgb(double h, double s, double v) {
-            double H = 180 * h / M_PI;
+            double H = 180.0 * h / M_PI;
             double c = s * v;
             double x = c * (1 - fabs(fmod(H/60.0, 2) - 1));
             double m = v - c;
@@ -61,35 +61,36 @@ class Mandelbrot : public FractalGen {
     private:
 
         rgb_t conv;
+        double f;
         double s, v;
 
     public:
 
         // constructor
-        Mandelbrot(rgb_t conv, double s=1, double v=1) {
+        Mandelbrot(rgb_t conv, double f=50*M_PI, double s=1, double v=1) {
             this->conv = conv;
+            this->f = f;
             this->s = s;
             this->v = v;
         }
 
-        rgb_t color_complex_num(std::complex<double> num){
+        rgb_t color_complex_num(std::complex<double> num) {
             // quick check to decrease computation time
             if (abs(num) < 0.2) { return this->conv; }
             else if (num.real() < 0){
-                if (abs(num) < 0.6) { return this->conv; }
+               if (abs(num) < 0.6) { return this->conv; }
             }
 
-            double f = 12*M_PI;
             std::complex<double> z(0.0, 0.0);                                   // start the 0-orbit
-            int cap = 500;                                                      // set an iteration cap
+            int iter_cap = 2000;                                                // set an iteration cap
+            int mag_cap = 100000;                                               // set a magnitude cap
             int i;
-            for (i = 0; i < cap && abs(z) <= 2; i++) {                          // iterate 0 on z_n+1 = z_n^2 + num
+            for (i = 0; i < iter_cap && abs(z) <= mag_cap; i++) {               // iterate 0 on z_n+1 = z_n^2 + num
                 z = pow(z, 2) + num;
             }
-            if (abs(z) <= 2) { return this->conv; }                             // if orbit has not diverged to infinity, return the background color
+            if (i == iter_cap) { return this->conv; }                           // if orbit has not diverged to infinity, return the background color
             else {                                                              // otherwise, compute the appropriate color
-                double div = cap/(double)i;
-                double h = div / f;
+                double h = (double)i / f;                                       // compute h and turn into angle in [0, 2*pi]
                 h = h - (int)h;
                 h *= 2.0*M_PI;
                 return hsv_to_rgb(h, s, v);
@@ -106,16 +107,17 @@ class PowerTower : public FractalGen {
     private:
 
         rgb_t conv;
-        double r, g, b;
+        double f;
+        double s, v;
 
     public:
 
         // constructor
-        PowerTower(rgb_t conv, double r=1, double g=1, double b=1) {
+        PowerTower(rgb_t conv, double f=50*M_PI, double s=1, double v=1) {
             this->conv = conv;
-            this->r = r;
-            this->g = g;
-            this->b = b;
+            this->f = f;
+            this->s = s;
+            this->v = v;
         }
 
         rgb_t color_complex_num(std::complex<double> num){
@@ -129,13 +131,10 @@ class PowerTower : public FractalGen {
             }
             if (abs(z) < mag_cap) { return this->conv; }                        // if orbit has not diverged to infinity, return the background color
             else {                                                              // otherwise, compute the scaled color
-                double div = iter_cap/(double)i;
-                div = 1000;
-                int r = (int) 255*(this->r + (1/div)*(1-this->r));
-                int g = (int) 255*(this->g + (1/div)*(1-this->g));
-                int b = (int) 255*(this->b + (1/div)*(1-this->b));
-                rgb_t color = make_colour(r, g, b);
-                return color;
+                double h = (double)i / f;                                       // compute h and turn into angle in [0, 2*pi]
+                h = h - (int)h;
+                h *= 2.0*M_PI;
+                return hsv_to_rgb(h, s, v);
             }
         }
 

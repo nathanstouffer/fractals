@@ -4,7 +4,7 @@ project(fractals VERSION 1.0)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(DEPS_DIR "../deps")
+set(DEPS_DIR "../../deps")
 
 set(GLFW_DIR ${DEPS_DIR}/glfw)
 add_subdirectory(${GLFW_DIR} ${CMAKE_CURRENT_BINARY_DIR}/glfw)

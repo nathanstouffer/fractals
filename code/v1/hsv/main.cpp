@@ -12,9 +12,9 @@
 // X is the left hand side of the image and W is the width
 // Y is the vertical offset from 0
 // the height H is computed
-#define X -0.75
-#define Y -0.001
-#define W 4
+#define X -.722585
+#define Y 0.26099
+#define W 0.01841
 #define H W*(9.0/16.0)
 // left, right, top, and bottom define the window of the complex plane that we view
 #define LEFT (X-W/2.0)
@@ -23,11 +23,13 @@
 #define BOTTOM (Y-H/2.0)
 // width and height define the resolution of the image (compute based on ratio between width/height of the rectangle)
 // desktop backgrounds should have a width of 25000
-#define WIDTH 1000
+// images on the github page usually have a width of 2000-4000
+#define WIDTH 25000
 #define HEIGHT (int)(WIDTH*(TOP-BOTTOM)/(RIGHT-LEFT))
 // not diverging color (should be in 255 format)
 #define CONV 0,0,0
 // saturation and value
+#define FREQUENCY 24*M_PI
 #define SATURATION 0.95
 #define VALUE 0.8
 // define options
@@ -88,9 +90,9 @@ int main(int argc, char** argv) {
     rgb_t conv = make_colour(CONV);
 
     // Mandelbrot set
-    Mandelbrot mand(conv, SATURATION, VALUE);
+    Mandelbrot mand(conv, FREQUENCY, SATURATION, VALUE);
     // tetration (power tower)
-    PowerTower power(conv, SATURATION, VALUE);
+    PowerTower power(conv, FREQUENCY, SATURATION, VALUE);
 
     // set up fractal gen pointer
     FractalGen* fg;
