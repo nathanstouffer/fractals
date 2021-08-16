@@ -5,6 +5,11 @@ Note that the *bitmap_image.hpp* file is an open source file that I did not writ
 
 Here are some cool fractals that I made using various methods.
 
+ * *src/dynamics* contains fractals made using dynamical systems
+ * *src/lines* uses the turtles library combined with recursion to make some fractals
+ * *src/v1* creates fractals by coloring the complex plane and outputs the image to a bitmap
+ * *src/v2* same as *src/v1* except we adapt the method to glsl shaders for real-time user interaction
+
 **Tetration**
 
 ![powertower-yellow](./img/powertower/powertower-yellow-2000.bmp)
