@@ -12,9 +12,9 @@
 // X is the left hand side of the image and W is the width
 // Y is the vertical offset from 0
 // the height H is computed
-#define X -.722585
-#define Y 0.26099
-#define W 0.01841
+#define X -3 //-2
+#define Y 0
+#define W 12 //6.25
 #define H W*(9.0/16.0)
 // left, right, top, and bottom define the window of the complex plane that we view
 #define LEFT (X-W/2.0)
@@ -24,12 +24,12 @@
 // width and height define the resolution of the image (compute based on ratio between width/height of the rectangle)
 // desktop backgrounds should have a width of 25000
 // images on the github page usually have a width of 2000-4000
-#define WIDTH 25000
+#define WIDTH 1000
 #define HEIGHT (int)(WIDTH*(TOP-BOTTOM)/(RIGHT-LEFT))
 // not diverging color (should be in 255 format)
 #define CONV 0,0,0
 // saturation and value
-#define FREQUENCY 24*M_PI
+#define FREQUENCY 25*M_PI
 #define SATURATION 0.95
 #define VALUE 0.8
 // define options
@@ -39,7 +39,8 @@
 #define NUMTHREADS 10
 
 /* for making backgrounds on the desktop, the ratio should be 1920:1080
- *  - a good window (of the complex plane) for the mandelbrot set is [-4,1.3333] and [-1.5,1.5]
+ *  - a good window (of the complex plane) for the mandelbrot set is [-4,1.3333] with 0 Y-offset
+ *  -                                              power tower is [-3,9] with 0 Y-offset
 */
 
 /* function to color the pixels in a column of the matrix.
@@ -82,7 +83,7 @@ void render(bitmap_image* image, FractalGen* generator) {
 
 int main(int argc, char** argv) {
 
-    int option = MANDELBROT;
+    int option = POWERTOWER;
 
     // create an image 640 pixels wide by 480 pixels tall
     bitmap_image tmp(WIDTH, HEIGHT);

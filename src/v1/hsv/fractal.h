@@ -123,13 +123,13 @@ class PowerTower : public FractalGen {
         rgb_t color_complex_num(std::complex<double> num){
             std::complex<double> z = num;                                       // start the input
             std::complex<double> prev = z;                                      // set up previous value
-            int iter_cap = 200;                                                 // set an iteration cap
-            double mag_cap = 50;                                                // set up a magnitude cap
+            int iter_cap = 1000;                                                // set an iteration cap
+            double mag_cap = 1000;                                              // set up a magnitude cap
             int i;
             for (i = 0; i < iter_cap && abs(z) < mag_cap; i++) {                // iterate 0 on z_n+1 = num^z_n
                 z = pow(num, z);                                                // exponentiate
             }
-            if (abs(z) < mag_cap) { return this->conv; }                        // if orbit has not diverged to infinity, return the background color
+            if (i == iter_cap) { return this->conv; }                           // if orbit has not diverged to infinity, return the background color
             else {                                                              // otherwise, compute the scaled color
                 double h = (double)i / f;                                       // compute h and turn into angle in [0, 2*pi]
                 h = h - (int)h;
