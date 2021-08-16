@@ -1,7 +1,7 @@
 # fractals
 
 This repo contains some code that I made exploring fractals.
-Note that the *bitmap_image.hpp* file is an open source file that I did not write and the remaining contents of */code/deps/* are from a course that I took on graphics taught by Dr. David Millman at Montana State University.
+Note that the *bitmap_image.hpp* file is an open source file that I did not write and the remaining contents of *src/deps/* are from a course that I took on graphics taught by Dr. David Millman at Montana State University.
 
 Here are some cool fractals that I made using various methods.
 
