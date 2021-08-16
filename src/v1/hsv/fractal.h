@@ -61,14 +61,15 @@ class Mandelbrot : public FractalGen {
     private:
 
         rgb_t conv;
-        double f;
+        double h_shift, f;
         double s, v;
 
     public:
 
         // constructor
-        Mandelbrot(rgb_t conv, double f=50*M_PI, double s=1, double v=1) {
+        Mandelbrot(rgb_t conv, double h_shift=0, double f=50*M_PI, double s=1, double v=1) {
             this->conv = conv;
+            this->h_shift = h_shift;
             this->f = f;
             this->s = s;
             this->v = v;
@@ -93,6 +94,8 @@ class Mandelbrot : public FractalGen {
                 double h = (double)i / f;                                       // compute h and turn into angle in [0, 2*pi]
                 h = h - (int)h;
                 h *= 2.0*M_PI;
+                h += h_shift;
+                if (h > 2.0*M_PI) { h -= 2.0*M_PI; }
                 return hsv_to_rgb(h, s, v);
             }
         }
@@ -107,14 +110,15 @@ class PowerTower : public FractalGen {
     private:
 
         rgb_t conv;
-        double f;
+        double h_shift, f;
         double s, v;
 
     public:
 
         // constructor
-        PowerTower(rgb_t conv, double f=50*M_PI, double s=1, double v=1) {
+        PowerTower(rgb_t conv, double h_shift=0, double f=50*M_PI, double s=1, double v=1) {
             this->conv = conv;
+            this->h_shift = h_shift;
             this->f = f;
             this->s = s;
             this->v = v;
@@ -134,6 +138,8 @@ class PowerTower : public FractalGen {
                 double h = (double)i / f;                                       // compute h and turn into angle in [0, 2*pi]
                 h = h - (int)h;
                 h *= 2.0*M_PI;
+                h += h_shift;
+                if (h > 2.0*M_PI) { h -= 2.0*M_PI; }
                 return hsv_to_rgb(h, s, v);
             }
         }

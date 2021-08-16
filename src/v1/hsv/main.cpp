@@ -9,12 +9,12 @@
 
 #include "fractal.h"
 
-// X is the left hand side of the image and W is the width
+// X is the center of the image and W is the width
 // Y is the vertical offset from 0
 // the height H is computed
-#define X -3 //-2
-#define Y 0
-#define W 12 //6.25
+#define X -1.4
+#define Y 0.00000001
+#define W 5.333333333
 #define H W*(9.0/16.0)
 // left, right, top, and bottom define the window of the complex plane that we view
 #define LEFT (X-W/2.0)
@@ -29,6 +29,7 @@
 // not diverging color (should be in 255 format)
 #define CONV 0,0,0
 // saturation and value
+#define HUESHIFT M_PI
 #define FREQUENCY 25*M_PI
 #define SATURATION 0.95
 #define VALUE 0.8
@@ -83,7 +84,7 @@ void render(bitmap_image* image, FractalGen* generator) {
 
 int main(int argc, char** argv) {
 
-    int option = POWERTOWER;
+    int option = MANDELBROT;
 
     // create an image 640 pixels wide by 480 pixels tall
     bitmap_image tmp(WIDTH, HEIGHT);
@@ -91,9 +92,9 @@ int main(int argc, char** argv) {
     rgb_t conv = make_colour(CONV);
 
     // Mandelbrot set
-    Mandelbrot mand(conv, FREQUENCY, SATURATION, VALUE);
+    Mandelbrot mand(conv, HUESHIFT, FREQUENCY, SATURATION, VALUE);
     // tetration (power tower)
-    PowerTower power(conv, FREQUENCY, SATURATION, VALUE);
+    PowerTower power(conv, HUESHIFT, FREQUENCY, SATURATION, VALUE);
 
     // set up fractal gen pointer
     FractalGen* fg;
