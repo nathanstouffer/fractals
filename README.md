@@ -27,9 +27,8 @@ Here are some cool fractals that I made using various methods.
 ![mandelbrot-teal-spikyzoom](./img/mandelbrot/mandelbrot-teal-spikyzoom-2000.bmp)
 
 ![mandelbrot-hsv-spiralzoom](./img/mandelbrot/mandelbrot-hsv-spiralzoom-2000.bmp)
-![mandelbrot-hsv-diagonalright](./img/mandelbrot/mandelbrot-hsv-diagonalrightzoom-4000.bmp)
-![mandelbrot-hsv-spikyzoom](./img/mandelbrot/mandelbrot-hsv-spikyzoom-2000.bmp)
-![mandelbrot-hsv-curlzoom](./img/mandelbrot/mandelbrot-hsv-curlzoom-2000.bmp)
+![mandelbrot-hsv-spikyzoom](./img/mandelbrot/mandelbrot-hsv-spikyzoom-4000.bmp)
+![mandelbrot-hsv-curlzoom](./img/mandelbrot/mandelbrot-hsv-curlzoom-4000.bmp)
 
 
 **Newton**
