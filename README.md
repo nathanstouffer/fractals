@@ -30,6 +30,9 @@ Here are some cool fractals that I made using various methods.
 ![mandelbrot-hsv-spikyzoom](./img/mandelbrot/mandelbrot-hsv-spikyzoom-4000.bmp)
 ![mandelbrot-hsv-curlzoom](./img/mandelbrot/mandelbrot-hsv-curlzoom-4000.bmp)
 
+**Teardrop (rotating Mandelbrot on the Riemann sphere)**
+
+![teardrop-rgb-darkgreen](./img/teardrop/teardrop-darkgreen-4000.bmp)
 
 **Newton**
 
