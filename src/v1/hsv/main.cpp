@@ -12,9 +12,9 @@
 // X is the center of the image and W is the width
 // Y is the vertical offset from 0
 // the height H is computed
-#define X -1.4
-#define Y 0.00000001
-#define W 5.333333333
+#define X 1.75
+#define Y 0
+#define W 9
 #define H W*(9.0/16.0)
 // left, right, top, and bottom define the window of the complex plane that we view
 #define LEFT (X-W/2.0)
@@ -24,18 +24,19 @@
 // width and height define the resolution of the image (compute based on ratio between width/height of the rectangle)
 // desktop backgrounds should have a width of 25000
 // images on the github page usually have a width of 2000-4000
-#define WIDTH 1000
+#define WIDTH 500
 #define HEIGHT (int)(WIDTH*(TOP-BOTTOM)/(RIGHT-LEFT))
 // not diverging color (should be in 255 format)
 #define CONV 0,0,0
 // saturation and value
-#define HUESHIFT M_PI
-#define FREQUENCY 25*M_PI
-#define SATURATION 0.95
-#define VALUE 0.8
+#define HUESHIFT 0
+#define FREQUENCY 4*M_PI
+#define SATURATION 0.9
+#define VALUE 0.7
 // define options
 #define MANDELBROT 0
-#define POWERTOWER 1
+#define TEARDROP 1
+#define POWERTOWER 2
 // number of threads
 #define NUMTHREADS 10
 
@@ -84,7 +85,7 @@ void render(bitmap_image* image, FractalGen* generator) {
 
 int main(int argc, char** argv) {
 
-    int option = MANDELBROT;
+    int option = TEARDROP;
 
     // create an image 640 pixels wide by 480 pixels tall
     bitmap_image tmp(WIDTH, HEIGHT);
@@ -93,6 +94,9 @@ int main(int argc, char** argv) {
 
     // Mandelbrot set
     Mandelbrot mand(conv, HUESHIFT, FREQUENCY, SATURATION, VALUE);
+    // Teardrop set (inverted mandelbrot) - we rotate the riemann sphere around the x-axis by theta
+    double theta = M_PI;
+    Teardrop teardrop(theta, conv, HUESHIFT, FREQUENCY, SATURATION, VALUE);
     // tetration (power tower)
     PowerTower power(conv, HUESHIFT, FREQUENCY, SATURATION, VALUE);
 
@@ -107,6 +111,13 @@ int main(int argc, char** argv) {
             render(image, fg);
             image->save_image("../../../../img/mandelbrot/mandelbrot.bmp");
             std::cout << "Success for mandelbrot" << std::endl;
+            break;
+        case TEARDROP:
+            fg = &teardrop;
+            std::cout << "Starting teardrop" << std::endl;
+            render(image, fg);
+            image->save_image("../../../../img/teardrop/teardrop.bmp");
+            std::cout << "Success for teardrop" << std::endl;
             break;
         case POWERTOWER:
             fg = &power;
