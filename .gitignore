@@ -31,6 +31,10 @@
 *.out
 *.app
 
+# Visual Studio
+.vs/
+x64/
+
 # CMake
 CMakeLists.txt.user
 CMakeCache.txt
