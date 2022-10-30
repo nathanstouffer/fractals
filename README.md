@@ -9,6 +9,7 @@ Here are some cool fractals that I made using various methods.
  * *src/lines* uses the turtles library combined with recursion to make some fractals
  * *src/v1* creates fractals by coloring the complex plane and outputs the image to a bitmap
  * *src/v2* same as *src/v1* except we adapt the method to glsl shaders for real-time user interaction
+ * *src/v3* is a speed up of *src/v1* that utilizes CUDA
 
 **Tetration**
 
