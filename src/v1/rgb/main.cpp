@@ -30,6 +30,10 @@ double static constexpr BOTTOM = (Y-H/2.0);
 int static constexpr WIDTH = 4000;
 int static constexpr HEIGHT = (int)(WIDTH*(TOP-BOTTOM)/(RIGHT-LEFT));
 
+// the resolution of the lattice used to sample each pixel
+static constexpr size_t SAMPLES_RESOLUTION = 1;
+static constexpr double INSET = 1.0 / (SAMPLES_RESOLUTION + 1);
+
 // number of threads
 static constexpr size_t NUMTHREADS = 16;
 
@@ -53,8 +57,9 @@ enum class Types
 
 rgb_t pixel_color(FractalGen* generator, unsigned int i, unsigned int j)
 {
-    
-    std::complex<double> num(LEFT + i * X_STEP, TOP - j * Y_STEP);
+    double x = LEFT + i * X_STEP + INSET * X_STEP;
+    double y = TOP  - j * Y_STEP + INSET * Y_STEP;
+    std::complex<double> num(x, y);
     return generator->color_complex_num(num);
 }
 
