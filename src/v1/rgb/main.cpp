@@ -30,15 +30,17 @@ double static constexpr BOTTOM = (Y-H/2.0);
 int static constexpr WIDTH = 4000;
 int static constexpr HEIGHT = (int)(WIDTH*(TOP-BOTTOM)/(RIGHT-LEFT));
 
-// the resolution of the lattice used to sample each pixel
-static constexpr size_t SAMPLES_RESOLUTION = 1;
-static constexpr double INSET = 1.0 / (SAMPLES_RESOLUTION + 1);
-
 // number of threads
 static constexpr size_t NUMTHREADS = 16;
 
 static constexpr double X_STEP = (double)(RIGHT - LEFT) / WIDTH;
 static constexpr double Y_STEP = (double)(TOP - BOTTOM) / HEIGHT;
+
+// the resolution of the lattice used to sample each pixel
+static constexpr size_t SAMPLES_RESOLUTION = 8;
+static constexpr double INSET = 1.0 / (SAMPLES_RESOLUTION + 1);
+static constexpr double X_PIXEL_INSET = INSET * X_STEP;
+static constexpr double Y_PIXEL_INSET = INSET * Y_STEP;
 
 enum class Types
 {
@@ -57,10 +59,28 @@ enum class Types
 
 rgb_t pixel_color(FractalGen* generator, unsigned int i, unsigned int j)
 {
-    double x = LEFT + i * X_STEP + INSET * X_STEP;
-    double y = TOP  - j * Y_STEP + INSET * Y_STEP;
-    std::complex<double> num(x, y);
-    return generator->color_complex_num(num);
+    unsigned int r = 0;
+    unsigned int g = 0;
+    unsigned int b = 0;
+    double intial_x = LEFT + i * X_STEP + X_PIXEL_INSET;
+    double intial_y = TOP  - j * Y_STEP + Y_PIXEL_INSET;
+    for (size_t u = 0; u < SAMPLES_RESOLUTION; ++u)
+    {
+        for (size_t v = 0; v < SAMPLES_RESOLUTION; ++v)
+        {
+            double x = intial_x + u * X_PIXEL_INSET;
+            double y = intial_y + v * Y_PIXEL_INSET;
+            std::complex<double> num(x, y);
+            rgb_t color = generator->color_complex_num(num);
+            r += color.red;
+            g += color.green;
+            b += color.blue;
+        }
+    }
+    r /= (SAMPLES_RESOLUTION * SAMPLES_RESOLUTION);
+    g /= (SAMPLES_RESOLUTION * SAMPLES_RESOLUTION);
+    b /= (SAMPLES_RESOLUTION * SAMPLES_RESOLUTION);
+    return make_colour(r, g, b);
 }
 
 /**
