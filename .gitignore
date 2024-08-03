@@ -35,6 +35,9 @@
 .vs/
 x64/
 
+# VS Code
+.vscode/
+
 # CMake
 CMakeLists.txt.user
 CMakeCache.txt
