@@ -30,13 +30,16 @@
 #define RED 0
 #define GREEN 0.4
 #define BLUE 0.1
-// define options
-#define MANDELBROT 0
-#define TEARDROP 1
-#define POWERTOWER 2
-#define NEWTON 3
 // number of threads
-#define NUMTHREADS 10
+#define NUMTHREADS 16
+
+enum class Types
+{
+    MANDELBROT,
+    TEARDROP,
+    POWERTOWER,
+    NEWTON,
+};
 
 /* for making backgrounds on the desktop, the ratio should be 1920:1080
  *  - a good window (of the complex plane) for the mandelbrot set is [-4,1.3333] and [-1.5,1.5]
@@ -45,7 +48,8 @@
 /* function to color the pixels in a column of the matrix.
  * the bounds are [min_j, max_j)
  */
-void color_pixels(bitmap_image* image, FractalGen* generator, unsigned int i, int min_j, int max_j){
+void color_pixels(bitmap_image* image, FractalGen* generator, unsigned int i, int min_j, int max_j)
+{
     double x_step = (double)(RIGHT - LEFT)/WIDTH;
     double y_step = (double)(TOP - BOTTOM)/HEIGHT;
     for (unsigned int j = min_j; j < max_j; j++) {
@@ -82,7 +86,7 @@ void render(bitmap_image* image, FractalGen* generator) {
 
 int main(int argc, char** argv) {
 
-    int option = TEARDROP;
+    Types option = Types::MANDELBROT;
 
     // create an image 640 pixels wide by 480 pixels tall
     bitmap_image tmp(WIDTH, HEIGHT);
@@ -104,28 +108,28 @@ int main(int argc, char** argv) {
 
     // render the fractal
     switch (option) {
-        case MANDELBROT:
+        case Types::MANDELBROT:
             fg = &mand;
             std::cout << "Starting mandelbrot" << std::endl;
             render(image, fg);
             image->save_image("../../../../img/mandelbrot/mandelbrot.bmp");
             std::cout << "Success for mandelbrot" << std::endl;
             break;
-        case TEARDROP:
+        case Types::TEARDROP:
             fg = &teardrop;
             std::cout << "Starting teardrop" << std::endl;
             render(image, fg);
             image->save_image("../../../../img/teardrop/teardrop.bmp");
             std::cout << "Success for teardrop" << std::endl;
             break;
-        case POWERTOWER:
+        case Types::POWERTOWER:
             fg = &power;
             std::cout << "Starting power tower" << std::endl;
             render(image, fg);
             image->save_image("../../../../img/powertower/powertower.bmp");
             std::cout << "Success for power tower" << std::endl;
             break;
-        case NEWTON:
+        case Types::NEWTON:
             fg = &newt;
             std::cout << "Starting newton" << std::endl;
             render(image, fg);
