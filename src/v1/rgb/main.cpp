@@ -9,29 +9,32 @@
 
 #include "fractal.h"
 
+/**
+ * for making backgrounds on the desktop, the ratio should be 1920:1080
+ *  - a good window (of the complex plane) for the mandelbrot set is [-4,1.3333] and [-1.5,1.5]
+ */
+
 // (X, Y) is the leftmost pixel halfway up the image and W is the width
 // the height H is computed
-#define X 1.75
-#define Y 0
-#define W 9
-#define H W*(9.0/16.0)
+double static constexpr X = -1.333333333;
+double static constexpr Y = 0;
+double static constexpr W = 5.33333333;
+double static constexpr H = W*(9.0/16.0);
 // left, right, top, and bottom define the window of the complex plane that we view
-#define LEFT (X-W/2.0)
-#define RIGHT (X+W/2.0)
-#define TOP (Y+H/2.0)
-#define BOTTOM (Y-H/2.0)
+double static constexpr LEFT = (X-W/2.0);
+double static constexpr RIGHT = (X+W/2.0);
+double static constexpr TOP = (Y+H/2.0);
+double static constexpr BOTTOM = (Y-H/2.0);
 // width and height define the resolution of the image (compute based on ratio between width/height of the rectangle)
 // desktop backgrounds should have a width of 25000
-#define WIDTH 4000
-#define HEIGHT (int)(WIDTH*(TOP-BOTTOM)/(RIGHT-LEFT))
-// not diverging color (should be in 255 format)
-#define CONV 0,0,0
-// diverging color
-#define RED 0
-#define GREEN 0.4
-#define BLUE 0.1
+int static constexpr WIDTH = 4000;
+int static constexpr HEIGHT = (int)(WIDTH*(TOP-BOTTOM)/(RIGHT-LEFT));
+
 // number of threads
-#define NUMTHREADS 16
+static constexpr size_t NUMTHREADS = 16;
+
+static constexpr double X_STEP = (double)(RIGHT - LEFT) / WIDTH;
+static constexpr double Y_STEP = (double)(TOP - BOTTOM) / HEIGHT;
 
 enum class Types
 {
@@ -41,46 +44,50 @@ enum class Types
     NEWTON,
 };
 
-/* for making backgrounds on the desktop, the ratio should be 1920:1080
- *  - a good window (of the complex plane) for the mandelbrot set is [-4,1.3333] and [-1.5,1.5]
-*/
+// not diverging color (should be in 255 format)
+#define CONV 0,0,0
+// diverging color
+#define RED 0
+#define GREEN 0.4
+#define BLUE 0.1
 
-/* function to color the pixels in a column of the matrix.
- * the bounds are [min_j, max_j)
+rgb_t pixel_color(FractalGen* generator, unsigned int i, unsigned int j)
+{
+    
+    std::complex<double> num(LEFT + i * X_STEP, TOP - j * Y_STEP);
+    return generator->color_complex_num(num);
+}
+
+/**
+ * function to color the pixels in a row of the matrix. the bounds are [min_j, max_j)
  */
 void color_pixels(bitmap_image* image, FractalGen* generator, unsigned int i, int min_j, int max_j)
 {
-    double x_step = (double)(RIGHT - LEFT)/WIDTH;
-    double y_step = (double)(TOP - BOTTOM)/HEIGHT;
-    for (unsigned int j = min_j; j < max_j; j++) {
-        std::complex<double> num(LEFT + i*x_step, TOP - j*y_step);
-        // compute convergence
-        rgb_t color = generator->color_complex_num(num);
-        // set color
+    for (unsigned int j = min_j; j < max_j; j++)
+    {
+        rgb_t color = pixel_color(generator, i, j);
         image->set_pixel(i, j, color);
     }
 }
 
 void render(bitmap_image* image, FractalGen* generator) {
-    double x_step = (double)(RIGHT - LEFT)/WIDTH;
-    double y_step = (double)(TOP - BOTTOM)/HEIGHT;
-    //std::cout << "x step: " << x_step << std::endl;
-    //std::cout << "y step: " << y_step << std::endl;
     time_t start = std::time(NULL);                                             // get start time
     // loop over all pixels
-    for (unsigned int i = 0; i < WIDTH; i++) {
-        if (i % (WIDTH/10) == 0) {                                              // intermittent status update
+    for (unsigned int i = 0; i < WIDTH; i++)
+    {
+        if (i % (WIDTH/10) == 0)                                                // intermittent status update
+        {
             time_t current = std::time(NULL);                                   // get current time
-            std::cout << (int)(100*i/(double)WIDTH) << "% complete  "
-                    << current-start << " seconds passed" << std::endl;
+            std::cout << (int)(100*i/(double)WIDTH) << "% complete  " << current-start << " seconds passed" << std::endl;
         }
         std::vector<std::thread> threads;
-        for (unsigned int t = 0; t < NUMTHREADS; t++) {
+        for (unsigned int t = 0; t < NUMTHREADS; ++t)
+        {
             int min = (int)(t/(double)NUMTHREADS*HEIGHT);
             int max = (int)((t+1)/(double)NUMTHREADS*HEIGHT);
             threads.push_back(std::thread(color_pixels, image, generator, i, min, max));
         }
-        for (unsigned int t = 0; t < NUMTHREADS; t++) { threads[t].join(); }
+        for (unsigned int t = 0; t < NUMTHREADS; ++t) { threads[t].join(); }
     }
 }
 
@@ -104,7 +111,7 @@ int main(int argc, char** argv) {
     Newton newt(conv);
 
     // set up fractal gen pointer
-    FractalGen* fg;
+    FractalGen* fg = nullptr;
 
     // render the fractal
     switch (option) {
