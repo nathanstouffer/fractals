@@ -1,2 +1,2 @@
-add_subdirectory(fractal-gen)
-add_subdirectory(fractal-viewer)
+add_subdirectory(generator)
+add_subdirectory(viewer)
