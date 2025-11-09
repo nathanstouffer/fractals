@@ -2,5 +2,5 @@
 
 int main()
 {
-    std::cout << "hello fractal" << std::endl;
+    std::cout << "hello fractal-gen" << std::endl;
 }
