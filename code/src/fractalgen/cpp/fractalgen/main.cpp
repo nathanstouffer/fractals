@@ -96,40 +96,39 @@ namespace fractalgen
     /**
      * function to color the pixels in a row of the matrix. the bounds are [min_j, max_j)
      */
-    void color_pixels(std::vector<rgb_t>& pixels, generators::generator const& gen, int min_i, int max_i, int j)
+    void color_pixels(std::vector<rgb_t>& pixels, generators::generator const& gen, int min_j, int max_j)
     {
-        int offset = j * WIDTH;
-        for (int i = min_i; i < max_i; ++i)
+        for (int j = min_j; j < max_j; ++j)
         {
-            pixels[offset + i] = pixel_color(gen, i, j);
+            int offset = j * WIDTH;
+            for (int i = 0; i < WIDTH; ++i)
+            {
+                pixels[offset + i] = pixel_color(gen, i, j);
+            }
         }
     }
 
-    void color_pixels_ptr(std::vector<rgb_t>* pixels, generators::generator const* gen, int min_i, int max_i, int j)
+    void color_pixels_ptr(std::vector<rgb_t>* pixels, generators::generator const* gen, int min_j, int max_j)
     {
-        color_pixels(*pixels, *gen, min_i, max_i, j);
+        color_pixels(*pixels, *gen, min_j, max_j);
     }
 
     void render(std::vector<rgb_t>& pixels, generators::generator const& gen)
     {
         time_t start = std::time(NULL);                                             // get start time
 
-        for (int j = 0; j < HEIGHT; ++j)            // loop over all pixels
+        // kick off threads
+        std::vector<std::thread> threads;
+        for (unsigned int t = 0; t < NUMTHREADS; ++t)
         {
-            if (j % (HEIGHT/10) == 0)                                                   // intermittent status update
-            {
-                time_t current = std::time(NULL);                                       // get current time
-                std::cout << (int)(100*j/(double)HEIGHT) << "% complete  " << current - start << " seconds passed" << std::endl;
-            }
-            std::vector<std::thread> threads;
-            for (unsigned int t = 0; t < NUMTHREADS; ++t)
-            {
-                int min = (int)(t/(double)NUMTHREADS * WIDTH);
-                int max = (int)((t+1)/(double)NUMTHREADS * WIDTH);
-                threads.push_back(std::thread(color_pixels_ptr, &pixels, &gen, min, max, j));
-            }
-            for (unsigned int t = 0; t < NUMTHREADS; ++t) { threads[t].join(); }
+            int min = (int)(t/(double)NUMTHREADS * HEIGHT);
+            int max = (int)((t+1)/(double)NUMTHREADS * HEIGHT);
+            threads.push_back(std::thread(color_pixels_ptr, &pixels, &gen, min, max));
         }
+
+        for (unsigned int t = 0; t < NUMTHREADS; ++t) { threads[t].join(); }
+        time_t current = std::time(NULL);                                       // get current time
+        std::cout << current - start << " seconds elapsed" << std::endl;
     }
 }
 
