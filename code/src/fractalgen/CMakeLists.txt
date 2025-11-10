@@ -1,6 +1,7 @@
 set(FRACTALGEN_FILES
-    "${CMAKE_CURRENT_SOURCE_DIR}/cpp/main.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/private/fractalgen/generators.hpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/cpp/fractalgen/main.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/cpp/fractalgen/generators/generators.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/private/fractalgen/generators/generators.hpp"
 )
 
 # add directory structure to IDEs

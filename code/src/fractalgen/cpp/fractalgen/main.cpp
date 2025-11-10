@@ -14,7 +14,7 @@
 
 #include <stf/stf.hpp>
 
-#include "fractalgen/generators.hpp"
+#include "fractalgen/generators/generators.hpp"
 
 /**
  * for making backgrounds on the desktop, the ratio should be 1920:1080
@@ -67,7 +67,7 @@ namespace fractalgen
         NEWTON,
     };
 
-    rgb_t pixel_color(generator const& gen, unsigned int i, unsigned int j)
+    rgb_t pixel_color(generators::generator const& gen, unsigned int i, unsigned int j)
     {
         int r = 0;
         int g = 0;
@@ -96,7 +96,7 @@ namespace fractalgen
     /**
      * function to color the pixels in a row of the matrix. the bounds are [min_j, max_j)
      */
-    void color_pixels(std::vector<rgb_t>& pixels, generator const& gen, int min_i, int max_i, int j)
+    void color_pixels(std::vector<rgb_t>& pixels, generators::generator const& gen, int min_i, int max_i, int j)
     {
         int offset = j * WIDTH;
         for (int i = min_i; i < max_i; ++i)
@@ -105,12 +105,12 @@ namespace fractalgen
         }
     }
 
-    void color_pixels_ptr(std::vector<rgb_t>* pixels, generator const* gen, int min_i, int max_i, int j)
+    void color_pixels_ptr(std::vector<rgb_t>* pixels, generators::generator const* gen, int min_i, int max_i, int j)
     {
         color_pixels(*pixels, *gen, min_i, max_i, j);
     }
 
-    void render(std::vector<rgb_t>& pixels, generator const& gen)
+    void render(std::vector<rgb_t>& pixels, generators::generator const& gen)
     {
         time_t start = std::time(NULL);                                             // get start time
 
@@ -143,14 +143,14 @@ int main(int argc, char** argv) {
     fractalgen::rgb_t conv = { CONV };
 
     // Mandelbrot set
-    fractalgen::mandelbrot mand(conv, RED, GREEN, BLUE);
+    fractalgen::generators::mandelbrot mand(conv, RED, GREEN, BLUE);
     // Teardrop (inverted mandelbrot) - we rotate around the x-axis by theta
     double theta = stfd::constants::pi;
-    fractalgen::teardrop teardrop(theta, conv, RED, GREEN, BLUE);
+    fractalgen::generators::teardrop teardrop(theta, conv, RED, GREEN, BLUE);
     // tetration (power tower)
-    fractalgen::powertower power(conv, RED, GREEN, BLUE);
+    fractalgen::generators::powertower power(conv, RED, GREEN, BLUE);
     // newton's method in the complex plane
-    fractalgen::newton newt(conv);
+    fractalgen::generators::newton newt(conv);
 
     // set up fractal gen pointer
     std::string path;
