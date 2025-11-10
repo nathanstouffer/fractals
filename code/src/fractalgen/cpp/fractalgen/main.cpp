@@ -7,6 +7,8 @@
 #include <sstream>
 #include <thread>
 
+#include <CLI/CLI.hpp>
+
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 #define STB_IMAGE_WRITE_IMPLEMENTATION
@@ -63,12 +65,10 @@ namespace fractalgen
             std::vector<rgb_t> pixels = generator->generate(window);
 
             // save to png
-            {
-                std::vector<unsigned char> bytes;
-                bytes.reserve(3 * pixels.size());
-                std::for_each(pixels.begin(), pixels.end(), [&bytes](rgb_t const& c) { bytes.push_back(c.r); bytes.push_back(c.g); bytes.push_back(c.b); });
-                int result = stbi_write_png("fractal.png", window.width, window.height, 3, bytes.data(), window.width * 3);
-            }
+            std::vector<unsigned char> bytes;
+            bytes.reserve(3 * pixels.size());
+            std::for_each(pixels.begin(), pixels.end(), [&bytes](rgb_t const& c) { bytes.push_back(c.r); bytes.push_back(c.g); bytes.push_back(c.b); });
+            int result = stbi_write_png("fractal.png", window.width, window.height, 3, bytes.data(), window.width * 3);
         }
         return 0;
     }
@@ -77,5 +77,9 @@ namespace fractalgen
 
 int main(int argc, char** argv)
 {
+    CLI::App app{"fractalgen"};
+
+    CLI11_PARSE(app, argc, argv);
+
     return fractalgen::main();
 }

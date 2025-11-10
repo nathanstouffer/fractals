@@ -1,5 +1,13 @@
 include(FetchContent)
 
+# declare and populate CLI11 library
+FetchContent_Declare(
+    CLI11
+    GIT_REPOSITORY https://github.com/CLIUtils/CLI11.git
+    GIT_TAG        v2.6.1
+)
+FetchContent_MakeAvailable(CLI11)
+
 # declare and populate stb library
 FetchContent_Declare(
     stb
@@ -16,6 +24,6 @@ target_include_directories(stb INTERFACE ${stb_SOURCE_DIR})
 FetchContent_Declare(
     stf
     GIT_REPOSITORY https://github.com/nathanstouffer/stf.git
-    GIT_TAG f6aa6c33c4e3ba54f70a1270c7cb19bc4ea34ed8
+    GIT_TAG fe5b51b948c7637d5cd8eeee92c0977df79524bd
 )
 FetchContent_MakeAvailable(stf)

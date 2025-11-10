@@ -19,6 +19,7 @@ target_include_directories(fractalgen
 # add small dependencies
 target_link_libraries(fractalgen
     PRIVATE
+    CLI11::CLI11
     stb
     stf
 )
