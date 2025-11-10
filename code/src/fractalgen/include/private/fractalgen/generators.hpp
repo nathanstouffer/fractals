@@ -6,7 +6,7 @@
 #include <cfloat>
 #include <cmath>
 
-namespace generator
+namespace fractalgen
 {
 
     struct rgb_t
@@ -23,11 +23,11 @@ namespace generator
     /**
      * Interface that provides a function to color an element of the complex plane
      */
-    class fractal
+    class generator
     {
     public:
 
-        virtual ~fractal() = default;
+        virtual ~generator() = default;
 
         virtual rgb_t color_complex_num(std::complex<double> const& num) const = 0;
     };
@@ -35,7 +35,7 @@ namespace generator
     /**
      * class that colors a complex number according to the iterative rule z_n+1 = (z_n)^2 + c
      */
-    class mandelbrot : public fractal
+    class mandelbrot : public generator
     {
     private:
 
@@ -84,7 +84,7 @@ namespace generator
     * complex plane (via mapping to the Riemann sphere, rotating, and then mapping
     * back to the complex plane) and coloring according to regular mandelbrot coloring
     */
-    class teardrop : public fractal
+    class teardrop : public generator
     {
     private:
 
@@ -148,7 +148,7 @@ namespace generator
     /**
      * class that colors a complex number c according to the iterative rule z_n+1 = num^z_n where z_0 = num
      */
-    class powertower : public fractal {
+    class powertower : public generator {
     private:
 
         rgb_t conv;
@@ -194,7 +194,7 @@ namespace generator
      * class that colors a complex number c according to newton's method for finding zeros of a function
      * @todo turn this class to just take in the zeros
      */
-    class newton : public fractal
+    class newton : public generator
     {
     private:
 
