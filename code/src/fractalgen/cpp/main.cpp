@@ -7,8 +7,6 @@
 #include <sstream>
 #include <thread>
 
-#include <bitmap/bitmap_image.hpp>  // TODO (stouff) remove both this include and the file
-
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 #define STB_IMAGE_WRITE_IMPLEMENTATION
