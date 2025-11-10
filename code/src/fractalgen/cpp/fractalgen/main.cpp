@@ -37,13 +37,6 @@ double static constexpr BOTTOM = (Y-H/2.0);
 // desktop backgrounds should have a width of 25000
 int static constexpr WIDTH = 750;
 
-// not diverging color (should be in 255 format)
-#define CONV 0,0,0
-// diverging color
-#define RED 0
-#define GREEN 0.4
-#define BLUE 0.1
-
 namespace fractalgen
 {
 
