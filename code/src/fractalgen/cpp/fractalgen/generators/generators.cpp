@@ -114,7 +114,7 @@ namespace fractalgen::generators
         }
     }
 
-    stfd::vec3 teardrop::to_riemann_sphere(std::complex<double> const& num)
+    stfd::vec3 rotated_mandelbrot::to_riemann_sphere(std::complex<double> const& num)
     {
         double x = num.real();
         double y = num.imag();
@@ -127,7 +127,7 @@ namespace fractalgen::generators
         return vec;
     }
 
-    std::complex<double> teardrop::to_complex(stfd::vec3 const& vec)
+    std::complex<double> rotated_mandelbrot::to_complex(stfd::vec3 const& vec)
     {
         if (vec.x == 0.0 && vec.y == 0.0 && vec.z == 1.0)
         {
@@ -139,10 +139,10 @@ namespace fractalgen::generators
         return std::complex<double>(a, b);
     }
 
-    teardrop::teardrop(double _theta, rgb_t conv, double r, double g, double b)
+    rotated_mandelbrot::rotated_mandelbrot(double _theta, rgb_t conv, double r, double g, double b)
         : mand(mandelbrot(conv, r, g, b)), theta(_theta) {}
 
-    rgb_t teardrop::color_complex_num(std::complex<double> const& num) const
+    rgb_t rotated_mandelbrot::color_complex_num(std::complex<double> const& num) const
     {
         stfd::vec3 reimann_point = to_riemann_sphere(num);                      // map to riemann sphere
         double complement = stfd::constants::two_pi - theta;   // rotate by complement of theta since num is in the image space and we want the preimage

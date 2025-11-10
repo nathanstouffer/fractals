@@ -1,6 +1,8 @@
 set(FRACTALGEN_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/cpp/fractalgen/main.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/cpp/fractalgen/generators/factory.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/cpp/fractalgen/generators/generators.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/private/fractalgen/generators/factory.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/private/fractalgen/generators/generators.hpp"
 )
 

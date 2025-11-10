@@ -78,7 +78,7 @@ namespace fractalgen::generators
     * complex plane (via mapping to the Riemann sphere, rotating, and then mapping
     * back to the complex plane) and coloring according to regular mandelbrot coloring
     */
-    class teardrop : public generator
+    class rotated_mandelbrot : public generator
     {
     private:
 
@@ -91,7 +91,7 @@ namespace fractalgen::generators
 
     public:
 
-        teardrop(double _theta, rgb_t conv, double r=1, double g=1, double b=1);
+        rotated_mandelbrot(double _theta, rgb_t conv, double r=1, double g=1, double b=1);
 
         rgb_t color_complex_num(std::complex<double> const& num) const;
     };
