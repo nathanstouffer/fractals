@@ -1,11 +1,13 @@
 #pragma once
 
-#include <complex>
-#include <iostream>
-
 #include <cfloat>
 #include <cmath>
 
+#include <complex>
+#include <iostream>
+
+#include <stf/math/transform.hpp>
+#include <stf/stf.hpp>
 namespace fractalgen
 {
 
@@ -91,36 +93,20 @@ namespace fractalgen
         mandelbrot mand;
         double theta;
 
-        struct vec3
-        {
-            double x, y, z;
-
-            // apply rotation about the x-axis via a rotation matrix
-            vec3 rotated_x(double theta) const
-            {
-                vec3 rotated;
-                rotated.x = this->x;
-                rotated.y = std::cos(theta) * this->y - std::sin(theta) * this->z;
-                rotated.z = std::sin(theta) * this->y + std::cos(theta) * this->z;
-                return rotated;
-            }
-
-        };
-
-        static vec3 to_riemann_sphere(std::complex<double> const& num)
+        static stfd::vec3 to_riemann_sphere(std::complex<double> const& num)
         {
             double x = num.real();
             double y = num.imag();
 
             double denom = 1 + x * x + y * y;
-            vec3 vec;
+            stfd::vec3 vec;
             vec.x = 2 * x / denom;
             vec.y = 2 * y / denom;
             vec.z = (-1 + x * x + y * y) / denom;
             return vec;
         }
 
-        static std::complex<double> to_complex(vec3 const& vec)
+        static std::complex<double> to_complex(stfd::vec3 const& vec)
         {
             if (vec.x == 0.0 && vec.y == 0.0 && vec.z == 1.0)
             {
@@ -138,9 +124,10 @@ namespace fractalgen
 
         rgb_t color_complex_num(std::complex<double> const& num) const
         {
-            vec3 reimann_point = to_riemann_sphere(num);                    // map to riemann sphere
-            vec3 rotated = reimann_point.rotated_x(2 * M_PI - this->theta); // rotate by complement of theta since num is in the image space and we want the preimage
-            std::complex<double> z = to_complex(rotated);                   // map back to the complex plane
+            stfd::vec3 reimann_point = to_riemann_sphere(num);                      // map to riemann sphere
+            double complement = stfd::constants::two_pi - theta;   // rotate by complement of theta since num is in the image space and we want the preimage
+            stfd::vec3 rotated = stf::math::rotate(reimann_point, stfd::vec3(1, 0, 0), complement);
+            std::complex<double> z = to_complex(rotated);                           // map back to the complex plane
             return mand.color_complex_num(z);
         }
     };
