@@ -19,9 +19,39 @@ namespace fractalgen::generators
      */
     class generator
     {
+    private:
+
+        static constexpr int c_thread_count = 16;
+
+        static constexpr int c_supersample_sqrt = 8;
+        static constexpr double c_inset = 1.0 / (c_supersample_sqrt + 1);
+
+
+    public:
+
+        struct window_t
+        {
+            stfd::aabb2 bounds;
+            int width;
+            int height;
+
+            double delta_x;
+            double delta_y;
+
+            double inset_x;
+            double inset_y;
+
+            window_t(stfd::aabb2 const& _bounds, int _width);
+
+        };
+
     public:
 
         virtual ~generator() = default;
+
+        std::vector<rgb_t> generate(window_t const& window) const;
+
+        rgb_t color_pixel(window_t const& window, int i, int j) const;
 
         virtual rgb_t color_complex_num(std::complex<double> const& num) const = 0;
     };

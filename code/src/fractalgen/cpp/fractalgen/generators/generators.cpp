@@ -1,7 +1,88 @@
 #include "fractalgen/generators/generators.hpp"
 
+#include <iostream>
+#include <thread>
+
 namespace fractalgen::generators
 {
+
+    static void color_pixels(generator const& gen, generator::window_t const& window, int min_j, int max_j, std::vector<rgb_t>& pixels)
+    {
+        for (int j = min_j; j < max_j; ++j)
+        {
+            int offset = j * window.width;
+            for (int i = 0; i < window.width; ++i)
+            {
+                pixels[offset + i] = gen.color_pixel(window,i, j);
+            }
+        }
+    }
+
+    static void color_pixels_ptr(generators::generator const* gen, generator::window_t const& window, int min_j, int max_j, std::vector<rgb_t>* pixels)
+    {
+        color_pixels(*gen, window, min_j, max_j, *pixels);
+    }
+
+    generator::window_t::window_t(stfd::aabb2 const& _bounds, int _width)
+        : bounds(_bounds)
+        , width(_width)
+        , height(static_cast<int>(width * (bounds.diagonal().y / bounds.diagonal().x)))
+        , delta_x(bounds.diagonal().x / width)
+        , delta_y(bounds.diagonal().y / height)
+        , inset_x(c_inset * delta_x)
+        , inset_y(c_inset * delta_y)
+    {}
+
+    std::vector<rgb_t> generator::generate(window_t const& window) const
+    {
+        time_t start = std::time(NULL);                                             // get start time
+
+        std::vector<rgb_t> pixels;
+        pixels.resize(window.width * window.height);
+
+        // kick off threads
+        std::vector<std::thread> threads;
+        for (int t = 0; t < c_thread_count; ++t)
+        {
+            int min = (int)(t/(double)c_thread_count * window.height);
+            int max = (int)((t+1)/(double)c_thread_count * window.height);
+            threads.push_back(std::thread(color_pixels_ptr, this, window, min, max, &pixels));
+        }
+
+        // join threads
+        for (unsigned int t = 0; t < c_thread_count; ++t) { threads[t].join(); }
+
+        time_t current = std::time(NULL);                                           // get current time
+        std::cout << current - start << " seconds elapsed" << std::endl;
+
+        return pixels;
+    }
+
+    rgb_t generator::color_pixel(window_t const& window, int i, int j) const
+    {
+        int r = 0;
+        int g = 0;
+        int b = 0;
+        double intial_x = window.bounds.min.x + i * window.delta_x + window.inset_x;
+        double intial_y = window.bounds.min.y + j * window.delta_y + window.inset_y;
+        for (size_t u = 0; u < c_supersample_sqrt; ++u)
+        {
+            for (size_t v = 0; v < c_supersample_sqrt; ++v)
+            {
+                double x = intial_x + u * window.inset_x;
+                double y = intial_y + v * window.inset_y;
+                std::complex<double> num(x, y);
+                rgb_t color = color_complex_num(num);   // virtual function call
+                r += color.r;
+                g += color.g;
+                b += color.b;
+            }
+        }
+        r /= (c_supersample_sqrt * c_supersample_sqrt);
+        g /= (c_supersample_sqrt * c_supersample_sqrt);
+        b /= (c_supersample_sqrt * c_supersample_sqrt);
+        return { r, g, b };
+    }
 
     mandelbrot::mandelbrot(rgb_t _conv, double _r, double _g, double _b)
         : conv(_conv) , r(_r) , g(_g) , b(_b) {}

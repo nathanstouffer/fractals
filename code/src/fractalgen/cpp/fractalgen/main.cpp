@@ -37,18 +37,6 @@ double static constexpr BOTTOM = (Y-H/2.0);
 int static constexpr WIDTH = 750;
 int static constexpr HEIGHT = (int)(WIDTH*(TOP-BOTTOM)/(RIGHT-LEFT));
 
-// number of threads
-static constexpr size_t NUMTHREADS = 16;
-
-static constexpr double X_STEP = (double)(RIGHT - LEFT) / WIDTH;
-static constexpr double Y_STEP = (double)(TOP - BOTTOM) / HEIGHT;
-
-// the resolution of the lattice used to sample each pixel
-static constexpr size_t SAMPLES_RESOLUTION = 8;
-static constexpr double INSET = 1.0 / (SAMPLES_RESOLUTION + 1);
-static constexpr double X_PIXEL_INSET = INSET * X_STEP;
-static constexpr double Y_PIXEL_INSET = INSET * Y_STEP;
-
 // not diverging color (should be in 255 format)
 #define CONV 0,0,0
 // diverging color
@@ -67,77 +55,16 @@ namespace fractalgen
         NEWTON,
     };
 
-    rgb_t pixel_color(generators::generator const& gen, unsigned int i, unsigned int j)
-    {
-        int r = 0;
-        int g = 0;
-        int b = 0;
-        double intial_x = LEFT + i * X_STEP + X_PIXEL_INSET;
-        double intial_y = TOP  - j * Y_STEP + Y_PIXEL_INSET;
-        for (size_t u = 0; u < SAMPLES_RESOLUTION; ++u)
-        {
-            for (size_t v = 0; v < SAMPLES_RESOLUTION; ++v)
-            {
-                double x = intial_x + u * X_PIXEL_INSET;
-                double y = intial_y + v * Y_PIXEL_INSET;
-                std::complex<double> num(x, y);
-                rgb_t color = gen.color_complex_num(num);
-                r += color.r;
-                g += color.g;
-                b += color.b;
-            }
-        }
-        r /= (SAMPLES_RESOLUTION * SAMPLES_RESOLUTION);
-        g /= (SAMPLES_RESOLUTION * SAMPLES_RESOLUTION);
-        b /= (SAMPLES_RESOLUTION * SAMPLES_RESOLUTION);
-        return { r, g, b };
-    }
-
-    /**
-     * function to color the pixels in a row of the matrix. the bounds are [min_j, max_j)
-     */
-    void color_pixels(std::vector<rgb_t>& pixels, generators::generator const& gen, int min_j, int max_j)
-    {
-        for (int j = min_j; j < max_j; ++j)
-        {
-            int offset = j * WIDTH;
-            for (int i = 0; i < WIDTH; ++i)
-            {
-                pixels[offset + i] = pixel_color(gen, i, j);
-            }
-        }
-    }
-
-    void color_pixels_ptr(std::vector<rgb_t>* pixels, generators::generator const* gen, int min_j, int max_j)
-    {
-        color_pixels(*pixels, *gen, min_j, max_j);
-    }
-
-    void render(std::vector<rgb_t>& pixels, generators::generator const& gen)
-    {
-        time_t start = std::time(NULL);                                             // get start time
-
-        // kick off threads
-        std::vector<std::thread> threads;
-        for (unsigned int t = 0; t < NUMTHREADS; ++t)
-        {
-            int min = (int)(t/(double)NUMTHREADS * HEIGHT);
-            int max = (int)((t+1)/(double)NUMTHREADS * HEIGHT);
-            threads.push_back(std::thread(color_pixels_ptr, &pixels, &gen, min, max));
-        }
-
-        for (unsigned int t = 0; t < NUMTHREADS; ++t) { threads[t].join(); }
-        time_t current = std::time(NULL);                                       // get current time
-        std::cout << current - start << " seconds elapsed" << std::endl;
-    }
 }
 
 int main(int argc, char** argv) {
 
     fractalgen::Types option = fractalgen::Types::MANDELBROT;
 
-    std::vector<fractalgen::rgb_t> pixels;
-    pixels.resize(WIDTH * HEIGHT);
+    stfd::vec2 min(LEFT, BOTTOM);
+    stfd::vec2 max(RIGHT, TOP);
+    stfd::aabb2 bounds(min, max);
+    fractalgen::generators::generator::window_t window = { bounds, WIDTH };
 
     fractalgen::rgb_t conv = { CONV };
 
@@ -154,30 +81,31 @@ int main(int argc, char** argv) {
     // set up fractal gen pointer
     std::string path;
 
-    // render the fractal
+    // generate the fractal
+    std::vector<fractalgen::rgb_t> pixels;
     switch (option)
     {
         case fractalgen::Types::MANDELBROT:
             std::cout << "Starting mandelbrot" << std::endl;
-            fractalgen::render(pixels, mand);
+            pixels = mand.generate(window);
             path = "../../../../img/mandelbrot/mandelbrot.png";
             std::cout << "Success for mandelbrot" << std::endl;
             break;
         case fractalgen::Types::TEARDROP:
             std::cout << "Starting teardrop" << std::endl;
-            fractalgen::render(pixels, teardrop);
+            pixels = teardrop.generate(window);
             path = "../../../../img/teardrop/teardrop.png";
             std::cout << "Success for teardrop" << std::endl;
             break;
         case fractalgen::Types::POWERTOWER:
             std::cout << "Starting power tower" << std::endl;
-            fractalgen::render(pixels, power);
+            pixels = power.generate(window);
             path = "../../../../img/powertower/powertower.png";
             std::cout << "Success for power tower" << std::endl;
             break;
         case fractalgen::Types::NEWTON:
             std::cout << "Starting newton" << std::endl;
-            fractalgen::render(pixels, newt);
+            pixels = newt.generate(window);
             path = "../../../../img/newton/newton.png";
             std::cout << "Success for newton" << std::endl;
             break;
@@ -190,7 +118,7 @@ int main(int argc, char** argv) {
         std::vector<unsigned char> bytes;
         bytes.reserve(3 * pixels.size());
         std::for_each(pixels.begin(), pixels.end(), [&bytes](fractalgen::rgb_t const& c) { bytes.push_back(c.r); bytes.push_back(c.g); bytes.push_back(c.b); });
-        int result = stbi_write_png(path.c_str(), WIDTH, HEIGHT, 3, bytes.data(), WIDTH * 3);
+        int result = stbi_write_png(path.c_str(), window.width, window.height, 3, bytes.data(), window.width * 3);
     }
 
     return 0;
