@@ -7,6 +7,8 @@
 #include <ctime>
 #include <thread>
 
+#include <stf/stf.hpp>
+
 #include "fractalgen/generators.hpp"
 
 /**
@@ -27,7 +29,7 @@ double static constexpr TOP = (Y+H/2.0);
 double static constexpr BOTTOM = (Y-H/2.0);
 // width and height define the resolution of the image (compute based on ratio between width/height of the rectangle)
 // desktop backgrounds should have a width of 25000
-int static constexpr WIDTH = 4000;
+int static constexpr WIDTH = 750;
 int static constexpr HEIGHT = (int)(WIDTH*(TOP-BOTTOM)/(RIGHT-LEFT));
 
 // number of threads
