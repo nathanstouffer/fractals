@@ -194,8 +194,8 @@ namespace generator
      * class that colors a complex number c according to newton's method for finding zeros of a function
      * @todo turn this class to just take in the zeros
      */
-    class newton : public fractal {
-
+    class newton : public fractal
+    {
     private:
 
         rgb_t div;
