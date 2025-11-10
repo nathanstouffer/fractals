@@ -118,7 +118,7 @@ int main(int argc, char** argv) {
         std::vector<unsigned char> bytes;
         bytes.reserve(3 * pixels.size());
         std::for_each(pixels.begin(), pixels.end(), [&bytes](fractalgen::rgb_t const& c) { bytes.push_back(c.r); bytes.push_back(c.g); bytes.push_back(c.b); });
-        int result = stbi_write_png(path.c_str(), window.width, window.height, 3, bytes.data(), window.width * 3);
+        int result = stbi_write_png("fractal.png", window.width, window.height, 3, bytes.data(), window.width * 3);
     }
 
     return 0;
