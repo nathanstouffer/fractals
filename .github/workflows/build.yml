@@ -1,0 +1,66 @@
+name: build
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.host.image }}
+
+    strategy:
+      # Cancel all in-progress and queued jobs in the matrix if any job in the matrix fails
+      fail-fast: true
+
+      # matrix docs: https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#jobsjob_idstrategymatrix
+      matrix:
+        build_type: [Debug, RelWithDebInfo, Release, MinSizeRel]
+        # image states
+        # windows-2022: https://github.com/actions/runner-images/blob/main/images/macos/macos-14-Readme.md
+        # ubuntu-24.04: https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md
+        # macos-14:     https://github.com/actions/runner-images/blob/main/images/macos/macos-14-Readme.md
+        host:
+          # cl configurations
+          - { cpp_compiler: cl,         c_compiler: cl,       image: windows-2022, generator: Visual Studio 17 2022 }
+          # clang++ configurations
+          - { cpp_compiler: clang++,    c_compiler: clang,    image: ubuntu-24.04, generator: Unix Makefiles        }
+          - { cpp_compiler: clang++,    c_compiler: clang,    image: macos-14,     generator: Unix Makefiles        } # GHA docs say this is version 15.0.0
+          # g++ configurations
+          - { cpp_compiler: g++,        c_compiler: gcc,      image: windows-2022, generator: MinGW Makefiles       } # GHA docs say this is version 12.2.0
+          - { cpp_compiler: g++,        c_compiler: gcc,      image: ubuntu-24.04, generator: Unix Makefiles        }
+          - { cpp_compiler: g++,        c_compiler: gcc,      image: macos-14,     generator: Unix Makefiles        }
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      # Use this to set up an open ssh debugging session with CI
+      # - name: Setup ssh session
+      #   uses: lhotari/action-upterm@v1
+
+      - name: Set reusable strings
+        # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
+        id: strings
+        shell: bash
+        run: |
+          echo "src-dir=${{ github.workspace }}/code/src" >> "$GITHUB_OUTPUT"
+          echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+          echo "tests-output-dir=${{ github.workspace }}/build/code/tests/stf" >> "$GITHUB_OUTPUT"
+
+      - name: Configure CMake
+        # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+        # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+        run: >
+          cmake
+          -G "${{ matrix.host.generator }}"
+          -S ${{ github.workspace }}
+          -B ${{ steps.strings.outputs.build-output-dir }}
+          -DCMAKE_CXX_COMPILER=${{ matrix.host.cpp_compiler }}
+          -DCMAKE_C_COMPILER=${{ matrix.host.c_compiler }}
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+
+      - name: Build
+        # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
+        run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
