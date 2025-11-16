@@ -77,7 +77,7 @@ namespace fractalgen
 
 int main(int argc, char** argv)
 {
-    CLI::App app{"fractalgen"};
+    CLI::App app{"fractalgen is a tool that generates images by coloring the complex plane.", "fractalgen"};
 
     CLI11_PARSE(app, argc, argv);
 
