@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <complex>
 #include <iostream>
+#include <map>
 #include <sstream>
 #include <thread>
 
@@ -42,12 +43,12 @@ int static constexpr WIDTH = 750;
 namespace fractalgen
 {
 
-    int main()
+    int generate(generators::types type)
     {
         // set up fractal config
         generators::config config = 
         {
-            generators::types::mandelbrot,
+            type,
             { 0, 0, 0 },
             { 0, 100, 25 },
             0.0
@@ -68,18 +69,38 @@ namespace fractalgen
             std::vector<unsigned char> bytes;
             bytes.reserve(3 * pixels.size());
             std::for_each(pixels.begin(), pixels.end(), [&bytes](rgb_t const& c) { bytes.push_back(c.r); bytes.push_back(c.g); bytes.push_back(c.b); });
-            int result = stbi_write_png("fractal.png", window.width, window.height, 3, bytes.data(), window.width * 3);
+            return stbi_write_png("fractal.png", window.width, window.height, 3, bytes.data(), window.width * 3);
         }
         return 0;
+    }
+
+    int main(int argc, char** argv)
+    {
+        CLI::App app{"fractalgen is a tool that generates images by coloring the complex plane.", "fractalgen"};
+
+        using types = generators::types;
+
+        std::map<std::string, types> types_map = 
+        {
+            {"mandelbrot", types::mandelbrot},
+            {"rotated_mandelbrot", types::rotated_mandelbrot},
+            {"powertower", types::powertower},
+            {"newton", types::newton}
+        };
+
+        generators::types type;
+        app.add_option("-t,--type", type, "Select type")
+            ->required()
+            ->transform(CLI::CheckedTransformer(types_map));
+
+        CLI11_PARSE(app, argc, argv);
+
+        return generate(type);
     }
 
 }
 
 int main(int argc, char** argv)
 {
-    CLI::App app{"fractalgen is a tool that generates images by coloring the complex plane.", "fractalgen"};
-
-    CLI11_PARSE(app, argc, argv);
-
-    return fractalgen::main();
+    return fractalgen::main(argc, argv);
 }
