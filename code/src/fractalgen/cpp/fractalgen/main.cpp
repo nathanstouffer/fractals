@@ -45,9 +45,9 @@ namespace fractalgen
     int main()
     {
         // set up fractal config
-        generators::config_t config = 
+        generators::config config = 
         {
-            generators::config_t::types_t::mandelbrot,
+            generators::types::mandelbrot,
             { 0, 0, 0 },
             { 0, 100, 25 },
             0.0
@@ -57,7 +57,7 @@ namespace fractalgen
         stfd::vec2 min(LEFT, BOTTOM);
         stfd::vec2 max(RIGHT, TOP);
         stfd::aabb2 bounds(min, max);
-        generators::generator::window_t window = { bounds, WIDTH };
+        generators::window_t window = { bounds, WIDTH };
 
         std::unique_ptr<generators::generator> generator = generators::factory(config);
         if (generator)

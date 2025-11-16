@@ -8,18 +8,18 @@
 namespace fractalgen::generators
 {
 
-    struct config_t
+    enum class types
+    {
+        mandelbrot,
+        rotated_mandelbrot,
+        powertower,
+        newton,
+    };
+
+    struct config
     {
 
-        enum class types_t
-        {
-            mandelbrot,
-            rotated_mandelbrot,
-            powertower,
-            newton,
-        };
-
-        types_t type;
+        types type;
 
         rgb_t converging;
         rgb_t diverging;
@@ -28,6 +28,6 @@ namespace fractalgen::generators
 
     };
 
-    std::unique_ptr<generator> factory(config_t const& config);
+    std::unique_ptr<generator> factory(config const& conf);
 
 }

@@ -14,37 +14,27 @@
 namespace fractalgen::generators
 {
 
+    struct window_t
+    {
+        stfd::aabb2 bounds;
+        int width;
+        int height;
+
+        double delta_x;
+        double delta_y;
+
+        double inset_x;
+        double inset_y;
+
+        window_t(stfd::aabb2 const& _bounds, int _width);
+
+    };
+
     /**
      * Interface that provides a function to color an element of the complex plane
      */
     class generator
     {
-    private:
-
-        static constexpr int c_thread_count = 16;
-
-        static constexpr int c_supersample_sqrt = 8;
-        static constexpr double c_inset = 1.0 / (c_supersample_sqrt + 1);
-
-
-    public:
-
-        struct window_t
-        {
-            stfd::aabb2 bounds;
-            int width;
-            int height;
-
-            double delta_x;
-            double delta_y;
-
-            double inset_x;
-            double inset_y;
-
-            window_t(stfd::aabb2 const& _bounds, int _width);
-
-        };
-
     public:
 
         virtual ~generator() = default;
