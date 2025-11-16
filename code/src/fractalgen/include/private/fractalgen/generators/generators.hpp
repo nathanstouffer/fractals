@@ -68,6 +68,7 @@ namespace fractalgen::generators
      * class that colors a complex number c by transforming it to another point in the
      * complex plane (via mapping to the Riemann sphere, rotating, and then mapping
      * back to the complex plane) and coloring according to regular mandelbrot coloring
+     * @todo remove this class and just set all of the fractals up to rotate
      */
     class rotated_mandelbrot : public generator
     {

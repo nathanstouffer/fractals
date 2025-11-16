@@ -7,6 +7,7 @@
 #include <map>
 #include <sstream>
 #include <thread>
+#include <tuple>
 
 #include <CLI/CLI.hpp>
 
@@ -43,14 +44,8 @@ int static constexpr WIDTH = 750;
 namespace fractalgen
 {
 
-    int generate(generators::config const& config)
+    int generate(generators::config const& config, generators::window_t const& window)
     {
-        // set up window
-        stfd::vec2 min(LEFT, BOTTOM);
-        stfd::vec2 max(RIGHT, TOP);
-        stfd::aabb2 bounds(min, max);
-        generators::window_t window = { bounds, WIDTH };
-
         std::unique_ptr<generators::generator> generator = generators::factory(config);
         if (generator)
         {
@@ -68,6 +63,20 @@ namespace fractalgen
     int main(int argc, char** argv)
     {
         CLI::App app{"fractalgen is a tool that generates images by coloring the complex plane.", "fractalgen"};
+        app.fallthrough();
+
+        std::array<double, 4> bounds = { -4, -1.5, 1.33, 1.5 };
+        int width = 750;
+
+        // set up window options
+        {
+            app.add_option("-w,--width", width, "Width (in pixels) of the output image -- height is computed automatically")
+                ->capture_default_str();
+
+            app.add_option("-b,--bounds", bounds, "Bounds of the image in the complex plane. Format: min_x min_y max_x max_y")
+                ->capture_default_str()
+                ->required();
+        }
 
         using types = generators::types;
 
@@ -80,21 +89,17 @@ namespace fractalgen
             0.0
         };
 
-        std::map<std::string, types> types_map = 
-        {
-            {"mandelbrot", types::mandelbrot},
-            {"rotated_mandelbrot", types::rotated_mandelbrot},
-            {"powertower", types::powertower},
-            {"newton", types::newton}
-        };
+        CLI::App* mandelbrot = app.add_subcommand("mandelbrot");
+        CLI::App* powertower = app.add_subcommand("powertower");
+        CLI::App* newton = app.add_subcommand("newton");
 
-        app.add_option("-t,--type", config.type, "Select type")
-            ->required()
-            ->transform(CLI::CheckedTransformer(types_map));
+        app.require_subcommand(1);
 
         CLI11_PARSE(app, argc, argv);
 
-        return generate(config);
+        generators::window_t window = { stfd::aabb2(stfd::vec2(bounds[0], bounds[1]), stfd::vec2(bounds[2], bounds[3])), width };
+
+        return generate(config, window);
     }
 
 }
