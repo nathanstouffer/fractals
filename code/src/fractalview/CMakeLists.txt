@@ -5,4 +5,4 @@ set(FRACTALVIEW_FILES
 # add directory structure to IDEs
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/" FILES ${FRACTALVIEW_FILES})
 
-add_executable(fractalview ${VIEWERFRACTALVIEW_FILES_FILES})
+add_executable(fractalview ${FRACTALVIEW_FILES})
