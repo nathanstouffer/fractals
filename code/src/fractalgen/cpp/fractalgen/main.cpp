@@ -44,7 +44,7 @@ int static constexpr WIDTH = 750;
 namespace fractalgen
 {
 
-    int generate(generators::config const& config, generators::window_t const& window)
+    int generate(generators::config const& config, generators::window_t const& window, std::string const& name)
     {
         std::unique_ptr<generators::generator> generator = generators::factory(config);
         if (generator)
@@ -55,7 +55,8 @@ namespace fractalgen
             std::vector<unsigned char> bytes;
             bytes.reserve(3 * pixels.size());
             std::for_each(pixels.begin(), pixels.end(), [&bytes](rgb_t const& c) { bytes.push_back(c.r); bytes.push_back(c.g); bytes.push_back(c.b); });
-            return stbi_write_png("fractal.png", window.width, window.height, 3, bytes.data(), window.width * 3);
+            std::string filename = name + ".png";
+            return stbi_write_png(filename.c_str(), window.width, window.height, 3, bytes.data(), window.width * 3);
         }
         return 0;
     }
@@ -65,12 +66,16 @@ namespace fractalgen
         CLI::App app{"fractalgen is a tool that generates images by coloring the complex plane.", "fractalgen"};
         app.fallthrough();
 
+        std::string name = "fractal";
         std::array<double, 4> bounds = { -4, -1.5, 1.33, 1.5 };
         int width = 750;
         double rho = 0.0;
 
         // set up window options
         {
+            app.add_option("-n,--name", name, "Name of the fractal (the output is written to name.png)")
+                ->capture_default_str();
+
             app.add_option("-w,--width", width, "Width (in pixels) of the output image -- height is computed automatically")
                 ->capture_default_str();
 
@@ -102,7 +107,7 @@ namespace fractalgen
             rho
         };
 
-        return generate(config, window);
+        return generate(config, window, name);
     }
 
 }
