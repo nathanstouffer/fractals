@@ -6,7 +6,12 @@
 namespace fractalgen::generators
 {
 
-    static void color_pixels(generator const& gen, generator::window_t const& window, int min_j, int max_j, std::vector<rgb_t>& pixels)
+    static constexpr int c_thread_count = 16;
+
+    static constexpr int c_supersample_sqrt = 8;
+    static constexpr double c_inset = 1.0 / (c_supersample_sqrt + 1);
+
+    static void color_pixels(generator const& gen, window_t const& window, int min_j, int max_j, std::vector<rgb_t>& pixels)
     {
         for (int j = min_j; j < max_j; ++j)
         {
@@ -18,12 +23,12 @@ namespace fractalgen::generators
         }
     }
 
-    static void color_pixels_ptr(generators::generator const* gen, generator::window_t const& window, int min_j, int max_j, std::vector<rgb_t>* pixels)
+    static void color_pixels_ptr(generators::generator const* gen, window_t const& window, int min_j, int max_j, std::vector<rgb_t>* pixels)
     {
         color_pixels(*gen, window, min_j, max_j, *pixels);
     }
 
-    generator::window_t::window_t(stfd::aabb2 const& _bounds, int _width)
+    window_t::window_t(stfd::aabb2 const& _bounds, int _width)
         : bounds(_bounds)
         , width(_width)
         , height(static_cast<int>(width * (bounds.diagonal().y / bounds.diagonal().x)))

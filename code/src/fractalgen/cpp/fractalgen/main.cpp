@@ -4,8 +4,10 @@
 #include <algorithm>
 #include <complex>
 #include <iostream>
+#include <map>
 #include <sstream>
 #include <thread>
+#include <tuple>
 
 #include <CLI/CLI.hpp>
 
@@ -42,23 +44,8 @@ int static constexpr WIDTH = 750;
 namespace fractalgen
 {
 
-    int main()
+    int generate(generators::config const& config, generators::window_t const& window)
     {
-        // set up fractal config
-        generators::config_t config = 
-        {
-            generators::config_t::types_t::mandelbrot,
-            { 0, 0, 0 },
-            { 0, 100, 25 },
-            0.0
-        };
-
-        // set up window
-        stfd::vec2 min(LEFT, BOTTOM);
-        stfd::vec2 max(RIGHT, TOP);
-        stfd::aabb2 bounds(min, max);
-        generators::generator::window_t window = { bounds, WIDTH };
-
         std::unique_ptr<generators::generator> generator = generators::factory(config);
         if (generator)
         {
@@ -68,18 +55,56 @@ namespace fractalgen
             std::vector<unsigned char> bytes;
             bytes.reserve(3 * pixels.size());
             std::for_each(pixels.begin(), pixels.end(), [&bytes](rgb_t const& c) { bytes.push_back(c.r); bytes.push_back(c.g); bytes.push_back(c.b); });
-            int result = stbi_write_png("fractal.png", window.width, window.height, 3, bytes.data(), window.width * 3);
+            return stbi_write_png("fractal.png", window.width, window.height, 3, bytes.data(), window.width * 3);
         }
         return 0;
+    }
+
+    int main(int argc, char** argv)
+    {
+        CLI::App app{"fractalgen is a tool that generates images by coloring the complex plane.", "fractalgen"};
+        app.fallthrough();
+
+        std::array<double, 4> bounds = { -4, -1.5, 1.33, 1.5 };
+        int width = 750;
+
+        // set up window options
+        {
+            app.add_option("-w,--width", width, "Width (in pixels) of the output image -- height is computed automatically")
+                ->capture_default_str();
+
+            app.add_option("-b,--bounds", bounds, "Bounds of the image in the complex plane. Format: min_x min_y max_x max_y")
+                ->capture_default_str()
+                ->required();
+        }
+
+        using types = generators::types;
+
+        // set up fractal config
+        generators::config config = 
+        {
+            types::mandelbrot,
+            { 0, 0, 0 },
+            { 0, 100, 25 },
+            0.0
+        };
+
+        CLI::App* mandelbrot = app.add_subcommand("mandelbrot");
+        CLI::App* powertower = app.add_subcommand("powertower");
+        CLI::App* newton = app.add_subcommand("newton");
+
+        app.require_subcommand(1);
+
+        CLI11_PARSE(app, argc, argv);
+
+        generators::window_t window = { stfd::aabb2(stfd::vec2(bounds[0], bounds[1]), stfd::vec2(bounds[2], bounds[3])), width };
+
+        return generate(config, window);
     }
 
 }
 
 int main(int argc, char** argv)
 {
-    CLI::App app{"fractalgen"};
-
-    CLI11_PARSE(app, argc, argv);
-
-    return fractalgen::main();
+    return fractalgen::main(argc, argv);
 }
