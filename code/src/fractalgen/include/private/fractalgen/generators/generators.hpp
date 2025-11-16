@@ -74,10 +74,11 @@ namespace fractalgen::generators
         rgb_t color_complex_num(std::complex<double> const& num) const override;
     };
 
-    /* class that colors a complex number c by transforming it to another point in the
-    * complex plane (via mapping to the Riemann sphere, rotating, and then mapping
-    * back to the complex plane) and coloring according to regular mandelbrot coloring
-    */
+    /**
+     * class that colors a complex number c by transforming it to another point in the
+     * complex plane (via mapping to the Riemann sphere, rotating, and then mapping
+     * back to the complex plane) and coloring according to regular mandelbrot coloring
+     */
     class rotated_mandelbrot : public generator
     {
     private:
