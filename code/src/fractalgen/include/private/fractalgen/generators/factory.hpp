@@ -1,8 +1,8 @@
 #pragma once
 
+#include <array>
 #include <memory>
 
-#include "fractalgen/rgb.hpp"
 #include "fractalgen/generators/generators.hpp"
 
 namespace fractalgen::generators
@@ -20,8 +20,8 @@ namespace fractalgen::generators
 
         types type;
 
-        rgb_t converging;
-        rgb_t diverging;
+        std::array<uint8_t, 3> color = { 0, 0, 0 };
+        std::array<uint8_t, 3> diverging = { 0, 0, 0 };
 
         double rho;
 

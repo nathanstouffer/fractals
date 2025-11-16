@@ -65,12 +65,12 @@ namespace fractalgen::generators
     {
     private:
 
-        rgb_t conv;
-        double r, g, b;
+        rgb_t m_color;
+        stfd::vec3 m_diverging;
 
     public:
 
-        mandelbrot(double rho, rgb_t _conv, double _r=1, double _g=1, double _b=1);
+        mandelbrot(double rho, rgb_t color, rgb_t diverging);
 
         rgb_t color_complex_num(std::complex<double> const& num) const override;
 

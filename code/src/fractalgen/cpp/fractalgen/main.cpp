@@ -66,6 +66,7 @@ namespace fractalgen
         CLI::App app{"fractalgen is a tool that generates images by coloring the complex plane.", "fractalgen"};
         app.fallthrough();
 
+        generators::config config;
         std::string name = "fractal";
         std::array<double, 4> bounds = { -4, -1.5, 1.33, 1.5 };
         int width = 750;
@@ -88,24 +89,15 @@ namespace fractalgen
 
         using types = generators::types;
 
-        CLI::App* mandelbrot = app.add_subcommand("mandelbrot");
-        CLI::App* powertower = app.add_subcommand("powertower");
-        CLI::App* newton = app.add_subcommand("newton");
+        CLI::App* mandelbrot = app.add_subcommand("mandelbrot"); mandelbrot->callback([&]() { config.type = types::mandelbrot; });
+        CLI::App* powertower = app.add_subcommand("powertower"); powertower->callback([&]() { config.type = types::powertower; });
+        CLI::App* newton = app.add_subcommand("newton"); newton->callback([&]() { config.type = types::newton; });
 
         app.require_subcommand(1);
 
         CLI11_PARSE(app, argc, argv);
 
         generators::window_t window = { stfd::aabb2(stfd::vec2(bounds[0], bounds[1]), stfd::vec2(bounds[2], bounds[3])), width };
-
-        // set up fractal config
-        generators::config config = 
-        {
-            types::mandelbrot,
-            { 0, 0, 0 },
-            { 0, 100, 25 },
-            rho
-        };
 
         return generate(config, window, name);
     }

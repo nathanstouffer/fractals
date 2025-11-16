@@ -1,23 +1,30 @@
 #include "fractalgen/generators/factory.hpp"
 
+#include "fractalgen/rgb.hpp"
+
 namespace fractalgen::generators
 {
 
-    std::unique_ptr<generator> factory(config const& cnfg)
+    static rgb_t convert(std::array<uint8_t, 3> const& arr)
     {
-        double r = static_cast<double>(cnfg.diverging.r) / 255;
-        double g = static_cast<double>(cnfg.diverging.g) / 255;
-        double b = static_cast<double>(cnfg.diverging.b) / 255;
-        switch (cnfg.type)
+        return { arr[0], arr[1], arr[2] };
+    }
+
+    std::unique_ptr<generator> factory(config const& cfg)
+    {
+        double r = static_cast<double>(cfg.diverging[0]) / 255;
+        double g = static_cast<double>(cfg.diverging[1]) / 255;
+        double b = static_cast<double>(cfg.diverging[2]) / 255;
+        switch (cfg.type)
         {
             case types::mandelbrot:
-                return std::make_unique<mandelbrot>(cnfg.rho, cnfg.converging, r, g, b);
+                return std::make_unique<mandelbrot>(cfg.rho, convert(cfg.color), convert(cfg.diverging));
                 break;
             case types::powertower:
-                return std::make_unique<powertower>(cnfg.rho, cnfg.converging, r, g, b);
+                return std::make_unique<powertower>(cfg.rho, convert(cfg.color), r, g, b);
                 break;
             case types::newton:
-                return std::make_unique<newton>(cnfg.rho, cnfg.diverging);
+                return std::make_unique<newton>(cfg.rho, convert(cfg.diverging));
                 break;
             default: return nullptr;
         }
