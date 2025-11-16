@@ -46,6 +46,8 @@ namespace fractalgen::generators
 
         virtual rgb_t color_complex_num(std::complex<double> const& num) const = 0;
 
+        virtual std::string_view const name() const = 0;
+
     private:
 
         double m_rho;
@@ -53,6 +55,7 @@ namespace fractalgen::generators
         static stfd::vec3 to_riemann_sphere(std::complex<double> const& num);
 
         static std::complex<double> to_complex(stfd::vec3 const& vec);
+
     };
 
     /**
@@ -70,6 +73,9 @@ namespace fractalgen::generators
         mandelbrot(double rho, rgb_t _conv, double _r=1, double _g=1, double _b=1);
 
         rgb_t color_complex_num(std::complex<double> const& num) const override;
+
+        std::string_view const name() const override { return "mandelbrot"; }
+
     };
 
     /**
@@ -87,6 +93,8 @@ namespace fractalgen::generators
         powertower(double rho, rgb_t _conv, double _r=1, double _g=1, double _b=1);
 
         rgb_t color_complex_num(std::complex<double> const& num)const override;
+
+        std::string_view const name() const override { return "powertower"; }
 
     };
 
@@ -143,6 +151,8 @@ namespace fractalgen::generators
         newton(double rho, rgb_t _div);
 
         rgb_t color_complex_num(std::complex<double> const& num) const override;
+
+        std::string_view const name() const override { return "newton"; }
 
     };
 

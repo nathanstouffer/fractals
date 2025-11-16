@@ -42,6 +42,7 @@ namespace fractalgen::generators
 
     std::vector<rgb_t> generator::generate(window_t const& window) const
     {
+        std::cout << "Rendering " << name() << std::endl;
         time_t start = std::time(NULL);                                             // get start time
 
         std::vector<rgb_t> pixels;
@@ -60,7 +61,7 @@ namespace fractalgen::generators
         for (unsigned int t = 0; t < c_thread_count; ++t) { threads[t].join(); }
 
         time_t current = std::time(NULL);                                           // get current time
-        std::cout << current - start << " seconds elapsed" << std::endl;
+        std::cout << "Completed " << name() << " -- " << current - start << " seconds elapsed" << std::endl;
 
         return pixels;
     }
