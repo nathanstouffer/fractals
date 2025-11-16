@@ -1,6 +1,8 @@
 #include "fractalgen/generators/generators.hpp"
 
+#include <iomanip>
 #include <iostream>
+#include <sstream>
 #include <thread>
 
 namespace fractalgen::generators
@@ -11,7 +13,7 @@ namespace fractalgen::generators
     static constexpr int c_supersample_sqrt = 8;
     static constexpr double c_inset = 1.0 / (c_supersample_sqrt + 1);
 
-    static void color_pixels(generator const& gen, window_t const& window, int min_j, int max_j, std::vector<rgb_t>& pixels)
+    static void color_pixels(generator const& gen, window_t const& window, int min_j, int max_j, std::vector<rgb_t>& pixels, std::vector<bool>& status)
     {
         for (int j = min_j; j < max_j; ++j)
         {
@@ -19,13 +21,14 @@ namespace fractalgen::generators
             for (int i = 0; i < window.width; ++i)
             {
                 pixels[offset + i] = gen.color_pixel(window, i, j);
+                status[offset + i] = true;
             }
         }
     }
 
-    static void color_pixels_ptr(generators::generator const* gen, window_t const& window, int min_j, int max_j, std::vector<rgb_t>* pixels)
+    static void color_pixels_ptr(generators::generator const* gen, window_t const& window, int min_j, int max_j, std::vector<rgb_t>* pixels, std::vector<bool>* status)
     {
-        color_pixels(*gen, window, min_j, max_j, *pixels);
+        color_pixels(*gen, window, min_j, max_j, *pixels, *status);
     }
 
     window_t::window_t(stfd::aabb2 const& _bounds, int _width)
@@ -42,7 +45,8 @@ namespace fractalgen::generators
 
     std::vector<rgb_t> generator::generate(window_t const& window) const
     {
-        std::cout << "Rendering " << name() << std::endl;
+        std::vector<bool> status(window.width * window.height, false);
+
         time_t start = std::time(NULL);                                             // get start time
 
         std::vector<rgb_t> pixels;
@@ -54,15 +58,55 @@ namespace fractalgen::generators
         {
             int min = (int)(t/(double)c_thread_count * window.height);
             int max = (int)((t+1)/(double)c_thread_count * window.height);
-            threads.push_back(std::thread(color_pixels_ptr, this, window, min, max, &pixels));
+            threads.push_back(std::thread(color_pixels_ptr, this, window, min, max, &pixels, &status));
         }
+
+        while (std::find(status.begin(), status.end(), false) != status.end())
+        {
+            size_t completed = 0;
+            std::for_each(status.begin(), status.end(), [&completed](bool status) { if (status) { ++completed; } });
+            double progress = static_cast<double>(completed) / (window.width * window.height);
+
+            std::ostringstream stream;
+
+            int bar_width = 50;
+
+            {
+                stream << "\rRendering " << name();
+            }
+
+            // write progress bar
+            {
+                stream << " [";
+                int pos = bar_width * progress;
+                for (int i = 0; i < bar_width; ++i)
+                {
+                    if (i <= pos) { stream << "#"; }
+                    else { stream << " "; }
+                }
+                stream << "] ";
+            }
+
+            // add percentage
+            {
+                stream << std::fixed << std::setprecision(0) << (progress * 100.0) << "%";
+            }
+
+            // add duration
+            {
+                time_t current = std::time(NULL);
+                stream << " -- " << current - start << " seconds elapsed";
+            }
+
+            std::cout << stream.str();
+            std::cout.flush();
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        }
+        std::cout << std::endl;
 
         // join threads
         for (unsigned int t = 0; t < c_thread_count; ++t) { threads[t].join(); }
-
-        time_t current = std::time(NULL);                                           // get current time
-        std::cout << "Completed " << name() << " -- " << current - start << " seconds elapsed" << std::endl;
-
         return pixels;
     }
 
