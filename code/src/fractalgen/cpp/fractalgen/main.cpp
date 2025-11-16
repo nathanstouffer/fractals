@@ -43,17 +43,8 @@ int static constexpr WIDTH = 750;
 namespace fractalgen
 {
 
-    int generate(generators::types type)
+    int generate(generators::config const& config)
     {
-        // set up fractal config
-        generators::config config = 
-        {
-            type,
-            { 0, 0, 0 },
-            { 0, 100, 25 },
-            0.0
-        };
-
         // set up window
         stfd::vec2 min(LEFT, BOTTOM);
         stfd::vec2 max(RIGHT, TOP);
@@ -80,6 +71,15 @@ namespace fractalgen
 
         using types = generators::types;
 
+        // set up fractal config
+        generators::config config = 
+        {
+            types::mandelbrot,
+            { 0, 0, 0 },
+            { 0, 100, 25 },
+            0.0
+        };
+
         std::map<std::string, types> types_map = 
         {
             {"mandelbrot", types::mandelbrot},
@@ -88,14 +88,13 @@ namespace fractalgen
             {"newton", types::newton}
         };
 
-        generators::types type;
-        app.add_option("-t,--type", type, "Select type")
+        app.add_option("-t,--type", config.type, "Select type")
             ->required()
             ->transform(CLI::CheckedTransformer(types_map));
 
         CLI11_PARSE(app, argc, argv);
 
-        return generate(type);
+        return generate(config);
     }
 
 }
