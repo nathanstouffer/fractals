@@ -67,6 +67,7 @@ namespace fractalgen
 
         std::array<double, 4> bounds = { -4, -1.5, 1.33, 1.5 };
         int width = 750;
+        double rho = 0.0;
 
         // set up window options
         {
@@ -75,18 +76,12 @@ namespace fractalgen
 
             app.add_option("-b,--bounds", bounds, "Bounds of the image in the complex plane. Format: min_x min_y max_x max_y")
                 ->capture_default_str();
+
+            app.add_option("-r,--rho", rho, "Angle (in radians) by which to rotate the Riemann Sphere about the y-axis")
+                ->capture_default_str();
         }
 
         using types = generators::types;
-
-        // set up fractal config
-        generators::config config = 
-        {
-            types::mandelbrot,
-            { 0, 0, 0 },
-            { 0, 100, 25 },
-            0.0
-        };
 
         CLI::App* mandelbrot = app.add_subcommand("mandelbrot");
         CLI::App* powertower = app.add_subcommand("powertower");
@@ -97,6 +92,15 @@ namespace fractalgen
         CLI11_PARSE(app, argc, argv);
 
         generators::window_t window = { stfd::aabb2(stfd::vec2(bounds[0], bounds[1]), stfd::vec2(bounds[2], bounds[3])), width };
+
+        // set up fractal config
+        generators::config config = 
+        {
+            types::mandelbrot,
+            { 0, 0, 0 },
+            { 0, 100, 25 },
+            rho
+        };
 
         return generate(config, window);
     }

@@ -38,7 +38,7 @@ namespace fractalgen::generators
         , inset_y(c_inset * delta_y)
     {}
 
-    generator::generator(double theta) : m_theta(theta) {}
+    generator::generator(double rho) : m_rho(rho) {}
 
     std::vector<rgb_t> generator::generate(window_t const& window) const
     {
@@ -79,12 +79,12 @@ namespace fractalgen::generators
                 double x = intial_x + u * window.inset_x;
                 double y = intial_y + v * window.inset_y;
                 std::complex<double> z(x, y);
-                if (m_theta != stfd::constants::zero)
+                if (m_rho != stfd::constants::zero)
                 {
                     stfd::vec3 reimann_point = to_riemann_sphere(z);                // map to riemann sphere
-                    // rotate by complement of theta since z0 is in the image space and we want the preimage
-                    double complement = stfd::constants::two_pi - m_theta;
-                    stfd::vec3 rotated = stf::math::rotate(reimann_point, stfd::vec3(1, 0, 0), complement);
+                    // rotate by complement of rho since z is in the image space and we want the preimage
+                    double complement = stfd::constants::two_pi - m_rho;
+                    stfd::vec3 rotated = stf::math::rotate(reimann_point, stfd::vec3(0, 1, 0), complement);
                     z = to_complex(rotated);                                        // map back to the complex plane
                 }
                 rgb_t color = color_complex_num(z);                         // virtual function call
@@ -124,8 +124,8 @@ namespace fractalgen::generators
         return std::complex<double>(a, b);
     }
 
-    mandelbrot::mandelbrot(double theta, rgb_t _conv, double _r, double _g, double _b)
-        : generator(theta), conv(_conv) , r(_r) , g(_g) , b(_b) {}
+    mandelbrot::mandelbrot(double rho, rgb_t _conv, double _r, double _g, double _b)
+        : generator(rho), conv(_conv) , r(_r) , g(_g) , b(_b) {}
 
     rgb_t mandelbrot::color_complex_num(std::complex<double> const& num) const
     {
@@ -154,8 +154,8 @@ namespace fractalgen::generators
         }
     }
 
-    powertower::powertower(double theta, rgb_t _conv, double _r, double _g, double _b)
-        : generator(theta), conv(_conv), r(_r), g(_g), b(_b){}
+    powertower::powertower(double rho, rgb_t _conv, double _r, double _g, double _b)
+        : generator(rho), conv(_conv), r(_r), g(_g), b(_b){}
 
     rgb_t powertower::color_complex_num(std::complex<double> const& num) const
     {
@@ -207,7 +207,7 @@ namespace fractalgen::generators
         return index;
     }
 
-    newton::newton(double theta, rgb_t _div) : generator(theta), div(_div) {}
+    newton::newton(double rho, rgb_t _div) : generator(rho), div(_div) {}
 
     rgb_t newton::color_complex_num(std::complex<double> const& num) const
     {

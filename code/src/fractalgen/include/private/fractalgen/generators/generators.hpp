@@ -37,7 +37,7 @@ namespace fractalgen::generators
     {
     public:
 
-        generator(double _theta);
+        generator(double _rho);
         virtual ~generator() = default;
 
         std::vector<rgb_t> generate(window_t const& window) const;
@@ -48,7 +48,7 @@ namespace fractalgen::generators
 
     private:
 
-        double m_theta;
+        double m_rho;
 
         static stfd::vec3 to_riemann_sphere(std::complex<double> const& num);
 
@@ -67,7 +67,7 @@ namespace fractalgen::generators
 
     public:
 
-        mandelbrot(double theta, rgb_t _conv, double _r=1, double _g=1, double _b=1);
+        mandelbrot(double rho, rgb_t _conv, double _r=1, double _g=1, double _b=1);
 
         rgb_t color_complex_num(std::complex<double> const& num) const override;
     };
@@ -84,7 +84,7 @@ namespace fractalgen::generators
 
     public:
 
-        powertower(double theta, rgb_t _conv, double _r=1, double _g=1, double _b=1);
+        powertower(double rho, rgb_t _conv, double _r=1, double _g=1, double _b=1);
 
         rgb_t color_complex_num(std::complex<double> const& num)const override;
 
@@ -140,7 +140,7 @@ namespace fractalgen::generators
 
     public:
 
-        newton(double theta, rgb_t _div);
+        newton(double rho, rgb_t _div);
 
         rgb_t color_complex_num(std::complex<double> const& num) const override;
 

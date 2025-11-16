@@ -11,13 +11,13 @@ namespace fractalgen::generators
         switch (cnfg.type)
         {
             case types::mandelbrot:
-                return std::make_unique<mandelbrot>(cnfg.theta, cnfg.converging, r, g, b);
+                return std::make_unique<mandelbrot>(cnfg.rho, cnfg.converging, r, g, b);
                 break;
             case types::powertower:
-                return std::make_unique<powertower>(cnfg.theta, cnfg.converging, r, g, b);
+                return std::make_unique<powertower>(cnfg.rho, cnfg.converging, r, g, b);
                 break;
             case types::newton:
-                return std::make_unique<newton>(cnfg.theta, cnfg.diverging);
+                return std::make_unique<newton>(cnfg.rho, cnfg.diverging);
                 break;
             default: return nullptr;
         }

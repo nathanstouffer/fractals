@@ -23,7 +23,7 @@ namespace fractalgen::generators
         rgb_t converging;
         rgb_t diverging;
 
-        double theta;   // used for rotated_mandelbrot
+        double rho;
 
     };
 
