@@ -74,8 +74,7 @@ namespace fractalgen
                 ->capture_default_str();
 
             app.add_option("-b,--bounds", bounds, "Bounds of the image in the complex plane. Format: min_x min_y max_x max_y")
-                ->capture_default_str()
-                ->required();
+                ->capture_default_str();
         }
 
         using types = generators::types;

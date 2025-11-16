@@ -18,7 +18,7 @@ namespace fractalgen::generators
             int offset = j * window.width;
             for (int i = 0; i < window.width; ++i)
             {
-                pixels[offset + i] = gen.color_pixel(window,i, j);
+                pixels[offset + i] = gen.color_pixel(window, i, j);
             }
         }
     }
@@ -37,6 +37,8 @@ namespace fractalgen::generators
         , inset_x(c_inset * delta_x)
         , inset_y(c_inset * delta_y)
     {}
+
+    generator::generator(double theta) : m_theta(theta) {}
 
     std::vector<rgb_t> generator::generate(window_t const& window) const
     {
@@ -76,8 +78,16 @@ namespace fractalgen::generators
             {
                 double x = intial_x + u * window.inset_x;
                 double y = intial_y + v * window.inset_y;
-                std::complex<double> num(x, y);
-                rgb_t color = color_complex_num(num);   // virtual function call
+                std::complex<double> z(x, y);
+                if (m_theta != stfd::constants::zero)
+                {
+                    stfd::vec3 reimann_point = to_riemann_sphere(z);                // map to riemann sphere
+                    // rotate by complement of theta since z0 is in the image space and we want the preimage
+                    double complement = stfd::constants::two_pi - m_theta;
+                    stfd::vec3 rotated = stf::math::rotate(reimann_point, stfd::vec3(1, 0, 0), complement);
+                    z = to_complex(rotated);                                        // map back to the complex plane
+                }
+                rgb_t color = color_complex_num(z);                         // virtual function call
                 r += color.r;
                 g += color.g;
                 b += color.b;
@@ -89,8 +99,33 @@ namespace fractalgen::generators
         return { r, g, b };
     }
 
-    mandelbrot::mandelbrot(rgb_t _conv, double _r, double _g, double _b)
-        : conv(_conv) , r(_r) , g(_g) , b(_b) {}
+    stfd::vec3 generator::to_riemann_sphere(std::complex<double> const& num)
+    {
+        double x = num.real();
+        double y = num.imag();
+
+        double denom = 1 + x * x + y * y;
+        stfd::vec3 vec;
+        vec.x = 2 * x / denom;
+        vec.y = 2 * y / denom;
+        vec.z = (-1 + x * x + y * y) / denom;
+        return vec;
+    }
+
+    std::complex<double> generator::to_complex(stfd::vec3 const& vec)
+    {
+        if (vec.x == 0.0 && vec.y == 0.0 && vec.z == 1.0)
+        {
+            return std::complex<double>(DBL_MAX, DBL_MAX);
+        }
+
+        double a = vec.x / (1.0 - vec.z);
+        double b = vec.y / (1.0 - vec.z);
+        return std::complex<double>(a, b);
+    }
+
+    mandelbrot::mandelbrot(double theta, rgb_t _conv, double _r, double _g, double _b)
+        : generator(theta), conv(_conv) , r(_r) , g(_g) , b(_b) {}
 
     rgb_t mandelbrot::color_complex_num(std::complex<double> const& num) const
     {
@@ -119,45 +154,8 @@ namespace fractalgen::generators
         }
     }
 
-    stfd::vec3 rotated_mandelbrot::to_riemann_sphere(std::complex<double> const& num)
-    {
-        double x = num.real();
-        double y = num.imag();
-
-        double denom = 1 + x * x + y * y;
-        stfd::vec3 vec;
-        vec.x = 2 * x / denom;
-        vec.y = 2 * y / denom;
-        vec.z = (-1 + x * x + y * y) / denom;
-        return vec;
-    }
-
-    std::complex<double> rotated_mandelbrot::to_complex(stfd::vec3 const& vec)
-    {
-        if (vec.x == 0.0 && vec.y == 0.0 && vec.z == 1.0)
-        {
-            return std::complex<double>(DBL_MAX, DBL_MAX);
-        }
-
-        double a = vec.x / (1.0 - vec.z);
-        double b = vec.y / (1.0 - vec.z);
-        return std::complex<double>(a, b);
-    }
-
-    rotated_mandelbrot::rotated_mandelbrot(double _theta, rgb_t conv, double r, double g, double b)
-        : mand(mandelbrot(conv, r, g, b)), theta(_theta) {}
-
-    rgb_t rotated_mandelbrot::color_complex_num(std::complex<double> const& num) const
-    {
-        stfd::vec3 reimann_point = to_riemann_sphere(num);                      // map to riemann sphere
-        double complement = stfd::constants::two_pi - theta;   // rotate by complement of theta since num is in the image space and we want the preimage
-        stfd::vec3 rotated = stf::math::rotate(reimann_point, stfd::vec3(1, 0, 0), complement);
-        std::complex<double> z = to_complex(rotated);                           // map back to the complex plane
-        return mand.color_complex_num(z);
-    }
-
-    powertower::powertower(rgb_t _conv, double _r, double _g, double _b)
-        : conv(_conv), r(_r), g(_g), b(_b){}
+    powertower::powertower(double theta, rgb_t _conv, double _r, double _g, double _b)
+        : generator(theta), conv(_conv), r(_r), g(_g), b(_b){}
 
     rgb_t powertower::color_complex_num(std::complex<double> const& num) const
     {
@@ -209,7 +207,7 @@ namespace fractalgen::generators
         return index;
     }
 
-    newton::newton(rgb_t _div) : div(_div) {}
+    newton::newton(double theta, rgb_t _div) : generator(theta), div(_div) {}
 
     rgb_t newton::color_complex_num(std::complex<double> const& num) const
     {

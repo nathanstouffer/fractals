@@ -37,6 +37,7 @@ namespace fractalgen::generators
     {
     public:
 
+        generator(double _theta);
         virtual ~generator() = default;
 
         std::vector<rgb_t> generate(window_t const& window) const;
@@ -44,6 +45,14 @@ namespace fractalgen::generators
         rgb_t color_pixel(window_t const& window, int i, int j) const;
 
         virtual rgb_t color_complex_num(std::complex<double> const& num) const = 0;
+
+    private:
+
+        double m_theta;
+
+        static stfd::vec3 to_riemann_sphere(std::complex<double> const& num);
+
+        static std::complex<double> to_complex(stfd::vec3 const& vec);
     };
 
     /**
@@ -58,40 +67,16 @@ namespace fractalgen::generators
 
     public:
 
-        // constructor
-        mandelbrot(rgb_t _conv, double _r=1, double _g=1, double _b=1);
+        mandelbrot(double theta, rgb_t _conv, double _r=1, double _g=1, double _b=1);
 
         rgb_t color_complex_num(std::complex<double> const& num) const override;
     };
 
     /**
-     * class that colors a complex number c by transforming it to another point in the
-     * complex plane (via mapping to the Riemann sphere, rotating, and then mapping
-     * back to the complex plane) and coloring according to regular mandelbrot coloring
-     * @todo remove this class and just set all of the fractals up to rotate
-     */
-    class rotated_mandelbrot : public generator
-    {
-    private:
-
-        mandelbrot mand;
-        double theta;
-
-        static stfd::vec3 to_riemann_sphere(std::complex<double> const& num);
-
-        static std::complex<double> to_complex(stfd::vec3 const& vec);
-
-    public:
-
-        rotated_mandelbrot(double _theta, rgb_t conv, double r=1, double g=1, double b=1);
-
-        rgb_t color_complex_num(std::complex<double> const& num) const;
-    };
-
-    /**
      * class that colors a complex number c according to the iterative rule z_n+1 = num^z_n where z_0 = num
      */
-    class powertower : public generator {
+    class powertower : public generator
+    {
     private:
 
         rgb_t conv;
@@ -99,8 +84,7 @@ namespace fractalgen::generators
 
     public:
 
-        // constructor
-        powertower(rgb_t _conv, double _r=1, double _g=1, double _b=1);
+        powertower(double theta, rgb_t _conv, double _r=1, double _g=1, double _b=1);
 
         rgb_t color_complex_num(std::complex<double> const& num)const override;
 
@@ -156,8 +140,7 @@ namespace fractalgen::generators
 
     public:
 
-        // constructor
-        newton(rgb_t _div);
+        newton(double theta, rgb_t _div);
 
         rgb_t color_complex_num(std::complex<double> const& num) const override;
 

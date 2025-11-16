@@ -11,7 +11,6 @@ namespace fractalgen::generators
     enum class types
     {
         mandelbrot,
-        rotated_mandelbrot,
         powertower,
         newton,
     };
