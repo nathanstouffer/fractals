@@ -12,16 +12,13 @@ namespace fractalgen::generators
 
     std::unique_ptr<generator> factory(config const& cfg)
     {
-        double r = static_cast<double>(cfg.diverging[0]) / 255;
-        double g = static_cast<double>(cfg.diverging[1]) / 255;
-        double b = static_cast<double>(cfg.diverging[2]) / 255;
         switch (cfg.type)
         {
             case types::mandelbrot:
                 return std::make_unique<mandelbrot>(cfg.rho, convert(cfg.color), convert(cfg.diverging));
                 break;
             case types::powertower:
-                return std::make_unique<powertower>(cfg.rho, convert(cfg.color), r, g, b);
+                return std::make_unique<powertower>(cfg.rho, convert(cfg.color), convert(cfg.diverging));
                 break;
             case types::newton:
                 return std::make_unique<newton>(cfg.rho, convert(cfg.diverging));

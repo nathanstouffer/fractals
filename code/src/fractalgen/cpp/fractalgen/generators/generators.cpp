@@ -192,19 +192,23 @@ namespace fractalgen::generators
         {
             z = pow(z, 2) + num;
         }
-        if (abs(z) <= 2) { return m_color; }                             // if orbit has not diverged to infinity, return the background color
-        else                                                               // otherwise, compute the scaled color
+        if (abs(z) <= 2) { return m_color; }                                // if orbit has not diverged to infinity, return the background color
+        else                                                                // otherwise, compute the scaled color
         {
             double scale = static_cast<double>(i) / cap;
             stfd::vec3 rgb = m_diverging + scale * (stfd::vec3(1) - m_diverging);
             stfi::vec3 bytes = (255.0 * rgb).as<int>();
-            rgb_t color = { bytes.x, bytes.y, bytes.z };
-            return color;
+            return { bytes.x, bytes.y, bytes.z };
         }
     }
 
-    powertower::powertower(double rho, rgb_t _conv, double _r, double _g, double _b)
-        : generator(rho), conv(_conv), r(_r), g(_g), b(_b){}
+    powertower::powertower(double rho, rgb_t color, rgb_t diverging)
+        : generator(rho), m_color(color), m_diverging()
+    {
+        m_diverging.x = static_cast<double>(diverging.r) / 255;
+        m_diverging.y = static_cast<double>(diverging.g) / 255;
+        m_diverging.z = static_cast<double>(diverging.b) / 255;
+    }
 
     rgb_t powertower::color_complex_num(std::complex<double> const& num) const
     {
@@ -217,16 +221,14 @@ namespace fractalgen::generators
         {
             z = pow(num, z);                                                // exponentiate
         }
-        if (abs(z) < mag_cap) { return this->conv; }                        // if orbit has not diverged to infinity, return the background color
-        else                                                               // otherwise, compute the scaled color
+        if (abs(z) < mag_cap) { return m_color; }                           // if orbit has not diverged to infinity, return the background color
+        else                                                                // otherwise, compute the scaled color
         {
             double div = iter_cap/(double)i;
             div = 1000;
-            int r = (int) 255*(this->r + (1/div)*(1-this->r));
-            int g = (int) 255*(this->g + (1/div)*(1-this->g));
-            int b = (int) 255*(this->b + (1/div)*(1-this->b));
-            rgb_t color = { r, g, b };
-            return color;
+            stfd::vec3 rgb = m_diverging + (1 / div) * (stfd::vec3(1) - m_diverging);
+            stfi::vec3 bytes = (255.0 * rgb).as<int>();
+            return { bytes.x, bytes.y, bytes.z };
         }
     }
 
