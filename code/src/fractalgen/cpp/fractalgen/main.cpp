@@ -91,7 +91,7 @@ namespace fractalgen
 
         CLI::App* mandelbrot = app.add_subcommand("mandelbrot"); mandelbrot->callback([&]() { config.type = types::mandelbrot; });
         CLI::App* powertower = app.add_subcommand("powertower"); powertower->callback([&]() { config.type = types::powertower; });
-        CLI::App* newton = app.add_subcommand("newton"); newton->callback([&]() { config.type = types::newton; });
+        CLI::App* newton     = app.add_subcommand("newton"    ); newton    ->callback([&]() { config.type = types::newton;     });
 
         app.require_subcommand(1);
 
