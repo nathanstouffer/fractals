@@ -48,45 +48,61 @@ namespace fractalgen
         return 0;
     }
 
+    struct options
+    {
+        generators::config config;
+        std::string name = "fractal.png";
+        std::array<double, 4> bounds = { -4, -1.5, 1.33, 1.5 };
+        int width = 750;
+        double rho = 0.0;
+
+        generators::window_t window() const
+        {
+            return { stfd::aabb2(stfd::vec2(bounds[0], bounds[1]), stfd::vec2(bounds[2], bounds[3])), width };
+        }
+
+    };
+
+    void add_base_options(CLI::App& subcommand, options& opts)
+    {
+        subcommand.add_option("-n,--name", opts.name, "Name of the fractal (the output is written to name.png)")
+            ->capture_default_str();
+
+        subcommand.add_option("-w,--width", opts.width, "Width (in pixels) of the output image -- height is computed automatically")
+            ->capture_default_str();
+
+        subcommand.add_option("-b,--bounds", opts.bounds, "Bounds of the image in the complex plane. Format: min_x min_y max_x max_y")
+            ->capture_default_str();
+
+        subcommand.add_option("-r,--rho", opts.rho, "Angle (in radians) by which to rotate the Riemann Sphere about the y-axis")
+            ->capture_default_str();
+    }
+
     int main(int argc, char** argv)
     {
         CLI::App app{"fractalgen is a tool that generates images by coloring the complex plane.", "fractalgen"};
         app.fallthrough();
 
-        generators::config config;
-        std::string name = "fractal";
-        std::array<double, 4> bounds = { -4, -1.5, 1.33, 1.5 };
-        int width = 750;
-        double rho = 0.0;
-
-        // set up window options
-        {
-            app.add_option("-n,--name", name, "Name of the fractal (the output is written to name.png)")
-                ->capture_default_str();
-
-            app.add_option("-w,--width", width, "Width (in pixels) of the output image -- height is computed automatically")
-                ->capture_default_str();
-
-            app.add_option("-b,--bounds", bounds, "Bounds of the image in the complex plane. Format: min_x min_y max_x max_y")
-                ->capture_default_str();
-
-            app.add_option("-r,--rho", rho, "Angle (in radians) by which to rotate the Riemann Sphere about the y-axis")
-                ->capture_default_str();
-        }
-
         using types = generators::types;
+        options opts;
 
-        CLI::App* mandelbrot = app.add_subcommand("mandelbrot"); mandelbrot->callback([&]() { config.type = types::mandelbrot; });
-        CLI::App* powertower = app.add_subcommand("powertower"); powertower->callback([&]() { config.type = types::powertower; });
-        CLI::App* newton     = app.add_subcommand("newton"    ); newton    ->callback([&]() { config.type = types::newton;     });
+        CLI::App* mandelbrot = app.add_subcommand("mandelbrot", "Render the mandelbrot set");
+        mandelbrot->callback([&]() { opts.config.type = types::mandelbrot; });
+        add_base_options(*mandelbrot, opts);
+
+        CLI::App* powertower = app.add_subcommand("powertower", "Render a power tower fractal");
+        powertower->callback([&]() { opts.config.type = types::powertower; });
+        add_base_options(*powertower, opts);
+
+        CLI::App* newton = app.add_subcommand("newton", "Render a fractal using newton's method to find roots");
+        newton->callback([&]() { opts.config.type = types::newton; });
+        add_base_options(*newton, opts);
 
         app.require_subcommand(1);
 
         CLI11_PARSE(app, argc, argv);
 
-        generators::window_t window = { stfd::aabb2(stfd::vec2(bounds[0], bounds[1]), stfd::vec2(bounds[2], bounds[3])), width };
-
-        return generate(config, window, name);
+        return generate(opts.config, opts.window(), opts.name);
     }
 
 }
