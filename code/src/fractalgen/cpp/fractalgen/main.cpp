@@ -78,27 +78,36 @@ namespace fractalgen
             ->capture_default_str();
     }
 
+    void add_mandelbrot(CLI::App& app, options& opts)
+    {
+        CLI::App* mandelbrot = app.add_subcommand("mandelbrot", "Render the mandelbrot set");
+        mandelbrot->callback([&]() { opts.config.type = generators::types::mandelbrot; });
+        add_base_options(*mandelbrot, opts);
+    }
+
+    void add_powertower(CLI::App& app, options& opts)
+    {
+        CLI::App* powertower = app.add_subcommand("powertower", "Render a power tower fractal");
+        powertower->callback([&]() { opts.config.type = generators::types::powertower; });
+        add_base_options(*powertower, opts);
+    }
+
+    void add_newton(CLI::App& app, options& opts)
+    {
+        CLI::App* newton = app.add_subcommand("newton", "Render a fractal using newton's method to find roots");
+        newton->callback([&]() { opts.config.type = generators::types::newton; });
+        add_base_options(*newton, opts);
+    }
+
     int main(int argc, char** argv)
     {
         CLI::App app{"fractalgen is a tool that generates images by coloring the complex plane.", "fractalgen"};
-        app.fallthrough();
-
-        using types = generators::types;
-        options opts;
-
-        CLI::App* mandelbrot = app.add_subcommand("mandelbrot", "Render the mandelbrot set");
-        mandelbrot->callback([&]() { opts.config.type = types::mandelbrot; });
-        add_base_options(*mandelbrot, opts);
-
-        CLI::App* powertower = app.add_subcommand("powertower", "Render a power tower fractal");
-        powertower->callback([&]() { opts.config.type = types::powertower; });
-        add_base_options(*powertower, opts);
-
-        CLI::App* newton = app.add_subcommand("newton", "Render a fractal using newton's method to find roots");
-        newton->callback([&]() { opts.config.type = types::newton; });
-        add_base_options(*newton, opts);
-
         app.require_subcommand(1);
+
+        options opts;
+        add_mandelbrot(app, opts);
+        add_powertower(app, opts);
+        add_newton(app, opts);
 
         CLI11_PARSE(app, argc, argv);
 
