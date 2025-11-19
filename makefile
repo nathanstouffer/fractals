@@ -25,4 +25,4 @@ img/newton: | img
 	@mkdir img/newton
 
 readme: | build
-	@$(FRACTALGEN) mandelbrot --name img/mandelbrot/tmp --width 1000 --bounds -4 -1.5 1.33 1.5 --rho 0
+	@$(FRACTALGEN) mandelbrot --name img/mandelbrot/tmp.png --width 1000 --bounds -4 -1.5 1.33 1.5 --rho 0
