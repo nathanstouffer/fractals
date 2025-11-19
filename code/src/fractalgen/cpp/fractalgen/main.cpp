@@ -56,7 +56,9 @@ namespace fractalgen
             bytes.reserve(3 * pixels.size());
             std::for_each(pixels.begin(), pixels.end(), [&bytes](rgb_t const& c) { bytes.push_back(c.r); bytes.push_back(c.g); bytes.push_back(c.b); });
             std::string filename = name + ".png";
-            return stbi_write_png(filename.c_str(), window.width, window.height, 3, bytes.data(), window.width * 3);
+            int status = stbi_write_png(filename.c_str(), window.width, window.height, 3, bytes.data(), window.width * 3);
+            bool success = status != 0;
+            if (!success) { return 1; }
         }
         return 0;
     }
