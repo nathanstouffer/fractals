@@ -72,10 +72,13 @@ namespace fractalgen
             ->capture_default_str();
 
         subcommand.add_option("-b,--bounds", opts.bounds, "Bounds of the image in the complex plane. Format: min_x min_y max_x max_y")
-            ->capture_default_str();
+            ->default_str("-4 -1.5 1.33 1.5");
 
         subcommand.add_option("-r,--rho", opts.rho, "Angle (in radians) by which to rotate the Riemann Sphere about the y-axis")
             ->capture_default_str();
+
+        subcommand.add_option("-d,--diverging", opts.config.diverging, "The color (0-255) assigned to diverging inputs. Format: R G B")
+            ->default_str("0 0 0");
     }
 
     void add_mandelbrot(CLI::App& app, options& opts)
