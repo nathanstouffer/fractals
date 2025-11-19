@@ -21,26 +21,6 @@
 #include "fractalgen/generators/generators.hpp"
 #include "fractalgen/generators/factory.hpp"
 
-/**
- * for making backgrounds on the desktop, the ratio should be 1920:1080
- *  - a good window (of the complex plane) for the mandelbrot set is [-4,1.3333] and [-1.5,1.5]
- */
-
-// (X, Y) is the leftmost pixel halfway up the image and W is the width
-// the height H is computed
-double static constexpr X = -1.333333333;
-double static constexpr Y = 0;
-double static constexpr W = 5.33333333;
-double static constexpr H = W*(9.0/16.0);
-// left, right, top, and bottom define the window of the complex plane that we view
-double static constexpr LEFT = (X-W/2.0);
-double static constexpr RIGHT = (X+W/2.0);
-double static constexpr TOP = (Y+H/2.0);
-double static constexpr BOTTOM = (Y-H/2.0);
-// width and height define the resolution of the image (compute based on ratio between width/height of the rectangle)
-// desktop backgrounds should have a width of 25000
-int static constexpr WIDTH = 750;
-
 namespace fractalgen
 {
 
