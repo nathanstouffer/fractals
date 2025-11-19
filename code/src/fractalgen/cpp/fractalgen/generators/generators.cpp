@@ -61,7 +61,7 @@ namespace fractalgen::generators
             threads.push_back(std::thread(color_pixels_ptr, this, window, min, max, &pixels, &status));
         }
 
-        while (std::find(status.begin(), status.end(), false) != status.end())
+        while (true)
         {
             size_t completed = 0;
             std::for_each(status.begin(), status.end(), [&completed](bool status) { if (status) { ++completed; } });
@@ -101,7 +101,14 @@ namespace fractalgen::generators
             std::cout << stream.str();
             std::cout.flush();
 
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            if (completed == window.width * window.height)
+            {
+                break;
+            }
+            else
+            {
+                std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            }
         }
         std::cout << std::endl;
 
