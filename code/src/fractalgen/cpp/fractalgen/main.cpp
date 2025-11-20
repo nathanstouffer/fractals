@@ -107,7 +107,8 @@ namespace fractalgen
 
         // TODO (stouff) possibly rename this to roots and think of a different greek letter for rotation
         newton->add_option("-z", opts.newton.roots, "")
-            ->type_name("REAL IMAG R G B");
+            ->type_name("REAL IMAG R G B")
+            ->expected(5);
     }
 
     int main(int argc, char** argv)
