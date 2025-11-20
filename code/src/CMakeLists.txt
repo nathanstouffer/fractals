@@ -1,2 +1,2 @@
 add_subdirectory(fractalgen)
-add_subdirectory(fractalview)
+add_subdirectory(mandelview)
