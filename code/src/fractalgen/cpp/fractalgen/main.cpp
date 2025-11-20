@@ -72,9 +72,11 @@ namespace fractalgen
         add_base_options(*mandelbrot, opts);
 
         mandelbrot->add_option("-c,--color", opts.mandelbrot.color, "The color (0-255) assigned to non-diverging inputs. Format: R G B")
+            ->type_name("R G B")
             ->capture_default_str();
 
         mandelbrot->add_option("-d,--diverging", opts.mandelbrot.diverging, "The color (0-255) assigned to diverging inputs. Format: R G B")
+            ->type_name("R G B")
             ->capture_default_str();
     }
 
@@ -85,9 +87,11 @@ namespace fractalgen
         add_base_options(*powertower, opts);
 
         powertower->add_option("-c,--color", opts.powertower.color, "The color (0-255) assigned to non-diverging inputs. Format: R G B")
+            ->type_name("R G B")
             ->capture_default_str();
 
         powertower->add_option("-d,--diverging", opts.powertower.diverging, "The color (0-255) assigned to diverging inputs. Format: R G B")
+            ->type_name("R G B")
             ->capture_default_str();
     }
 
@@ -96,6 +100,14 @@ namespace fractalgen
         CLI::App* newton = app.add_subcommand("newton", "Render a fractal using newton's method to find roots");
         newton->callback([&]() { opts.type = generators::types::newton; });
         add_base_options(*newton, opts);
+
+        newton->add_option("-d,--diverging", opts.newton.diverging, "The color (0-255) assigned to diverging inputs. Format: R G B")
+            ->type_name("R G B")
+            ->capture_default_str();
+
+        // TODO (stouff) possibly rename this to roots and think of a different greek letter for rotation
+        newton->add_option("-z", opts.newton.roots, "")
+            ->type_name("REAL IMAG R G B");
     }
 
     int main(int argc, char** argv)

@@ -1,7 +1,9 @@
 #pragma once
 
 #include <array>
+#include <complex>
 #include <memory>
+#include <vector>
 
 #include "fractalgen/generators/generators.hpp"
 
@@ -22,6 +24,15 @@ namespace fractalgen::generators
         double rho;
         std::array<uint8_t, 3> color;
         std::array<uint8_t, 3> diverging;
+
+        struct root
+        {
+            std::complex<double> z;
+            std::array<uint8_t, 3> color;
+        };
+
+        std::vector<root> roots;
+        std::complex<double> scale;
 
         config(types _type, double _rho) : type(_type), rho(_rho) {}
     };

@@ -104,55 +104,43 @@ namespace fractalgen::generators
      */
     class newton : public generator
     {
+    public:
+
+        struct root
+        {
+            std::complex<double> z;
+            rgb_t color;
+        };
+
     private:
 
-        rgb_t div;
-        std::complex<double> func(std::complex<double> z) const
+        struct function
         {
-            return std::complex<double>(1, 0) * pow(z, 4)
-                    + std::complex<double>(0, 0) * pow(z, 3)
-                    + std::complex<double>(0, 0) * pow(z, 2)
-                    + std::complex<double>(0, 0) * z
-                    + std::complex<double>(-1, 0);
-        }
 
-        std::complex<double> deriv(std::complex<double> z) const
-        {
-            return std::complex<double>(4, 0) * pow(z, 3)
-                    + std::complex<double>(0, 0) * pow(z, 2)
-                    + std::complex<double>(0, 0) * z
-                    + std::complex<double>(0, 0);
-        }
+            std::vector<root> roots;
+            std::complex<double> scale;
 
-        // zeros and colors
-        std::complex<double> zeros [4] =
-        {
-            std::complex<double>(-1, 0),
-            std::complex<double>(1, 0),
-            std::complex<double>(0, -1),
-            std::complex<double>(0, 1)
+            std::complex<double> evaluate(std::complex<double> const& z) const;
+            std::complex<double> evaluate_deriv(std::complex<double> const& z) const;
         };
 
-        rgb_t colors [4] =
-        {
-            { 0, 5, 30 },
-            { 0, 10, 170 },
-            { 36, 70, 255 },
-            { 0, 10, 70 }
-        };
-
-        std::complex<double> newtons_method(std::complex<double> num, double eps) const;
+        std::complex<double> newtons_method(std::complex<double> const& z, double eps) const;
 
         // method to return the index of the zeros array within eps (a small value)
-        int index(std::complex<double> num, double eps) const;
+        int index(std::complex<double> const& z, double eps) const;
 
     public:
 
-        newton(double rho, rgb_t _div);
+        newton(double rho, rgb_t diverging, std::vector<root> const& roots, std::complex<double> const& scale);
 
-        rgb_t color_complex_num(std::complex<double> const& num) const override;
+        rgb_t color_complex_num(std::complex<double> const& z) const override;
 
         std::string_view const name() const override { return "newton"; }
+
+    private:
+
+        rgb_t m_diverging;
+        function m_function;
 
     };
 

@@ -239,41 +239,68 @@ namespace fractalgen::generators
         }
     }
 
-    std::complex<double> newton::newtons_method(std::complex<double> num, double eps) const
+    std::complex<double> newton::function::evaluate(std::complex<double> const& z) const
+    {
+        std::complex<double> res = scale;
+        for (root const& r : roots)
+        {
+            res *= (z - r.z);
+        }
+        return res;
+    }
+
+    std::complex<double> newton::function::evaluate_deriv(std::complex<double> const& z) const
+    {
+        // TODO (stouff) implement this
+        return 1.0;
+    }
+
+    std::complex<double> newton::newtons_method(std::complex<double> const& initial, double eps) const
     {
         std::complex<double> prev;
         int cap = 100;
         int i;
+        std::complex<double> z = initial;
         for (i = 0; i < cap; i++) {
-            prev = num;
-            num = num - func(num) / deriv(num);
-            if (abs(num - prev) <= eps) { return num; }
+            prev = z;
+            z = z - m_function.evaluate(z) / m_function.evaluate_deriv(z);
+            if (abs(z - prev) <= eps) { return z; }
         }
-        return num;
+        return z;
     }
 
     // method to return the index of the zeros array within eps (a small value)
-    int newton::index(std::complex<double> num, double eps) const
+    int newton::index(std::complex<double> const& z, double eps) const
     {
-        int index = -1;
-        int length = sizeof(this->zeros) / sizeof(this->zeros[0]);
-        int z;
-        for (z = 0; z < length; z++)
+        std::vector<root> const& roots = m_function.roots;
+        auto found = std::find_if(roots.begin(), roots.end(), [&](root const& r)
         {
-            if (abs(num - this->zeros[z]) <= eps) { index = z; }
+            return std::abs(z - r.z) <= eps;
+        });
+
+        if (found != roots.end())
+        {
+            return found - roots.begin();
         }
-        return index;
+        else
+        {
+            return -1;
+        }
     }
 
-    newton::newton(double rho, rgb_t _div) : generator(rho), div(_div) {}
+    newton::newton(double rho, rgb_t diverging, std::vector<root> const& roots, std::complex<double> const& scale)
+        : generator(rho),
+        m_diverging(diverging),
+        m_function({ roots, scale })
+    {}
 
     rgb_t newton::color_complex_num(std::complex<double> const& num) const
     {
         double eps = 0.000000001;
         std::complex<double> zero = newtons_method(num, eps);
-        int index = this->index(zero, eps);
-        if (index == -1) { return div; }
-        else { return this->colors[index]; }
+        int i = index(zero, eps);
+        if (i == -1) { return m_diverging; }
+        else { return m_function.roots[i].color; }
     }
 
 }
