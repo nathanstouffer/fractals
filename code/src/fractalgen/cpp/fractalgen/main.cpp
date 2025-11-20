@@ -105,8 +105,7 @@ namespace fractalgen
             ->type_name("R G B")
             ->capture_default_str();
 
-        // TODO (stouff) possibly rename this to roots and think of a different greek letter for rotation
-        newton->add_option("-z", opts.newton.roots, "")
+        newton->add_option("-r,--root", opts.newton.roots, "Add a polynomial root and corresponding color")
             ->type_name("REAL IMAG R G B")
             ->expected(5);
     }
