@@ -122,6 +122,14 @@ namespace fractalgen::generators
 
             std::complex<double> evaluate(std::complex<double> const& z) const;
             std::complex<double> evaluate_deriv(std::complex<double> const& z) const;
+
+        private:
+
+            using iter = std::vector<root>::const_iterator;
+
+            static std::complex<double> evaluate(iter begin, iter end, std::complex<double> const& z);
+            static std::complex<double> evaluate_deriv(iter begin, iter end, std::complex<double> const& z);
+
         };
 
         std::complex<double> newtons_method(std::complex<double> const& z, double eps) const;

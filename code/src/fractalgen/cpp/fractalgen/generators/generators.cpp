@@ -241,18 +241,35 @@ namespace fractalgen::generators
 
     std::complex<double> newton::function::evaluate(std::complex<double> const& z) const
     {
-        std::complex<double> res = scale;
-        for (root const& r : roots)
-        {
-            res *= (z - r.z);
-        }
-        return res;
+        return scale * evaluate(roots.begin(), roots.end(), z);
     }
 
     std::complex<double> newton::function::evaluate_deriv(std::complex<double> const& z) const
     {
-        // TODO (stouff) implement this
-        return 1.0;
+        return scale * evaluate_deriv(roots.begin(), roots.end(), z);
+    }
+
+    std::complex<double> newton::function::evaluate(iter begin, iter end, std::complex<double> const& z)
+    {
+        std::complex<double> res = 1.0;
+        for (auto it = begin; it != end; ++it)
+        {
+            res *= ( z - it->z);
+        }
+        return res;
+    }
+
+    std::complex<double> newton::function::evaluate_deriv(iter begin, iter end, std::complex<double> const& z)
+    {
+        auto diff = begin - end;
+        if (diff == 1)
+        {
+            return 1.0;
+        }
+        else
+        {
+            return evaluate(begin + 1, end, z) + (z - begin->z) * evaluate_deriv(begin + 1, end, z);
+        }
     }
 
     std::complex<double> newton::newtons_method(std::complex<double> const& initial, double eps) const

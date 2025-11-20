@@ -16,6 +16,7 @@ namespace fractalgen::generators
         roots.reserve(input.size());
         for (config::root const& r : input)
         {
+            // TODO (stouff) figure out why this conversion isn't working
             roots.push_back({ r.z, convert(r.color) });
         }
         return roots;
