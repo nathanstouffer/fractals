@@ -10,14 +10,18 @@ namespace fractalgen::generators
         return { arr[0], arr[1], arr[2] };
     }
 
+    static uint8_t convert(double x)
+    {
+        return static_cast<uint8_t>(std::clamp(x, 0.0, 255.0));
+    }
+
     static std::vector<newton::root> convert(std::vector<config::root> const& input)
     {
         std::vector<newton::root> roots;
         roots.reserve(input.size());
         for (config::root const& r : input)
         {
-            // TODO (stouff) figure out why this conversion isn't working
-            roots.push_back({ r.z, convert(r.color) });
+            roots.push_back({ { r[0], r[1] }, { convert(r[2]), convert(r[3]), convert(r[4]) } });
         }
         return roots;
     }

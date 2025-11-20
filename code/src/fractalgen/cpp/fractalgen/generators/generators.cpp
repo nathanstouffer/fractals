@@ -254,7 +254,7 @@ namespace fractalgen::generators
         std::complex<double> res = 1.0;
         for (auto it = begin; it != end; ++it)
         {
-            res *= ( z - it->z);
+            res *= (z - it->z);
         }
         return res;
     }

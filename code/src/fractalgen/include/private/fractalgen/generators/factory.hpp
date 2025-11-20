@@ -25,12 +25,7 @@ namespace fractalgen::generators
         std::array<uint8_t, 3> color;
         std::array<uint8_t, 3> diverging;
 
-        struct root
-        {
-            std::complex<double> z;
-            std::array<uint8_t, 3> color;
-        };
-
+        using root = std::array<double, 5>;
         std::vector<root> roots;
         std::complex<double> scale;
 
