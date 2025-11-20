@@ -41,7 +41,7 @@ namespace fractalgen::generators
         , inset_y(c_inset * delta_y)
     {}
 
-    generator::generator(double rho) : m_rho(rho) {}
+    generator::generator(double phi) : m_phi(phi) {}
 
     std::vector<rgb_t> generator::generate(window_t const& window) const
     {
@@ -131,11 +131,11 @@ namespace fractalgen::generators
                 double x = intial_x + u * window.inset_x;
                 double y = intial_y + v * window.inset_y;
                 std::complex<double> z(x, y);
-                if (m_rho != stfd::constants::zero)
+                if (m_phi != stfd::constants::zero)
                 {
                     stfd::vec3 reimann_point = to_riemann_sphere(z);                // map to riemann sphere
-                    // rotate by complement of rho since z is in the image space and we want the preimage
-                    double complement = stfd::constants::two_pi - m_rho;
+                    // rotate by complement of phi since z is in the image space and we want the preimage
+                    double complement = stfd::constants::two_pi - m_phi;
                     stfd::vec3 rotated = stf::math::rotate(reimann_point, stfd::vec3(0, 1, 0), complement);
                     z = to_complex(rotated);                                        // map back to the complex plane
                 }
@@ -176,8 +176,8 @@ namespace fractalgen::generators
         return std::complex<double>(a, b);
     }
 
-    mandelbrot::mandelbrot(double rho, rgb_t color, rgb_t diverging)
-        : generator(rho), m_color(color), m_diverging()
+    mandelbrot::mandelbrot(double phi, rgb_t color, rgb_t diverging)
+        : generator(phi), m_color(color), m_diverging()
     {
         m_diverging.x = static_cast<double>(diverging.r) / 255;
         m_diverging.y = static_cast<double>(diverging.g) / 255;
@@ -209,8 +209,8 @@ namespace fractalgen::generators
         }
     }
 
-    powertower::powertower(double rho, rgb_t color, rgb_t diverging)
-        : generator(rho), m_color(color), m_diverging()
+    powertower::powertower(double phi, rgb_t color, rgb_t diverging)
+        : generator(phi), m_color(color), m_diverging()
     {
         m_diverging.x = static_cast<double>(diverging.r) / 255;
         m_diverging.y = static_cast<double>(diverging.g) / 255;
@@ -305,8 +305,8 @@ namespace fractalgen::generators
         }
     }
 
-    newton::newton(double rho, rgb_t diverging, std::vector<root> const& roots, std::complex<double> const& scale)
-        : generator(rho),
+    newton::newton(double phi, rgb_t diverging, std::vector<root> const& roots, std::complex<double> const& scale)
+        : generator(phi),
         m_diverging(diverging),
         m_function({ roots, scale })
     {}

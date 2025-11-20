@@ -46,7 +46,7 @@ demo: build | img/demo
 #	$(FRACTALGEN) newton --name img/demo/newton.png
 
 readme: build | img/mandelbrot img/powertower img/newton
-	$(FRACTALGEN) mandelbrot --name fractal.png --width 1000 --bounds -4 -1.5 1.33 1.5 --rho 0
+	$(FRACTALGEN) mandelbrot --name fractal.png --width 1000 --bounds -4 -1.5 1.33 1.5 --phi 0
 
 backgrounds: build | img/backgrounds
-	$(FRACTALGEN) mandelbrot --name img/backgrounds/mandelbrot-black.png --width 1920 --bounds -4 -1.5 1.33 1.5 --rho 0
+	$(FRACTALGEN) mandelbrot --name img/backgrounds/mandelbrot-black.png --width 1920 --bounds -4 -1.5 1.33 1.5 --phi 0

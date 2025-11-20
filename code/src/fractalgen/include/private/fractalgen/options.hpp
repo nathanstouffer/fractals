@@ -54,7 +54,7 @@ namespace fractalgen
         std::string name = "fractal.png";
         std::array<double, 4> bounds = { -4, -1.5, 1.33, 1.5 };
         int width = 750;
-        double rho = 0.0;
+        double phi = 0.0;
 
         mandelbrot_opts mandelbrot;
         powertower_opts powertower;
@@ -62,7 +62,7 @@ namespace fractalgen
 
         generators::config config() const
         {
-            generators::config cfg(type, rho);
+            generators::config cfg(type, phi);
             switch (type)
             {
                 case generators::types::mandelbrot: mandelbrot.augment(cfg); break;

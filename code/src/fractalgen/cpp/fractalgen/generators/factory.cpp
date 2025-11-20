@@ -27,13 +27,13 @@ namespace fractalgen::generators
         switch (cfg.type)
         {
             case types::mandelbrot:
-                return std::make_unique<mandelbrot>(cfg.rho, convert(cfg.color), convert(cfg.diverging));
+                return std::make_unique<mandelbrot>(cfg.phi, convert(cfg.color), convert(cfg.diverging));
                 break;
             case types::powertower:
-                return std::make_unique<powertower>(cfg.rho, convert(cfg.color), convert(cfg.diverging));
+                return std::make_unique<powertower>(cfg.phi, convert(cfg.color), convert(cfg.diverging));
                 break;
             case types::newton:
-                return std::make_unique<newton>(cfg.rho, convert(cfg.diverging), convert(cfg.roots), cfg.scale);
+                return std::make_unique<newton>(cfg.phi, convert(cfg.diverging), convert(cfg.roots), cfg.scale);
                 break;
             default: return nullptr;
         }

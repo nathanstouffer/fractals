@@ -21,7 +21,7 @@ namespace fractalgen::generators
     struct config
     {
         types type;
-        double rho;
+        double phi;
         std::array<uint8_t, 3> color;
         std::array<uint8_t, 3> diverging;
 
@@ -34,7 +34,7 @@ namespace fractalgen::generators
         std::vector<root> roots;
         std::complex<double> scale;
 
-        config(types _type, double _rho) : type(_type), rho(_rho) {}
+        config(types _type, double _phi) : type(_type), phi(_phi) {}
     };
 
     std::unique_ptr<generator> factory(config const& conf);

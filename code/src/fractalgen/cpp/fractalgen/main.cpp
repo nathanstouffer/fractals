@@ -61,7 +61,7 @@ namespace fractalgen
         subcommand.add_option("-b,--bounds", opts.bounds, "Bounds of the image in the complex plane. Format: min_x min_y max_x max_y")
             ->capture_default_str();
 
-        subcommand.add_option("-r,--rho", opts.rho, "Angle (in radians) by which to rotate the Riemann Sphere about the y-axis")
+        subcommand.add_option("-p,--phi", opts.phi, "Angle (in radians) by which to rotate the Riemann Sphere about the y-axis")
             ->capture_default_str();
     }
 

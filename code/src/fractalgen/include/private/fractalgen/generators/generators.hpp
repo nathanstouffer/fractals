@@ -37,7 +37,7 @@ namespace fractalgen::generators
     {
     public:
 
-        generator(double _rho);
+        generator(double _phi);
         virtual ~generator() = default;
 
         std::vector<rgb_t> generate(window_t const& window) const;
@@ -50,7 +50,7 @@ namespace fractalgen::generators
 
     private:
 
-        double m_rho;
+        double m_phi;
 
         static stfd::vec3 to_riemann_sphere(std::complex<double> const& num);
 
@@ -70,7 +70,7 @@ namespace fractalgen::generators
 
     public:
 
-        mandelbrot(double rho, rgb_t color, rgb_t diverging);
+        mandelbrot(double phi, rgb_t color, rgb_t diverging);
 
         rgb_t color_complex_num(std::complex<double> const& num) const override;
 
@@ -90,7 +90,7 @@ namespace fractalgen::generators
 
     public:
 
-        powertower(double rho, rgb_t color, rgb_t diverging);
+        powertower(double phi, rgb_t color, rgb_t diverging);
 
         rgb_t color_complex_num(std::complex<double> const& num)const override;
 
@@ -139,7 +139,7 @@ namespace fractalgen::generators
 
     public:
 
-        newton(double rho, rgb_t diverging, std::vector<root> const& roots, std::complex<double> const& scale);
+        newton(double phi, rgb_t diverging, std::vector<root> const& roots, std::complex<double> const& scale);
 
         rgb_t color_complex_num(std::complex<double> const& z) const override;
 
