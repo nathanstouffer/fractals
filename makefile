@@ -43,7 +43,7 @@ build:
 demo: build | img/demo
 	$(FRACTALGEN) mandelbrot --name img/demo/mandelbrot.png
 	$(FRACTALGEN) powertower --name img/demo/powertower.png
-#	$(FRACTALGEN) newton --name img/demo/newton.png
+	$(FRACTALGEN) newton --name img/demo/newton.png --root -3 1 255 0 0 --root -3 -1 0 255 0 --root 1 0 0 0 255
 
 readme: build | img/mandelbrot img/powertower img/newton
 	$(FRACTALGEN) mandelbrot --name fractal.png --width 1000 --bounds -4 -1.5 1.33 1.5 --phi 0
