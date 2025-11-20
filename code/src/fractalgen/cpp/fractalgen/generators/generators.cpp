@@ -261,7 +261,7 @@ namespace fractalgen::generators
 
     std::complex<double> newton::function::evaluate_deriv(iter begin, iter end, std::complex<double> const& z)
     {
-        auto diff = begin - end;
+        auto diff = end - begin;
         if (diff == 1)
         {
             return 1.0;
