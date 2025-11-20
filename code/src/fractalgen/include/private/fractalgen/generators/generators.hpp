@@ -118,7 +118,6 @@ namespace fractalgen::generators
         {
 
             std::vector<root> roots;
-            std::complex<double> scale;
 
             std::complex<double> evaluate(std::complex<double> const& z) const;
             std::complex<double> evaluate_deriv(std::complex<double> const& z) const;
@@ -139,7 +138,7 @@ namespace fractalgen::generators
 
     public:
 
-        newton(double phi, rgb_t diverging, std::vector<root> const& roots, std::complex<double> const& scale);
+        newton(double phi, rgb_t diverging, std::vector<root> const& roots);
 
         rgb_t color_complex_num(std::complex<double> const& z) const override;
 

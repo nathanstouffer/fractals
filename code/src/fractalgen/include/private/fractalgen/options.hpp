@@ -40,13 +40,11 @@ namespace fractalgen
         {
             std::array<uint8_t, 3> diverging = { 0, 0, 0 };
             std::vector<generators::config::root> roots;
-            std::complex<double> scale = 1.0;
 
             void augment(generators::config& config) const
             {
                 config.diverging = diverging;
                 config.roots = roots;
-                config.scale = scale;
             }
         };
 

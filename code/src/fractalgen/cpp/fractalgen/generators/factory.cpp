@@ -37,7 +37,7 @@ namespace fractalgen::generators
                 return std::make_unique<powertower>(cfg.phi, convert(cfg.color), convert(cfg.diverging));
                 break;
             case types::newton:
-                return std::make_unique<newton>(cfg.phi, convert(cfg.diverging), convert(cfg.roots), cfg.scale);
+                return std::make_unique<newton>(cfg.phi, convert(cfg.diverging), convert(cfg.roots));
                 break;
             default: return nullptr;
         }

@@ -241,12 +241,12 @@ namespace fractalgen::generators
 
     std::complex<double> newton::function::evaluate(std::complex<double> const& z) const
     {
-        return scale * evaluate(roots.begin(), roots.end(), z);
+        return evaluate(roots.begin(), roots.end(), z);
     }
 
     std::complex<double> newton::function::evaluate_deriv(std::complex<double> const& z) const
     {
-        return scale * evaluate_deriv(roots.begin(), roots.end(), z);
+        return evaluate_deriv(roots.begin(), roots.end(), z);
     }
 
     std::complex<double> newton::function::evaluate(iter begin, iter end, std::complex<double> const& z)
@@ -305,10 +305,10 @@ namespace fractalgen::generators
         }
     }
 
-    newton::newton(double phi, rgb_t diverging, std::vector<root> const& roots, std::complex<double> const& scale)
+    newton::newton(double phi, rgb_t diverging, std::vector<root> const& roots)
         : generator(phi),
         m_diverging(diverging),
-        m_function({ roots, scale })
+        m_function({ roots })
     {}
 
     rgb_t newton::color_complex_num(std::complex<double> const& num) const

@@ -107,9 +107,6 @@ namespace fractalgen
 
         newton->add_option("-r,--root", opts.newton.roots, "Add a polynomial root and corresponding color")
             ->type_name("REAL IMAG R G B");
-
-        newton->add_option("-s,--scale", opts.newton.scale, "The value by which to scale the polynomial")
-            ->capture_default_str();
     }
 
     int main(int argc, char** argv)
