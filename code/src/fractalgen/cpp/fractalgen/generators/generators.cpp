@@ -1,29 +1,37 @@
 #include "fractalgen/generators/generators.hpp"
 
+#include <iomanip>
 #include <iostream>
+#include <sstream>
 #include <thread>
 
 namespace fractalgen::generators
 {
 
-    static void color_pixels(generator const& gen, generator::window_t const& window, int min_j, int max_j, std::vector<rgb_t>& pixels)
+    static constexpr int c_thread_count = 16;
+
+    static constexpr int c_supersample_sqrt = 8;
+    static constexpr double c_inset = 1.0 / (c_supersample_sqrt + 1);
+
+    static void color_pixels(generator const& gen, window_t const& window, int min_j, int max_j, std::vector<rgb_t>& pixels, std::vector<bool>& status)
     {
         for (int j = min_j; j < max_j; ++j)
         {
             int offset = j * window.width;
             for (int i = 0; i < window.width; ++i)
             {
-                pixels[offset + i] = gen.color_pixel(window,i, j);
+                pixels[offset + i] = gen.color_pixel(window, i, j);
+                status[offset + i] = true;
             }
         }
     }
 
-    static void color_pixels_ptr(generators::generator const* gen, generator::window_t const& window, int min_j, int max_j, std::vector<rgb_t>* pixels)
+    static void color_pixels_ptr(generators::generator const* gen, window_t const& window, int min_j, int max_j, std::vector<rgb_t>* pixels, std::vector<bool>* status)
     {
-        color_pixels(*gen, window, min_j, max_j, *pixels);
+        color_pixels(*gen, window, min_j, max_j, *pixels, *status);
     }
 
-    generator::window_t::window_t(stfd::aabb2 const& _bounds, int _width)
+    window_t::window_t(stfd::aabb2 const& _bounds, int _width)
         : bounds(_bounds)
         , width(_width)
         , height(static_cast<int>(width * (bounds.diagonal().y / bounds.diagonal().x)))
@@ -33,8 +41,12 @@ namespace fractalgen::generators
         , inset_y(c_inset * delta_y)
     {}
 
+    generator::generator(double phi) : m_phi(phi) {}
+
     std::vector<rgb_t> generator::generate(window_t const& window) const
     {
+        std::vector<bool> status(window.width * window.height, false);
+
         time_t start = std::time(NULL);                                             // get start time
 
         std::vector<rgb_t> pixels;
@@ -46,15 +58,62 @@ namespace fractalgen::generators
         {
             int min = (int)(t/(double)c_thread_count * window.height);
             int max = (int)((t+1)/(double)c_thread_count * window.height);
-            threads.push_back(std::thread(color_pixels_ptr, this, window, min, max, &pixels));
+            threads.push_back(std::thread(color_pixels_ptr, this, window, min, max, &pixels, &status));
         }
+
+        while (true)
+        {
+            size_t completed = 0;
+            std::for_each(status.begin(), status.end(), [&completed](bool status) { if (status) { ++completed; } });
+            double progress = static_cast<double>(completed) / (window.width * window.height);
+
+            std::ostringstream stream;
+
+            int bar_width = 50;
+
+            {
+                stream << "\rRendering " << name();
+            }
+
+            // write progress bar
+            {
+                stream << " [";
+                int pos = bar_width * progress;
+                for (int i = 0; i < bar_width; ++i)
+                {
+                    if (i <= pos) { stream << "#"; }
+                    else { stream << " "; }
+                }
+                stream << "] ";
+            }
+
+            // add percentage
+            {
+                stream << std::fixed << std::setprecision(0) << (progress * 100.0) << "%";
+            }
+
+            // add duration
+            {
+                time_t current = std::time(NULL);
+                stream << " -- " << current - start << " seconds elapsed";
+            }
+
+            std::cout << stream.str();
+            std::cout.flush();
+
+            if (completed == window.width * window.height)
+            {
+                break;
+            }
+            else
+            {
+                std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            }
+        }
+        std::cout << std::endl;
 
         // join threads
         for (unsigned int t = 0; t < c_thread_count; ++t) { threads[t].join(); }
-
-        time_t current = std::time(NULL);                                           // get current time
-        std::cout << current - start << " seconds elapsed" << std::endl;
-
         return pixels;
     }
 
@@ -71,8 +130,16 @@ namespace fractalgen::generators
             {
                 double x = intial_x + u * window.inset_x;
                 double y = intial_y + v * window.inset_y;
-                std::complex<double> num(x, y);
-                rgb_t color = color_complex_num(num);   // virtual function call
+                std::complex<double> z(x, y);
+                if (m_phi != stfd::constants::zero)
+                {
+                    stfd::vec3 reimann_point = to_riemann_sphere(z);                // map to riemann sphere
+                    // rotate by complement of phi since z is in the image space and we want the preimage
+                    double complement = stfd::constants::two_pi - m_phi;
+                    stfd::vec3 rotated = stf::math::rotate(reimann_point, stfd::vec3(0, 1, 0), complement);
+                    z = to_complex(rotated);                                        // map back to the complex plane
+                }
+                rgb_t color = color_complex_num(z);                         // virtual function call
                 r += color.r;
                 g += color.g;
                 b += color.b;
@@ -84,37 +151,7 @@ namespace fractalgen::generators
         return { r, g, b };
     }
 
-    mandelbrot::mandelbrot(rgb_t _conv, double _r, double _g, double _b)
-        : conv(_conv) , r(_r) , g(_g) , b(_b) {}
-
-    rgb_t mandelbrot::color_complex_num(std::complex<double> const& num) const
-    {
-        // quick check to decrease computation time
-        if (abs(num) < 0.2) { return this->conv; }
-        else if (num.real() < 0)
-        {
-            if (abs(num) < 0.6) { return this->conv; }
-        }
-        std::complex<double> z(0.0, 0.0);                                   // start the 0-orbit
-        int cap = 500;                                                      // set an iteration cap
-        int i;
-        for (i = 0; i < cap && abs(z) <= 2; i++)                            // iterate 0 on z_n+1 = z_n^2 + num
-        {
-            z = pow(z, 2) + num;
-        }
-        if (abs(z) <= 2) { return this->conv; }                             // if orbit has not diverged to infinity, return the background color
-        else                                                               // otherwise, compute the scaled color
-        {
-            double div = cap/(double)i;
-            int r = (int) 255*(this->r + (1/div)*(1-this->r));
-            int g = (int) 255*(this->g + (1/div)*(1-this->g));
-            int b = (int) 255*(this->b + (1/div)*(1-this->b));
-            rgb_t color = { r, g, b };
-            return color;
-        }
-    }
-
-    stfd::vec3 rotated_mandelbrot::to_riemann_sphere(std::complex<double> const& num)
+    stfd::vec3 generator::to_riemann_sphere(std::complex<double> const& num)
     {
         double x = num.real();
         double y = num.imag();
@@ -127,7 +164,7 @@ namespace fractalgen::generators
         return vec;
     }
 
-    std::complex<double> rotated_mandelbrot::to_complex(stfd::vec3 const& vec)
+    std::complex<double> generator::to_complex(stfd::vec3 const& vec)
     {
         if (vec.x == 0.0 && vec.y == 0.0 && vec.z == 1.0)
         {
@@ -139,20 +176,46 @@ namespace fractalgen::generators
         return std::complex<double>(a, b);
     }
 
-    rotated_mandelbrot::rotated_mandelbrot(double _theta, rgb_t conv, double r, double g, double b)
-        : mand(mandelbrot(conv, r, g, b)), theta(_theta) {}
-
-    rgb_t rotated_mandelbrot::color_complex_num(std::complex<double> const& num) const
+    mandelbrot::mandelbrot(double phi, rgb_t color, rgb_t diverging)
+        : generator(phi), m_color(color), m_diverging()
     {
-        stfd::vec3 reimann_point = to_riemann_sphere(num);                      // map to riemann sphere
-        double complement = stfd::constants::two_pi - theta;   // rotate by complement of theta since num is in the image space and we want the preimage
-        stfd::vec3 rotated = stf::math::rotate(reimann_point, stfd::vec3(1, 0, 0), complement);
-        std::complex<double> z = to_complex(rotated);                           // map back to the complex plane
-        return mand.color_complex_num(z);
+        m_diverging.x = static_cast<double>(diverging.r) / 255;
+        m_diverging.y = static_cast<double>(diverging.g) / 255;
+        m_diverging.z = static_cast<double>(diverging.b) / 255;
     }
 
-    powertower::powertower(rgb_t _conv, double _r, double _g, double _b)
-        : conv(_conv), r(_r), g(_g), b(_b){}
+    rgb_t mandelbrot::color_complex_num(std::complex<double> const& num) const
+    {
+        // quick check to decrease computation time
+        if (abs(num) < 0.2) { return m_color; }
+        else if (num.real() < 0)
+        {
+            if (abs(num) < 0.6) { return m_color; }
+        }
+        std::complex<double> z(0.0, 0.0);                                   // start the 0-orbit
+        int cap = 500;                                                      // set an iteration cap
+        int i;
+        for (i = 0; i < cap && abs(z) <= 2; i++)                            // iterate 0 on z_n+1 = z_n^2 + num
+        {
+            z = pow(z, 2) + num;
+        }
+        if (abs(z) <= 2) { return m_color; }                                // if orbit has not diverged to infinity, return the background color
+        else                                                                // otherwise, compute the scaled color
+        {
+            double scale = static_cast<double>(i) / cap;
+            stfd::vec3 rgb = m_diverging + scale * (stfd::vec3(1) - m_diverging);
+            stfi::vec3 bytes = (255.0 * rgb).as<int>();
+            return { bytes.x, bytes.y, bytes.z };
+        }
+    }
+
+    powertower::powertower(double phi, rgb_t color, rgb_t diverging)
+        : generator(phi), m_color(color), m_diverging()
+    {
+        m_diverging.x = static_cast<double>(diverging.r) / 255;
+        m_diverging.y = static_cast<double>(diverging.g) / 255;
+        m_diverging.z = static_cast<double>(diverging.b) / 255;
+    }
 
     rgb_t powertower::color_complex_num(std::complex<double> const& num) const
     {
@@ -165,54 +228,96 @@ namespace fractalgen::generators
         {
             z = pow(num, z);                                                // exponentiate
         }
-        if (abs(z) < mag_cap) { return this->conv; }                        // if orbit has not diverged to infinity, return the background color
-        else                                                               // otherwise, compute the scaled color
+        if (abs(z) < mag_cap) { return m_color; }                           // if orbit has not diverged to infinity, return the background color
+        else                                                                // otherwise, compute the scaled color
         {
             double div = iter_cap/(double)i;
             div = 1000;
-            int r = (int) 255*(this->r + (1/div)*(1-this->r));
-            int g = (int) 255*(this->g + (1/div)*(1-this->g));
-            int b = (int) 255*(this->b + (1/div)*(1-this->b));
-            rgb_t color = { r, g, b };
-            return color;
+            stfd::vec3 rgb = m_diverging + (1 / div) * (stfd::vec3(1) - m_diverging);
+            stfi::vec3 bytes = (255.0 * rgb).as<int>();
+            return { bytes.x, bytes.y, bytes.z };
         }
     }
 
-    std::complex<double> newton::newtons_method(std::complex<double> num, double eps) const
+    std::complex<double> newton::function::evaluate(std::complex<double> const& z) const
+    {
+        return evaluate(roots.begin(), roots.end(), z);
+    }
+
+    std::complex<double> newton::function::evaluate_deriv(std::complex<double> const& z) const
+    {
+        return evaluate_deriv(roots.begin(), roots.end(), z);
+    }
+
+    std::complex<double> newton::function::evaluate(iter begin, iter end, std::complex<double> const& z)
+    {
+        std::complex<double> res = 1.0;
+        for (auto it = begin; it != end; ++it)
+        {
+            res *= (z - it->z);
+        }
+        return res;
+    }
+
+    std::complex<double> newton::function::evaluate_deriv(iter begin, iter end, std::complex<double> const& z)
+    {
+        auto diff = end - begin;
+        if (diff == 1)
+        {
+            return 1.0;
+        }
+        else
+        {
+            return evaluate(begin + 1, end, z) + (z - begin->z) * evaluate_deriv(begin + 1, end, z);
+        }
+    }
+
+    std::complex<double> newton::newtons_method(std::complex<double> const& initial, double eps) const
     {
         std::complex<double> prev;
         int cap = 100;
         int i;
+        std::complex<double> z = initial;
         for (i = 0; i < cap; i++) {
-            prev = num;
-            num = num - func(num) / deriv(num);
-            if (abs(num - prev) <= eps) { return num; }
+            prev = z;
+            z = z - m_function.evaluate(z) / m_function.evaluate_deriv(z);
+            if (abs(z - prev) <= eps) { return z; }
         }
-        return num;
+        return z;
     }
 
     // method to return the index of the zeros array within eps (a small value)
-    int newton::index(std::complex<double> num, double eps) const
+    int newton::index(std::complex<double> const& z, double eps) const
     {
-        int index = -1;
-        int length = sizeof(this->zeros) / sizeof(this->zeros[0]);
-        int z;
-        for (z = 0; z < length; z++)
+        std::vector<root> const& roots = m_function.roots;
+        auto found = std::find_if(roots.begin(), roots.end(), [&](root const& r)
         {
-            if (abs(num - this->zeros[z]) <= eps) { index = z; }
+            return std::abs(z - r.z) <= eps;
+        });
+
+        if (found != roots.end())
+        {
+            return found - roots.begin();
         }
-        return index;
+        else
+        {
+            return -1;
+        }
     }
 
-    newton::newton(rgb_t _div) : div(_div) {}
+    newton::newton(double phi, rgb_t diverging, std::vector<root> const& roots)
+        : generator(phi),
+        m_diverging(diverging),
+        m_function({ roots })
+    {}
 
     rgb_t newton::color_complex_num(std::complex<double> const& num) const
     {
         double eps = 0.000000001;
         std::complex<double> zero = newtons_method(num, eps);
-        int index = this->index(zero, eps);
-        if (index == -1) { return div; }
-        else { return this->colors[index]; }
+        int i = index(zero, eps);
+        if (i == -1) { return m_diverging; }
+        else { return m_function.roots[i].color; }
     }
 
 }

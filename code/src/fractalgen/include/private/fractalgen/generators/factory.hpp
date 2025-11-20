@@ -1,33 +1,37 @@
 #pragma once
 
+#include <array>
+#include <complex>
 #include <memory>
+#include <vector>
 
-#include "fractalgen/rgb.hpp"
 #include "fractalgen/generators/generators.hpp"
 
 namespace fractalgen::generators
 {
 
-    struct config_t
+    enum class types
     {
-
-        enum class types_t
-        {
-            mandelbrot,
-            rotated_mandelbrot,
-            powertower,
-            newton,
-        };
-
-        types_t type;
-
-        rgb_t converging;
-        rgb_t diverging;
-
-        double theta;   // used for rotated_mandelbrot
-
+        mandelbrot,
+        powertower,
+        newton,
     };
 
-    std::unique_ptr<generator> factory(config_t const& config);
+    // TODO (stouff) consider removing this struct and just using options
+    struct config
+    {
+        types type;
+        double phi;
+        std::array<uint8_t, 3> color;
+        std::array<uint8_t, 3> diverging;
+
+        using root = std::array<double, 5>;
+        std::vector<root> roots;
+        std::complex<double> scale;
+
+        config(types _type, double _phi) : type(_type), phi(_phi) {}
+    };
+
+    std::unique_ptr<generator> factory(config const& conf);
 
 }

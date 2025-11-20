@@ -44,7 +44,6 @@ CMakeCache.txt
 CMakeFiles
 CMakeScripts
 Testing
-Makefile
 cmake_install.cmake
 install_manifest.txt
 compile_commands.json
@@ -52,6 +51,7 @@ CTestTestfile.cmake
 _deps
 build/
 .build/
+*build/
 
 # texstudio
 *.aux
@@ -61,3 +61,6 @@ build/
 # img
 *.bmp
 desktop/
+fractal.png
+img/demo
+img/backgrounds
