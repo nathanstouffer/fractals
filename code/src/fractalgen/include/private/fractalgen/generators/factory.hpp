@@ -15,16 +15,15 @@ namespace fractalgen::generators
         newton,
     };
 
+    // TODO (stouff) consider removing this struct and just using options
     struct config
     {
-
         types type;
-
-        std::array<uint8_t, 3> color = { 0, 0, 0 };
-        std::array<uint8_t, 3> diverging = { 0, 0, 0 };
-
         double rho;
+        std::array<uint8_t, 3> color;
+        std::array<uint8_t, 3> diverging;
 
+        config(types _type, double _rho) : type(_type), rho(_rho) {}
     };
 
     std::unique_ptr<generator> factory(config const& conf);

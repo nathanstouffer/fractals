@@ -20,22 +20,24 @@
 
 #include "fractalgen/generators/generators.hpp"
 #include "fractalgen/generators/factory.hpp"
+#include "fractalgen/options.hpp"
 
 namespace fractalgen
 {
 
-    int generate(generators::config const& config, generators::window_t const& window, std::string const& name)
+    int generate(options const& opts)
     {
-        std::unique_ptr<generators::generator> generator = generators::factory(config);
+        std::unique_ptr<generators::generator> generator = generators::factory(opts.config());
         if (generator)
         {
+            generators::window_t window = opts.window();
             std::vector<rgb_t> pixels = generator->generate(window);
 
             // save to png
             std::vector<unsigned char> bytes;
             bytes.reserve(3 * pixels.size());
             std::for_each(pixels.begin(), pixels.end(), [&bytes](rgb_t const& c) { bytes.push_back(c.r); bytes.push_back(c.g); bytes.push_back(c.b); });
-            std::string filename = name;
+            std::string filename = opts.name;
             std::string suffix = ".png";
             if (!filename.ends_with(suffix))
             {
@@ -48,21 +50,6 @@ namespace fractalgen
         return 0;
     }
 
-    struct options
-    {
-        generators::config config;
-        std::string name = "fractal.png";
-        std::array<double, 4> bounds = { -4, -1.5, 1.33, 1.5 };
-        int width = 750;
-        double rho = 0.0;
-
-        generators::window_t window() const
-        {
-            return { stfd::aabb2(stfd::vec2(bounds[0], bounds[1]), stfd::vec2(bounds[2], bounds[3])), width };
-        }
-
-    };
-
     void add_base_options(CLI::App& subcommand, options& opts)
     {
         subcommand.add_option("-n,--name", opts.name, "Name of the fractal (the output is written to name.png)")
@@ -72,33 +59,42 @@ namespace fractalgen
             ->capture_default_str();
 
         subcommand.add_option("-b,--bounds", opts.bounds, "Bounds of the image in the complex plane. Format: min_x min_y max_x max_y")
-            ->default_str("-4 -1.5 1.33 1.5");
+            ->capture_default_str();
 
         subcommand.add_option("-r,--rho", opts.rho, "Angle (in radians) by which to rotate the Riemann Sphere about the y-axis")
             ->capture_default_str();
-
-        subcommand.add_option("-d,--diverging", opts.config.diverging, "The color (0-255) assigned to diverging inputs. Format: R G B")
-            ->default_str("0 0 0");
     }
 
     void add_mandelbrot(CLI::App& app, options& opts)
     {
         CLI::App* mandelbrot = app.add_subcommand("mandelbrot", "Render the mandelbrot set");
-        mandelbrot->callback([&]() { opts.config.type = generators::types::mandelbrot; });
+        mandelbrot->callback([&]() { opts.type = generators::types::mandelbrot; });
         add_base_options(*mandelbrot, opts);
+
+        mandelbrot->add_option("-c,--color", opts.mandelbrot.color, "The color (0-255) assigned to non-diverging inputs. Format: R G B")
+            ->capture_default_str();
+
+        mandelbrot->add_option("-d,--diverging", opts.mandelbrot.diverging, "The color (0-255) assigned to diverging inputs. Format: R G B")
+            ->capture_default_str();
     }
 
     void add_powertower(CLI::App& app, options& opts)
     {
         CLI::App* powertower = app.add_subcommand("powertower", "Render a power tower fractal");
-        powertower->callback([&]() { opts.config.type = generators::types::powertower; });
+        powertower->callback([&]() { opts.type = generators::types::powertower; });
         add_base_options(*powertower, opts);
+
+        powertower->add_option("-c,--color", opts.powertower.color, "The color (0-255) assigned to non-diverging inputs. Format: R G B")
+            ->capture_default_str();
+
+        powertower->add_option("-d,--diverging", opts.powertower.diverging, "The color (0-255) assigned to diverging inputs. Format: R G B")
+            ->capture_default_str();
     }
 
     void add_newton(CLI::App& app, options& opts)
     {
         CLI::App* newton = app.add_subcommand("newton", "Render a fractal using newton's method to find roots");
-        newton->callback([&]() { opts.config.type = generators::types::newton; });
+        newton->callback([&]() { opts.type = generators::types::newton; });
         add_base_options(*newton, opts);
     }
 
@@ -114,7 +110,7 @@ namespace fractalgen
 
         CLI11_PARSE(app, argc, argv);
 
-        return generate(opts.config, opts.window(), opts.name);
+        return generate(opts);
     }
 
 }
