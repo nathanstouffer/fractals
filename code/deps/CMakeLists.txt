@@ -27,3 +27,6 @@ FetchContent_Declare(
     GIT_TAG fe5b51b948c7637d5cd8eeee92c0977df79524bd
 )
 FetchContent_MakeAvailable(stf)
+
+add_subdirectory(glfw)
+add_subdirectory(glm)
