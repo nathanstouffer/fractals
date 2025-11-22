@@ -10,6 +10,7 @@ namespace fractalgen::generators
 
     static constexpr int c_thread_count = 16;
 
+    // TODO (stouff) probably reduce this to 4
     static constexpr int c_supersample_sqrt = 8;
     static constexpr double c_inset = 1.0 / (c_supersample_sqrt + 1);
 
@@ -123,7 +124,7 @@ namespace fractalgen::generators
         int g = 0;
         int b = 0;
         double intial_x = window.bounds.min.x + i * window.delta_x + window.inset_x;
-        double intial_y = window.bounds.min.y + j * window.delta_y + window.inset_y;
+        double intial_y = window.bounds.max.y - j * window.delta_y + window.inset_y;
         for (size_t u = 0; u < c_supersample_sqrt; ++u)
         {
             for (size_t v = 0; v < c_supersample_sqrt; ++v)
