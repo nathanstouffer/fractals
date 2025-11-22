@@ -1,16 +1,16 @@
 #version 330 core
 
-in vec2 myFragPos;
-in vec3 myColor;
+in vec2 v_frag_pos;
+in vec3 v_color;
 out vec4 fragColor;
 
-float modulus(vec2 num) { return sqrt(num.x*num.x + num.y*num.y); }
-vec2 square(vec2 num) { return vec2(num.x*num.x - num.y*num.y, 2*num.x*num.y); }
+float modulus(vec2 num) { return sqrt(num.x * num.x + num.y * num.y); }
+vec2 square(vec2 num) { return vec2(num.x * num.x - num.y * num.y, 2 * num.x * num.y); }
 
 void main() {
     vec3 bckgrnd = vec3(0.0, 0.0, 0.0);
-    vec3 result  = myColor;
-    vec2 num     = myFragPos.xy;
+    vec3 result  = v_color;
+    vec2 num     = v_frag_pos.xy;
     // mandelbrot computations
     // quick check to decrease computation time
     if (modulus(num) < 0.2) { result = bckgrnd; }
@@ -27,9 +27,9 @@ void main() {
         if (modulus(z) <= 2) { result = bckgrnd; }                          // if orbit has not diverged to infinity, return the background color
         else {                                                              // otherwise, compute the scaled color
             float div = cap/i;
-            float r = myColor.x + (1/div)*(1-myColor.x);
-            float g = myColor.y + (1/div)*(1-myColor.y);
-            float b = myColor.z + (1/div)*(1-myColor.z);
+            float r = v_color.x + (1.0 / div) * (1 - v_color.x);
+            float g = v_color.y + (1.0 / div) * (1 - v_color.y);
+            float b = v_color.z + (1.0 / div) * (1 - v_color.z);
             result = vec3(r, g, b);
         }
     }
