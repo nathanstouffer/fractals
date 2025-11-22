@@ -36,4 +36,10 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(glfw)
 
-add_subdirectory(glm)
+# declare and populate glm library
+FetchContent_Declare(
+    glm
+    GIT_REPOSITORY https://github.com/g-truc/glm.git
+    GIT_TAG        a583c59e1616a628b18195869767ea4d6faca5f4  
+)
+FetchContent_MakeAvailable(glm)
