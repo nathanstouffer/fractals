@@ -7,7 +7,8 @@ out vec2 v_frag_pos;
 
 uniform mat4 view;
 
-void main() {
+void main()
+{
     gl_Position = view * vec4(a_pos, 0.0, 1.0);
     v_color = a_color;
     v_frag_pos = vec2(a_pos);
