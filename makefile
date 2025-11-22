@@ -57,6 +57,7 @@ powertower-backgrounds: build | img/backgrounds
 	$(FRACTALGEN) powertower --name img/backgrounds/powertower-black-and-white.png --width $(BCKGRND_WDTH) --bounds -4 -1.5 1.33 1.5 --phi 0 --color 0 0 0 --diverging 255 255 255
 	$(FRACTALGEN) powertower --name img/backgrounds/powertower-black-and-yellow.png --width $(BCKGRND_WDTH) --bounds -4 -1.5 1.33 1.5 --phi 0 --color 0 0 0 --diverging 255 255 0
 
+# TODO (stouff) investigate newton fractals for a bug -- the colors seem to be mismatched
 newton-backgrounds: build | img/backgrounds
 # 	$(FRACTALGEN) newton --name img/backgrounds/newton-blue.png --width $(BCKGRND_WDTH) --bounds -20 -11.25 20 11.25 --phi 0 --root -1 0 0 10 170 --root 0 1 0 10 70 --root 1 0 0 5 30 --root 0 -1 36 70 255
 # 	$(FRACTALGEN) newton --name img/backgrounds/newton-green.png --width $(BCKGRND_WDTH) --bounds -20 -11.25 20 11.25 --phi 0 --root -7 0 135 255 167 --root -4.25 0 29 130 56 --root 4.25 0 0 79 21 --root 7 0 0 0 0
