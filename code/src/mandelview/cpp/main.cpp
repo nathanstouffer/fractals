@@ -9,6 +9,8 @@
 #include <csci441/shader.h>
 #include <csci441/matrix4.h>
 
+#include <stf/stf.hpp>
+
 #define SCALE 0.025
 
 namespace mandelview
@@ -103,6 +105,10 @@ namespace mandelview
             -10.0f,  10.0f, 0.05, 0.05, 0.05
         };
 
+        int r = 255;
+        int g = 0;
+        int b = 0;
+
         // create and bind the vertex buffer object and copy the data to the buffer
         GLuint VBO[1];
         glGenBuffers(1, VBO);
@@ -162,6 +168,10 @@ namespace mandelview
             // set shader variables
             unsigned int viewLoc = glGetUniformLocation(shader.id(), "view");
             glUniformMatrix4fv(viewLoc, 1, GL_FALSE, view.values);
+
+            stff::vec3 color = stff::vec3(r, g, b) / 255.f;
+            unsigned int color_loc = glGetUniformLocation(shader.id(), "u_color");
+            glUniform3fv(color_loc, 1, color.values);
 
             // draw our triangles
             glBindVertexArray(VAO[0]);

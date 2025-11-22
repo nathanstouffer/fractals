@@ -1,8 +1,10 @@
 #version 330 core
 
-in vec2 v_frag_pos;
-in vec3 v_color;
+in vec2 v_pos;
+
 out vec4 frag_color;
+
+uniform vec3 u_color;
 
 float modulus(vec2 num) { return sqrt(num.x * num.x + num.y * num.y); }
 vec2 square(vec2 num) { return vec2(num.x * num.x - num.y * num.y, 2 * num.x * num.y); }
@@ -10,8 +12,8 @@ vec2 square(vec2 num) { return vec2(num.x * num.x - num.y * num.y, 2 * num.x * n
 void main()
 {
     vec3 bckgrnd = vec3(0.0, 0.0, 0.0);
-    vec3 result  = v_color;
-    vec2 num     = v_frag_pos.xy;
+    vec3 result  = u_color;
+    vec2 num     = v_pos.xy;
     // mandelbrot computations
     // quick check to decrease computation time
     if (modulus(num) < 0.2) { result = bckgrnd; }
@@ -31,9 +33,9 @@ void main()
         else                                                                // otherwise, compute the scaled color
         {
             float div = cap/i;
-            float r = v_color.x + (1.0 / div) * (1 - v_color.x);
-            float g = v_color.y + (1.0 / div) * (1 - v_color.y);
-            float b = v_color.z + (1.0 / div) * (1 - v_color.z);
+            float r = u_color.x + (1.0 / div) * (1 - u_color.x);
+            float g = u_color.y + (1.0 / div) * (1 - u_color.y);
+            float b = u_color.z + (1.0 / div) * (1 - u_color.z);
             result = vec3(r, g, b);
         }
     }
