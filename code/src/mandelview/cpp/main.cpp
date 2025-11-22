@@ -11,17 +11,17 @@
 
 #define SCALE 0.025
 
-void framebufferSizeCallback(GLFWwindow* window, int width, int height)
+void resize_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
 }
 
-bool isPressed(GLFWwindow *window, int key)
+bool is_pressed(GLFWwindow *window, int key)
 {
     return glfwGetKey(window, key) == GLFW_PRESS;
 }
 
-void processInput(GLFWwindow *window)
+void process_input(GLFWwindow *window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     {
@@ -29,28 +29,28 @@ void processInput(GLFWwindow *window)
     }
 }
 
-Matrix4 processTrans(GLFWwindow *window, float scale)
+Matrix4 process_trans(GLFWwindow *window, float scale)
 {
     Matrix4 update, tmp;
     const float TRANS = 0.01/scale;
 
     // TRANSLATE
-    if (isPressed(window, GLFW_KEY_W)) { tmp.translate(0, -TRANS, 0); update = update * tmp; }
-    if (isPressed(window, GLFW_KEY_A)) { tmp.translate(TRANS, 0, 0);  update = update * tmp; }
-    if (isPressed(window, GLFW_KEY_S)) { tmp.translate(0, TRANS, 0);  update = update * tmp; }
-    if (isPressed(window, GLFW_KEY_D)) { tmp.translate(-TRANS, 0, 0); update = update * tmp; }
+    if (is_pressed(window, GLFW_KEY_W)) { tmp.translate(0, -TRANS, 0); update = update * tmp; }
+    if (is_pressed(window, GLFW_KEY_A)) { tmp.translate(TRANS, 0, 0);  update = update * tmp; }
+    if (is_pressed(window, GLFW_KEY_S)) { tmp.translate(0, TRANS, 0);  update = update * tmp; }
+    if (is_pressed(window, GLFW_KEY_D)) { tmp.translate(-TRANS, 0, 0); update = update * tmp; }
 
     return update;
 }
 
-Matrix4 processZoom(GLFWwindow *window)
+Matrix4 process_zoom(GLFWwindow *window)
 {
     Matrix4 update, tmp;
     const float scale = SCALE;
 
     // SCALE
-    if (isPressed(window, '-')) { tmp.scale(1-scale, 1-scale, 1); update = update * tmp; }
-    if (isPressed(window, '=')) { tmp.scale(1+scale, 1+scale, 1); update = update * tmp; }
+    if (is_pressed(window, '-')) { tmp.scale(1-scale, 1-scale, 1); update = update * tmp; }
+    if (is_pressed(window, '=')) { tmp.scale(1+scale, 1+scale, 1); update = update * tmp; }
 
     return update;
 }
@@ -76,7 +76,7 @@ int main()
     glfwMakeContextCurrent(window);
 
     // tell glfw what to do on resize
-    glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+    glfwSetFramebufferSizeCallback(window, resize_callback);
 
     // init glad
     if (!gladLoadGL())
@@ -130,9 +130,9 @@ int main()
     while (!glfwWindowShouldClose(window))
     {
         // process input
-        processInput(window);
-        zoom = zoom * processZoom(window);
-        trans = trans * processTrans(window, zoom.values[0]);
+        process_input(window);
+        zoom = zoom * process_zoom(window);
+        trans = trans * process_trans(window, zoom.values[0]);
 
         /* Render here */
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -144,7 +144,7 @@ int main()
         view = zoom * trans * undistort;
 
         // test if enter has been clicked
-        if (isPressed(window, GLFW_KEY_ENTER) && prev_enter == false)
+        if (is_pressed(window, GLFW_KEY_ENTER) && prev_enter == false)
         {
             float x = -trans.values[12]*1.77777777777777;
             float y = -trans.values[13];
@@ -154,7 +154,7 @@ int main()
             std::cout << "zoom  -------- " << zoom.values[0] << std::endl;
             std::cout << "width -------- " << width << std::endl;
         }
-        prev_enter = isPressed(window, GLFW_KEY_ENTER);
+        prev_enter = is_pressed(window, GLFW_KEY_ENTER);
 
         // set shader variables
         unsigned int viewLoc = glGetUniformLocation(shader.id(), "view");
