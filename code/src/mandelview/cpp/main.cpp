@@ -149,10 +149,10 @@ namespace mandelview
             // test if enter has been clicked
             if (is_pressed(window, GLFW_KEY_ENTER) && prev_enter == false)
             {
-                //std::cout << "\n\n----- info -----" << std::endl;
-                //std::cout << "center ------- " << "x: " << x << " y: " << y << std::endl;
-                //std::cout << "zoom  -------- " << zoom.values[0] << std::endl;
-                //std::cout << "width -------- " << width << std::endl;
+                std::cout << "\n\n----------------------------- info -----------------------------" << std::endl;
+                std::cout << "--bounds " << bounds.min.x << " " << bounds.min.y << " " << bounds.max.x << " " << bounds.max.y << std::endl;
+                std::cout << "center: " << bounds.center().x << " " << bounds.center().y << "  ";
+                std::cout << "width: " << bounds.diagonal().x << "  height: " << bounds.diagonal().y << std::endl;
             }
             prev_enter = is_pressed(window, GLFW_KEY_ENTER);
 
