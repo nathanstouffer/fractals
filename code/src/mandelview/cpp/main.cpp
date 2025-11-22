@@ -35,10 +35,10 @@ Matrix4 processTrans(GLFWwindow *window, float scale)
     const float TRANS = 0.01/scale;
 
     // TRANSLATE
-    if (isPressed(window, 'w')) { tmp.translate(0, -TRANS, 0); update = update * tmp; }
-    if (isPressed(window, 'a')) { tmp.translate(TRANS, 0, 0);  update = update * tmp; }
-    if (isPressed(window, 's')) { tmp.translate(0, TRANS, 0);  update = update * tmp; }
-    if (isPressed(window, 'd')) { tmp.translate(-TRANS, 0, 0); update = update * tmp; }
+    if (isPressed(window, GLFW_KEY_W)) { tmp.translate(0, -TRANS, 0); update = update * tmp; }
+    if (isPressed(window, GLFW_KEY_A)) { tmp.translate(TRANS, 0, 0);  update = update * tmp; }
+    if (isPressed(window, GLFW_KEY_S)) { tmp.translate(0, TRANS, 0);  update = update * tmp; }
+    if (isPressed(window, GLFW_KEY_D)) { tmp.translate(-TRANS, 0, 0); update = update * tmp; }
 
     return update;
 }
