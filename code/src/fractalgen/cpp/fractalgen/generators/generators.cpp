@@ -130,7 +130,7 @@ namespace fractalgen::generators
             for (size_t v = 0; v < c_supersample_sqrt; ++v)
             {
                 double x = intial_x + u * window.inset_x;
-                double y = intial_y + v * window.inset_y;
+                double y = intial_y - v * window.inset_y;
                 std::complex<double> z(x, y);
                 if (m_phi != stfd::constants::zero)
                 {
