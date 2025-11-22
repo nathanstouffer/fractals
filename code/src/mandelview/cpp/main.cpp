@@ -93,7 +93,7 @@ namespace mandelview
 
         /* init the triangle drawing */
         // define the vertex coordinates of the triangle
-        float triangle[] =
+        float triangles[] =
         {
             // points
             10.0f,  10.0f,
@@ -113,7 +113,7 @@ namespace mandelview
         GLuint VBO[1];
         glGenBuffers(1, VBO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(triangles), triangles, GL_STATIC_DRAW);
 
         // create and bind the vertex array object and describe data layout
         GLuint VAO[1];
@@ -172,7 +172,7 @@ namespace mandelview
 
             // draw our triangles
             glBindVertexArray(VAO[0]);
-            glDrawArrays(GL_TRIANGLES, 0, sizeof(triangle));
+            glDrawArrays(GL_TRIANGLES, 0, sizeof(triangles));
 
             /* Swap front and back * buffers */
             glfwSwapBuffers(window);
