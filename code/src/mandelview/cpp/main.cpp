@@ -24,34 +24,32 @@ namespace mandelview
         glViewport(0, 0, width, height);
     }
 
-    bool is_pressed(GLFWwindow *window, int key)
+    bool is_pressed(GLFWwindow* window, int key)
     {
         return glfwGetKey(window, key) == GLFW_PRESS;
     }
 
-    void process_input(GLFWwindow *window)
+    void process_input(GLFWwindow* window)
     {
-        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        if (is_pressed(window, GLFW_KEY_ESCAPE))
         {
             glfwSetWindowShouldClose(window, true);
         }
     }
 
-    Matrix4 process_trans(GLFWwindow *window, float scale)
+    stfd::vec2 process_translation(GLFWwindow* window, stfd::vec2 const& magnitude)
     {
-        Matrix4 update, tmp;
-        const float TRANS = 0.01/scale;
+        stfd::vec2 delta = stfd::vec2();
 
-        // TRANSLATE
-        if (is_pressed(window, GLFW_KEY_W)) { tmp.translate(0, -TRANS, 0); update = update * tmp; }
-        if (is_pressed(window, GLFW_KEY_A)) { tmp.translate(TRANS, 0, 0);  update = update * tmp; }
-        if (is_pressed(window, GLFW_KEY_S)) { tmp.translate(0, TRANS, 0);  update = update * tmp; }
-        if (is_pressed(window, GLFW_KEY_D)) { tmp.translate(-TRANS, 0, 0); update = update * tmp; }
+        if (is_pressed(window, GLFW_KEY_W)) { delta += stfd::vec2(0, magnitude.y); }
+        if (is_pressed(window, GLFW_KEY_A)) { delta -= stfd::vec2(magnitude.x, 0); }
+        if (is_pressed(window, GLFW_KEY_S)) { delta -= stfd::vec2(0, magnitude.y); }
+        if (is_pressed(window, GLFW_KEY_D)) { delta += stfd::vec2(magnitude.x, 0); }
 
-        return update;
+        return delta;
     }
 
-    double process_zoom(GLFWwindow *window)
+    double process_zoom(GLFWwindow* window)
     {
         double update = 1.0;
         const float delta = c_zoom_delta;
@@ -159,6 +157,13 @@ namespace mandelview
                     stfd::vec2 center = bounds.center();
                     bounds.translate(-center).scale(zoom).translate(center);
                 }
+            }
+
+            // compute translation
+            {
+                stfd::vec2 diagonal = bounds.diagonal();
+                stfd::vec2 delta = process_translation(window, diagonal / s_dimensions.as<double>());
+                bounds.translate(delta);
             }
 
             /* Render here */
