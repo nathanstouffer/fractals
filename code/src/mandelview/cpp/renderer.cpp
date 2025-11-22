@@ -1,5 +1,6 @@
 #include "mandelview/renderer.hpp"
 
+#include <chrono>
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -14,7 +15,8 @@
 namespace mandelview
 {
 
-    static constexpr double c_zoom_delta = 0.025;
+    static constexpr double c_doubling_period_ms = 500.0;
+    static constexpr double c_translation_period_ms = 2'000.0;
 
     static stfi::vec2 s_dimensions = stfi::vec2(960, 540);
 
@@ -37,9 +39,10 @@ namespace mandelview
         }
     }
 
-    stfd::vec2 process_translation(GLFWwindow* window, stfd::vec2 const& magnitude)
+    stfd::vec2 process_translation(GLFWwindow* window, stfd::vec2 const& diagonal, double delta_ms)
     {
         stfd::vec2 delta = stfd::vec2();
+        stfd::vec2 magnitude = (delta_ms / c_translation_period_ms) * diagonal;
 
         if (is_pressed(window, GLFW_KEY_W)) { delta += stfd::vec2(0, magnitude.y); }
         if (is_pressed(window, GLFW_KEY_A)) { delta -= stfd::vec2(magnitude.x, 0); }
@@ -49,15 +52,20 @@ namespace mandelview
         return delta;
     }
 
-    double process_zoom(GLFWwindow* window)
+    double process_zoom(GLFWwindow* window, double delta_ms)
     {
         double update = 1.0;
-        const float delta = c_zoom_delta;
 
-        if (is_pressed(window, '-')) { update += delta; }
-        if (is_pressed(window, '=')) { update -= delta; }
+        if (is_pressed(window, '-')) { update *= std::pow(2.0,  delta_ms / c_doubling_period_ms); }
+        if (is_pressed(window, '=')) { update *= std::pow(2.0, -delta_ms / c_doubling_period_ms); }
 
         return update;
+    }
+
+    double now_ms()
+    {
+        auto now = std::chrono::high_resolution_clock::now();
+        return std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
     }
 
     renderer::renderer(std::array<uint8_t, 3> const& color) : m_color(stff::vec3(color[0], color[1], color[2]) / 255.f) {}
@@ -131,9 +139,14 @@ namespace mandelview
 
         stfi::vec2 dimensions = s_dimensions;
         bool prev_enter = false;
+        double time_ms = now_ms();
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window))
         {
+            double prev_time_ms = time_ms;
+            time_ms = now_ms();
+            double delta_ms = time_ms - prev_time_ms;
+
             // process input
             process_input(window);
 
@@ -149,7 +162,7 @@ namespace mandelview
 
             // compute zoom in/out
             {
-                double zoom = process_zoom(window);
+                double zoom = process_zoom(window, delta_ms);
                 if (zoom != stfd::constants::one)
                 {
                     stfd::vec2 center = bounds.center();
@@ -159,8 +172,7 @@ namespace mandelview
 
             // compute translation
             {
-                stfd::vec2 diagonal = bounds.diagonal();
-                stfd::vec2 delta = process_translation(window, diagonal / s_dimensions.as<double>());
+                stfd::vec2 delta = process_translation(window, bounds.diagonal(), delta_ms);
                 bounds.translate(delta);
             }
 
