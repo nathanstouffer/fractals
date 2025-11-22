@@ -55,10 +55,8 @@ Matrix4 processZoom(GLFWwindow *window)
     return update;
 }
 
-int main(int argc, char const** argv)
+int main()
 {
-
-    std::cout << argv[1] << std::endl;
     /* Initialize the library */
     GLFWwindow* window;
     if (!glfwInit())
