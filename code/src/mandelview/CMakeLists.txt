@@ -18,6 +18,7 @@ target_include_directories(mandelview
 )
 
 target_link_libraries(mandelview
+    CLI11::CLI11
     stf
     csci441
     glm
