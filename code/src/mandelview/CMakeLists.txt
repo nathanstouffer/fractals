@@ -15,4 +15,8 @@ target_include_directories(mandelview
     "${DEPS_DIR}/csci441/include"
 )
 
-target_link_libraries(mandelview glm glfw ${GLFW_LIBRARIES})
+target_link_libraries(mandelview
+    glm
+    glfw
+    ${GLFW_LIBRARIES}
+)
