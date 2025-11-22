@@ -43,3 +43,8 @@ FetchContent_Declare(
     GIT_TAG        a583c59e1616a628b18195869767ea4d6faca5f4  
 )
 FetchContent_MakeAvailable(glm)
+
+# csci441 doesn't define a target so we add our own
+add_library(csci441 INTERFACE)
+target_include_directories(csci441 INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/csci441/include")
+target_compile_definitions(csci441 INTERFACE M_PI=3.1415926535)
