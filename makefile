@@ -3,7 +3,7 @@ FRACTALGEN := $(BUILD_DIR)/code/src/fractalgen/fractalgen.exe
 
 .DEFAULT_GOAL := help
 
-.PHONY: help generate build demo readme background
+.PHONY: help generate build demo readme backgrounds mandelbrot-backgrounds powertower-backgrounds newton-backgrounds
 
 help:
 	@echo "Available targets:"
@@ -48,5 +48,18 @@ demo: build | img/demo
 readme: build | img/mandelbrot img/powertower img/newton
 	$(FRACTALGEN) mandelbrot --name fractal.png --width 1000 --bounds -4 -1.5 1.33 1.5 --phi 0
 
-backgrounds: build | img/backgrounds
-	$(FRACTALGEN) mandelbrot --name img/backgrounds/mandelbrot-black.png --width 1920 --bounds -4 -1.5 1.33 1.5 --phi 0
+BCKGRND_WDTH := 1000
+
+mandelbrot-backgrounds: build | img/backgrounds
+	$(FRACTALGEN) mandelbrot --name img/backgrounds/mandelbrot-black.png --width $(BCKGRND_WDTH) --bounds -4 -1.5 1.33 1.5 --phi 0 --color 0 0 0 --diverging 0 0 0
+
+powertower-backgrounds: build | img/backgrounds
+	$(FRACTALGEN) powertower --name img/backgrounds/powertower-black-and-white.png --width $(BCKGRND_WDTH) --bounds -4 -1.5 1.33 1.5 --phi 0 --color 0 0 0 --diverging 255 255 255
+	$(FRACTALGEN) powertower --name img/backgrounds/powertower-black-and-yellow.png --width $(BCKGRND_WDTH) --bounds -4 -1.5 1.33 1.5 --phi 0 --color 0 0 0 --diverging 255 255 0
+
+newton-backgrounds: build | img/backgrounds
+# 	$(FRACTALGEN) newton --name img/backgrounds/newton-blue.png --width $(BCKGRND_WDTH) --bounds -20 -11.25 20 11.25 --phi 0 --root -1 0 0 10 170 --root 0 1 0 10 70 --root 1 0 0 5 30 --root 0 -1 36 70 255
+# 	$(FRACTALGEN) newton --name img/backgrounds/newton-green.png --width $(BCKGRND_WDTH) --bounds -20 -11.25 20 11.25 --phi 0 --root -7 0 135 255 167 --root -4.25 0 29 130 56 --root 4.25 0 0 79 21 --root 7 0 0 0 0
+	$(FRACTALGEN) newton --name img/backgrounds/newton-pcp.png --width $(BCKGRND_WDTH) --bounds -20 -11.25 20 11.25 --phi 0 --root 5 -4.2 72 16 94 --root 5 4.2 255 167 129 --root 15 0 89 255 255
+
+backgrounds: mandelbrot-backgrounds powertower-backgrounds newton-backgrounds
