@@ -1,15 +1,13 @@
 #version 330 core
 layout (location = 0) in vec2 a_pos;
-layout (location = 1) in vec3 a_color;
+layout (location = 1) in vec2 a_uv;
 
-out vec3 v_color;
-out vec2 v_frag_pos;
+out vec2 v_pos;
 
-uniform mat4 view;
+uniform vec4 u_bounds;
 
 void main()
 {
-    gl_Position = view * vec4(a_pos, 0.0, 1.0);
-    v_color = a_color;
-    v_frag_pos = vec2(a_pos);
+    gl_Position = vec4(a_pos, 0.0, 1.0);
+    v_pos = mix(u_bounds.xy, u_bounds.zw, a_uv);
 }
