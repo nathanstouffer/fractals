@@ -95,14 +95,14 @@ namespace mandelview
         // define the vertex coordinates of the triangle
         float triangle[] =
         {
-            // points    // color
-            10.0f,  10.0f, 0.05, 0.05, 0.05,
-            10.0f, -10.0f, 0.05, 0.05, 0.05,
-            -10.0f,  10.0f, 0.05, 0.05, 0.05,
+            // points
+            10.0f,  10.0f,
+            10.0f, -10.0f,
+            -10.0f,  10.0f,
 
-            10.0f, -10.0f, 0.05, 0.05, 0.05,
-            -10.0f, -10.0f, 0.05, 0.05, 0.05,
-            -10.0f,  10.0f, 0.05, 0.05, 0.05
+            10.0f, -10.0f,
+            -10.0f, -10.0f,
+            -10.0f,  10.0f,
         };
 
         int r = 255;
@@ -120,11 +120,8 @@ namespace mandelview
         glGenVertexArrays(1, VAO);
         glBindVertexArray(VAO[0]);
 
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(0*sizeof(float)));
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2*sizeof(float), (void*)(0*sizeof(float)));
         glEnableVertexAttribArray(0);
-
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_TRUE, 5*sizeof(float), (void*)(2*sizeof(float)));
-        glEnableVertexAttribArray(1);
 
         // create the shaders
         Shader shader("assets/shaders/mandelbrot_vert.glsl", "assets/shaders/mandelbrot_frag.glsl");
