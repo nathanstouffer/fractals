@@ -35,10 +35,10 @@ Matrix4 processTrans(GLFWwindow *window, float scale)
     const float TRANS = 0.01/scale;
 
     // TRANSLATE
-    if (isPressed(window, GLFW_KEY_UP))    { tmp.translate(0, -TRANS, 0); update = update * tmp; }
-    if (isPressed(window, GLFW_KEY_DOWN))  { tmp.translate(0, TRANS, 0);  update = update * tmp; }
-    if (isPressed(window, GLFW_KEY_LEFT))  { tmp.translate(TRANS, 0, 0);  update = update * tmp; }
-    if (isPressed(window, GLFW_KEY_RIGHT)) { tmp.translate(-TRANS, 0, 0); update = update * tmp; }
+    if (isPressed(window, 'w')) { tmp.translate(0, -TRANS, 0); update = update * tmp; }
+    if (isPressed(window, 'a')) { tmp.translate(TRANS, 0, 0);  update = update * tmp; }
+    if (isPressed(window, 's')) { tmp.translate(0, TRANS, 0);  update = update * tmp; }
+    if (isPressed(window, 'd')) { tmp.translate(-TRANS, 0, 0); update = update * tmp; }
 
     return update;
 }
@@ -144,7 +144,8 @@ int main()
         view = zoom * trans * undistort;
 
         // test if enter has been clicked
-        if (isPressed(window, GLFW_KEY_ENTER) && prev_enter == false) {
+        if (isPressed(window, GLFW_KEY_ENTER) && prev_enter == false)
+        {
             float x = -trans.values[12]*1.77777777777777;
             float y = -trans.values[13];
             float width = (3.5)/zoom.values[0];
@@ -166,7 +167,7 @@ int main()
         /* Swap front and back * buffers */
         glfwSwapBuffers(window);
 
-        /* Poll for and * process * events */
+        /* Poll for and process events */
         glfwPollEvents();
     }
 
