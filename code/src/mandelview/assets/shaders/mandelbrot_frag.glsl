@@ -1,6 +1,7 @@
 #version 330 core
 
 in vec2 v_pos;
+in vec2 v_uv;
 
 out vec4 frag_color;
 
@@ -43,4 +44,5 @@ void main()
     }
 
     frag_color = vec4(result, 1.0f);
+    frag_color = vec4(v_uv, 0.f, 1.0f);
 }

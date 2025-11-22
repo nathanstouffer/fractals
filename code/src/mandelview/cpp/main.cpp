@@ -95,14 +95,14 @@ namespace mandelview
         // define the vertex coordinates of the triangle
         float triangles[] =
         {
-            // points
-            10.0f,  10.0f,
-            10.0f, -10.0f,
-            -10.0f,  10.0f,
+            // points       // uv
+            1.0f,  1.0f,    1.f, 0.f,
+            1.0f, -1.0f,    1.f, 1.f,
+            -1.0f,  1.0f,   0.f, 0.f,
 
-            10.0f, -10.0f,
-            -10.0f, -10.0f,
-            -10.0f,  10.0f,
+            1.0f, -1.0f,    1.f, 1.f,
+            -1.0f, -1.0f,   0.f, 1.f,
+            -1.0f,  1.0f,   0.f, 0.f,
         };
 
         int r = 255;
@@ -120,15 +120,14 @@ namespace mandelview
         glGenVertexArrays(1, VAO);
         glBindVertexArray(VAO[0]);
 
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2*sizeof(float), (void*)(0*sizeof(float)));
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4*sizeof(float), (void*)(0*sizeof(float)));
         glEnableVertexAttribArray(0);
+
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, 4*sizeof(float), (void*)(2*sizeof(float)));
+        glEnableVertexAttribArray(1);
 
         // create the shaders
         Shader shader("assets/shaders/mandelbrot_vert.glsl", "assets/shaders/mandelbrot_frag.glsl");
-
-        Matrix4 view, undistort, trans, zoom;
-        undistort.scale(1/1.7777777777777777, 1, 1);
-        trans.translate(0.5, 0, 0);
 
         bool prev_enter = false;
         float scale = 1;
@@ -137,8 +136,6 @@ namespace mandelview
         {
             // process input
             process_input(window);
-            zoom = zoom * process_zoom(window);
-            trans = trans * process_trans(window, zoom.values[0]);
 
             /* Render here */
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -147,24 +144,15 @@ namespace mandelview
             // use the shader
             shader.use();
 
-            view = zoom * trans * undistort;
-
             // test if enter has been clicked
             if (is_pressed(window, GLFW_KEY_ENTER) && prev_enter == false)
             {
-                float x = -trans.values[12]*1.77777777777777;
-                float y = -trans.values[13];
-                float width = (3.5)/zoom.values[0];
-                std::cout << "\n\n----- info -----" << std::endl;
-                std::cout << "center ------- " << "x: " << x << " y: " << y << std::endl;
-                std::cout << "zoom  -------- " << zoom.values[0] << std::endl;
-                std::cout << "width -------- " << width << std::endl;
+                //std::cout << "\n\n----- info -----" << std::endl;
+                //std::cout << "center ------- " << "x: " << x << " y: " << y << std::endl;
+                //std::cout << "zoom  -------- " << zoom.values[0] << std::endl;
+                //std::cout << "width -------- " << width << std::endl;
             }
             prev_enter = is_pressed(window, GLFW_KEY_ENTER);
-
-            // set shader variables
-            unsigned int viewLoc = glGetUniformLocation(shader.id(), "view");
-            glUniformMatrix4fv(viewLoc, 1, GL_FALSE, view.values);
 
             stff::vec3 color = stff::vec3(r, g, b) / 255.f;
             unsigned int color_loc = glGetUniformLocation(shader.id(), "u_color");
