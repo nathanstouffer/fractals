@@ -70,7 +70,7 @@ namespace mandelview
         }
 
         /* Create a windowed mode window and its OpenGL context */
-        window = glfwCreateWindow(1920, 1080, "fractal", NULL, NULL);
+        window = glfwCreateWindow(1920, 1080, "mandelview", NULL, NULL);
         if (!window)
         {
             glfwTerminate();
@@ -126,6 +126,8 @@ namespace mandelview
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, 4*sizeof(float), (void*)(2*sizeof(float)));
         glEnableVertexAttribArray(1);
 
+        stfd::aabb2 bounds = { stfd::vec2(-4, -1.5), stfd::vec2(1.33, 1.5) };
+
         // create the shaders
         Shader shader("assets/shaders/mandelbrot_vert.glsl", "assets/shaders/mandelbrot_frag.glsl");
 
@@ -153,6 +155,10 @@ namespace mandelview
                 //std::cout << "width -------- " << width << std::endl;
             }
             prev_enter = is_pressed(window, GLFW_KEY_ENTER);
+
+            stff::vec4 bounds_vec = stfd::vec4(bounds.min, bounds.max).as<float>();
+            unsigned int bounds_loc = glGetUniformLocation(shader.id(), "u_bounds");
+            glUniform4fv(bounds_loc, 1, bounds_vec.values);
 
             stff::vec3 color = stff::vec3(r, g, b) / 255.f;
             unsigned int color_loc = glGetUniformLocation(shader.id(), "u_color");
