@@ -7,7 +7,7 @@
 #include <GLFW/glfw3.h>
 
 #include <csci441/shader.h>
-#include <csci441/matrix4.h>
+#include <csci441/matrix4.h>    // TODO (stouff) remove this include
 
 #include <stf/stf.hpp>
 
@@ -15,6 +15,8 @@
 
 namespace mandelview
 {
+
+    static constexpr double c_zoom_delta = 0.025;
 
     void resize_callback(GLFWwindow* window, int width, int height)
     {
@@ -48,14 +50,14 @@ namespace mandelview
         return update;
     }
 
-    Matrix4 process_zoom(GLFWwindow *window)
+    double process_zoom(GLFWwindow *window)
     {
-        Matrix4 update, tmp;
-        const float scale = SCALE;
+        double update = 1.0;
+        const float delta = c_zoom_delta;
 
         // SCALE
-        if (is_pressed(window, '-')) { tmp.scale(1-scale, 1-scale, 1); update = update * tmp; }
-        if (is_pressed(window, '=')) { tmp.scale(1+scale, 1+scale, 1); update = update * tmp; }
+        if (is_pressed(window, '-')) { update += delta; }
+        if (is_pressed(window, '=')) { update -= delta; }
 
         return update;
     }
@@ -70,7 +72,7 @@ namespace mandelview
         }
 
         /* Create a windowed mode window and its OpenGL context */
-        window = glfwCreateWindow(1920, 1080, "mandelview", NULL, NULL);
+        window = glfwCreateWindow(960, 540, "mandelview", NULL, NULL);
         if (!window)
         {
             glfwTerminate();
@@ -138,6 +140,13 @@ namespace mandelview
         {
             // process input
             process_input(window);
+            
+            // compute zoom in/out
+            {
+                double zoom = process_zoom(window);
+                stfd::vec2 center = bounds.center();
+                bounds.translate(-center).scale(zoom).translate(center);
+            }
 
             /* Render here */
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
