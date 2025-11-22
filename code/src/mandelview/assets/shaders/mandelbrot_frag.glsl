@@ -21,7 +21,9 @@ void main()
     {
         result = bckgrnd;
     }
-    else {
+    else
+    {
+        // TODO (stouff) add antialiasing
         vec2 z = vec2(0.0, 0.0);                                            // start the 0-orbit
         int cap = 1000;                                                     // set an iteration cap
         int i;
