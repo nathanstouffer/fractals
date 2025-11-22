@@ -7,7 +7,6 @@
 #include <GLFW/glfw3.h>
 
 #include <csci441/shader.h>
-#include <csci441/matrix4.h>    // TODO (stouff) remove this include
 
 #include <stf/stf.hpp>
 
