@@ -11,8 +11,7 @@ namespace fractalgen::generators
 
     static constexpr int c_thread_count = 16;
 
-    // TODO (stouff) probably reduce this to 4
-    static constexpr int c_supersample_sqrt = 8;
+    static constexpr int c_supersample_sqrt = 4;
     static constexpr double c_inset = 1.0 / (c_supersample_sqrt + 1);
 
     static int now_seconds()
