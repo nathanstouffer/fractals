@@ -11,15 +11,16 @@
 
 #include <stf/stf.hpp>
 
-#define SCALE 0.025
-
 namespace mandelview
 {
 
     static constexpr double c_zoom_delta = 0.025;
 
+    static stfi::vec2 s_dimensions = stfi::vec2(960, 540);
+
     void resize_callback(GLFWwindow* window, int width, int height)
     {
+        s_dimensions = stfi::vec2(width, height);
         glViewport(0, 0, width, height);
     }
 
@@ -55,7 +56,6 @@ namespace mandelview
         double update = 1.0;
         const float delta = c_zoom_delta;
 
-        // SCALE
         if (is_pressed(window, '-')) { update += delta; }
         if (is_pressed(window, '=')) { update -= delta; }
 
@@ -72,7 +72,7 @@ namespace mandelview
         }
 
         /* Create a windowed mode window and its OpenGL context */
-        window = glfwCreateWindow(960, 540, "mandelview", NULL, NULL);
+        window = glfwCreateWindow(s_dimensions.x, s_dimensions.y, "mandelview", NULL, NULL);
         if (!window)
         {
             glfwTerminate();
@@ -133,19 +133,32 @@ namespace mandelview
         // create the shaders
         Shader shader("assets/shaders/mandelbrot_vert.glsl", "assets/shaders/mandelbrot_frag.glsl");
 
+        stfi::vec2 dimensions = s_dimensions;
         bool prev_enter = false;
-        float scale = 1;
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window))
         {
             // process input
             process_input(window);
-            
+
+            // process resize change
+            if (dimensions != s_dimensions)
+            {
+                stfd::vec2 center = bounds.center();
+                stfd::vec2 scale = s_dimensions.as<double>() / dimensions.as<double>();
+                stfd::vec2 half_diag = 0.5 * scale * bounds.diagonal();
+                bounds = stfd::aabb2(center - half_diag, center + half_diag);
+                dimensions = s_dimensions;
+            }
+
             // compute zoom in/out
             {
                 double zoom = process_zoom(window);
-                stfd::vec2 center = bounds.center();
-                bounds.translate(-center).scale(zoom).translate(center);
+                if (zoom != stfd::constants::one)
+                {
+                    stfd::vec2 center = bounds.center();
+                    bounds.translate(-center).scale(zoom).translate(center);
+                }
             }
 
             /* Render here */
