@@ -12,7 +12,7 @@ FetchContent_MakeAvailable(CLI11)
 FetchContent_Declare(
     stb
     GIT_REPOSITORY https://github.com/nothings/stb.git
-    GIT_TAG        f1c79c02822848a9bed4315b12c8c8f3761e1296  
+    GIT_TAG        f1c79c02822848a9bed4315b12c8c8f3761e1296
 )
 FetchContent_MakeAvailable(stb)
 
@@ -32,7 +32,7 @@ FetchContent_MakeAvailable(stf)
 FetchContent_Declare(
     glfw
     GIT_REPOSITORY https://github.com/glfw/glfw.git
-    GIT_TAG        162896e5b9a40dc382c5c438cd12c90a5ff86ddd  
+    GIT_TAG        162896e5b9a40dc382c5c438cd12c90a5ff86ddd
 )
 FetchContent_MakeAvailable(glfw)
 
