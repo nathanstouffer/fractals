@@ -18,5 +18,4 @@ target_include_directories(mandelview
 target_link_libraries(mandelview
     glm
     glfw
-    ${GLFW_LIBRARIES}
 )

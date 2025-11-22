@@ -28,5 +28,12 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(stf)
 
-add_subdirectory(glfw)
+# declare and populate glfw library
+FetchContent_Declare(
+    glfw
+    GIT_REPOSITORY https://github.com/glfw/glfw.git
+    GIT_TAG        162896e5b9a40dc382c5c438cd12c90a5ff86ddd  
+)
+FetchContent_MakeAvailable(glfw)
+
 add_subdirectory(glm)
