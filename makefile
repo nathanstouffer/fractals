@@ -47,7 +47,7 @@ demo: build | img/demo
 readme: build | img/mandelbrot img/powertower img/newton
 	$(FRACTALGEN) mandelbrot --name fractal.png --width 1000 --bounds -4 -1.5 1.33 1.5 --phi 0
 
-BCKGRND_WDTH := 1000
+BCKGRND_WDTH := 500
 
 mandelbrot-backgrounds: build | img/backgrounds
 	$(FRACTALGEN) mandelbrot --name img/backgrounds/mandelbrot-black.png --width $(BCKGRND_WDTH) --bounds -4 -1.5 1.33 1.5 --phi 0 --color 0 0 0 --diverging 0 0 0
@@ -59,8 +59,8 @@ mandelbrot-backgrounds: build | img/backgrounds
 	$(FRACTALGEN) mandelbrot --name img/backgrounds/mandelbrot-teal-spiky.png --width $(BCKGRND_WDTH) --bounds -0.906264 -0.268592 -0.905953 -0.268417 --phi 0 --color 0 0 0 --diverging 0 128 128
 
 powertower-backgrounds: build | img/backgrounds
-	$(FRACTALGEN) powertower --name img/backgrounds/powertower-black-and-white.png --width $(BCKGRND_WDTH) --bounds -4 -1.5 1.33 1.5 --phi 0 --color 0 0 0 --diverging 255 255 255
-	$(FRACTALGEN) powertower --name img/backgrounds/powertower-black-and-yellow.png --width $(BCKGRND_WDTH) --bounds -4 -1.5 1.33 1.5 --phi 0 --color 0 0 0 --diverging 255 255 0
+	$(FRACTALGEN) powertower --name img/backgrounds/powertower-black-and-yellow.png --width $(BCKGRND_WDTH) --bounds -5.2 -1.75 1 1.75 --phi 0 --color 0 0 0 --diverging 255 255 0
+	$(FRACTALGEN) powertower --name img/backgrounds/powertower-white-and-black.png --width $(BCKGRND_WDTH) --bounds -8.3 -3.25 3.25 3.25 --phi 0 --color 255 255 255 --diverging 0 0 0
 
 newton-backgrounds: build | img/backgrounds
 # 	$(FRACTALGEN) newton --name img/backgrounds/newton-blue.png --width $(BCKGRND_WDTH) --bounds -20 -11.25 20 11.25 --phi 0 --root -1 0 0 5 30 --root 0 1 36 70 255 --root 1 0 0 10 170 --root 0 -1 0 10 70
