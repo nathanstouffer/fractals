@@ -100,7 +100,6 @@ namespace fractalgen::generators
 
     /**
      * class that colors a complex number c according to newton's method for finding zeros of a function
-     * @todo turn this class to just take in the zeros
      */
     class newton : public generator
     {
