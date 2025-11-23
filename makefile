@@ -11,7 +11,6 @@ help:
 	@echo "  build       - Build the project with CMake"
 	@echo "  demo        - Run basic fractalgen"
 	@echo "  readme      - Render images for README"
-	@echo "  clean       - Remove build directory"
 	@echo "  backgrounds - Generate desktop backgrounds"
 	@echo ""
 	@echo "Usage: make <target>"
@@ -45,9 +44,6 @@ demo: build | img/demo
 	$(FRACTALGEN) powertower --name img/demo/powertower.png
 	$(FRACTALGEN) newton --name img/demo/newton.png --root -3 1 255 0 0 --root -3 -1 0 255 0 --root 1 0 0 0 255
 
-# spiral bounds
-# --bounds -1.25021 0.0407585 -1.24943 0.0411973
-
 readme: build | img/mandelbrot img/powertower img/newton
 	$(FRACTALGEN) mandelbrot --name fractal.png --width 1000 --bounds -4 -1.5 1.33 1.5 --phi 0
 
@@ -55,6 +51,12 @@ BCKGRND_WDTH := 1000
 
 mandelbrot-backgrounds: build | img/backgrounds
 	$(FRACTALGEN) mandelbrot --name img/backgrounds/mandelbrot-black.png --width $(BCKGRND_WDTH) --bounds -4 -1.5 1.33 1.5 --phi 0 --color 0 0 0 --diverging 0 0 0
+	$(FRACTALGEN) mandelbrot --name img/backgrounds/mandelbrot-blue.png --width $(BCKGRND_WDTH) --bounds -4 -1.5 1.33 1.5 --phi 0 --color 0 0 0 --diverging 0 0 153
+	$(FRACTALGEN) mandelbrot --name img/backgrounds/mandelbrot-purple.png --width $(BCKGRND_WDTH) --bounds -4 -1.5 1.33 1.5 --phi 0 --color 0 0 0 --diverging 89 0 89
+	$(FRACTALGEN) mandelbrot --name img/backgrounds/mandelbrot-green-teardrop.png --width $(BCKGRND_WDTH) --bounds -6.66 -3 4 3 --phi 3.1415926535 --color 0 0 0 --diverging 0 102 25
+	$(FRACTALGEN) mandelbrot --name img/backgrounds/mandelbrot-black-spiral.png --width $(BCKGRND_WDTH) --bounds -0.798981 -0.166236 -0.798059 -0.165716 --phi 0 --color 0 0 0 --diverging 0 0 0
+	$(FRACTALGEN) mandelbrot --name img/backgrounds/mandelbrot-green-diagonal.png --width $(BCKGRND_WDTH) --bounds -0.833432 0.205285 -0.831393 0.206432 --phi 0 --color 0 0 0 --diverging 0 50 0
+	$(FRACTALGEN) mandelbrot --name img/backgrounds/mandelbrot-teal-spiky.png --width $(BCKGRND_WDTH) --bounds -0.906264 -0.268592 -0.905953 -0.268417 --phi 0 --color 0 0 0 --diverging 0 128 128
 
 powertower-backgrounds: build | img/backgrounds
 	$(FRACTALGEN) powertower --name img/backgrounds/powertower-black-and-white.png --width $(BCKGRND_WDTH) --bounds -4 -1.5 1.33 1.5 --phi 0 --color 0 0 0 --diverging 255 255 255
