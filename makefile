@@ -50,9 +50,11 @@ powertower: build | img/generated
 	$(FRACTALGEN) powertower --name img/generated/powertower-white-and-black.png --width $(WIDTH) --bounds -8.3 -3.25 3.25 3.25 --phi 0 --color 255 255 255 --diverging 0 0 0
 
 newton: build | img/generated
-	$(FRACTALGEN) newton --name img/generated/newton-blue.png --width $(WIDTH) --bounds -20 -11.25 20 11.25 --phi 0 --root -1 0 0 5 30 --root 0 1 36 70 255 --root 1 0 0 10 170 --root 0 -1 0 10 70
-	$(FRACTALGEN) newton --name img/generated/newton-green.png --width $(WIDTH) --bounds -20 -11.25 20 11.25 --phi 0 --root -7 0 135 255 167 --root -4.25 0 29 130 56 --root 4.25 0 0 79 21 --root 7 0 0 0 0
-	$(FRACTALGEN) newton --name img/generated/newton-rgb.png --width $(WIDTH) --bounds -20 -11.25 20 11.25 --phi 0 --root 5 -5.7735 0 255 0 --root 5 5.7735 0 0 255 --root 15 0 255 0 0
-	$(FRACTALGEN) newton --name img/generated/newton-pcp.png --width $(WIDTH) --bounds -20 -11.25 20 11.25 --phi 0 --root 5 -4.25 72 16 94 --root 5 4.25 255 167 129 --root 15 0 89 255 255
+# 	$(FRACTALGEN) newton --name img/generated/newton-blue.png --width $(WIDTH) --bounds -20 -11.25 20 11.25 --phi 0 --root -1 0 0 5 30 --root 0 1 36 70 255 --root 1 0 0 10 170 --root 0 -1 0 10 70
+# 	$(FRACTALGEN) newton --name img/generated/newton-green.png --width $(WIDTH) --bounds -20 -11.25 20 11.25 --phi 0 --root -7 0 135 255 167 --root -4.25 0 29 130 56 --root 4.25 0 0 79 21 --root 7 0 0 0 0
+# 	$(FRACTALGEN) newton --name img/generated/newton-rgb.png --width $(WIDTH) --bounds -20 -11.25 20 11.25 --phi 0 --root 5 -5.7735 0 255 0 --root 5 5.7735 0 0 255 --root 15 0 255 0 0
+# 	$(FRACTALGEN) newton --name img/generated/newton-pcp.png --width $(WIDTH) --bounds -20 -11.25 20 11.25 --phi 0 --root 5 -4.25 72 16 94 --root 5 4.25 255 167 129 --root 15 0 89 255 255
+# 	$(FRACTALGEN) newton --name img/generated/newton-purple.png --width $(WIDTH) --bounds -20 -11.25 20 11.25 --phi 0 --root 0 0 54 15 90 --root -15 0 255 215 0 --root 0 5 224 176 255 --root 15 0 255 215 0 --root 0 -5 224 176 255
+	$(FRACTALGEN) newton --name img/generated/newton-brown-and-green.png --width $(WIDTH) --bounds -20 -11.25 20 11.25 --phi 0 --root -15 0 36 16 2 --root -5 -7 0 80 0 --root -5 7 90 165 90
 
 fractals: mandelbrot powertower newton

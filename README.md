@@ -35,10 +35,12 @@ Here are some cool fractals that I made using various methods.
 
 **Newton**
 
-![newton-rgb](./img/readme/newton-rgb.png)
-![newton-pcp](./img/readme/newton-pcp.png)
 ![newton-green](./img/readme/newton-green.png)
 ![newton-blue](./img/readme/newton-blue.png)
+![newton-pcp](./img/readme/newton-pcp.png)
+![newton-rgb](./img/readme/newton-rgb.png)
+![newton-purple](./img/readme/newton-purple.png)
+![newton-brown-and-green](./img/readme/newton-brown-and-green.png)
 
 **Koch**
 
