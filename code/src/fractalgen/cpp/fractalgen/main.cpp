@@ -59,7 +59,7 @@ namespace fractalgen
             ->capture_default_str();
 
         subcommand.add_option("-b,--bounds", opts.bounds, "Bounds of the image in the complex plane. Format: min_x min_y max_x max_y")
-            ->capture_default_str();
+            ->default_str("-4 -1.5 1.33 1.5");
 
         subcommand.add_option("-p,--phi", opts.phi, "Angle (in radians) by which to rotate the Riemann Sphere about the y-axis")
             ->capture_default_str();
@@ -73,11 +73,11 @@ namespace fractalgen
 
         mandelbrot->add_option("-c,--color", opts.mandelbrot.color, "The color (0-255) assigned to non-diverging inputs. Format: R G B")
             ->type_name("R G B")
-            ->capture_default_str();
+            ->default_str("0 0 0");
 
         mandelbrot->add_option("-d,--diverging", opts.mandelbrot.diverging, "The color (0-255) assigned to diverging inputs. Format: R G B")
             ->type_name("R G B")
-            ->capture_default_str();
+            ->default_str("0 100 0");
     }
 
     void add_powertower(CLI::App& app, options& opts)
@@ -88,11 +88,11 @@ namespace fractalgen
 
         powertower->add_option("-c,--color", opts.powertower.color, "The color (0-255) assigned to non-diverging inputs. Format: R G B")
             ->type_name("R G B")
-            ->capture_default_str();
+            ->default_str("0 0 0");
 
         powertower->add_option("-d,--diverging", opts.powertower.diverging, "The color (0-255) assigned to diverging inputs. Format: R G B")
             ->type_name("R G B")
-            ->capture_default_str();
+            ->default_str("255 255 0");
     }
 
     void add_newton(CLI::App& app, options& opts)
@@ -103,7 +103,7 @@ namespace fractalgen
 
         newton->add_option("-d,--diverging", opts.newton.diverging, "The color (0-255) assigned to diverging inputs. Format: R G B")
             ->type_name("R G B")
-            ->capture_default_str();
+            ->default_str("0 0 0");
 
         newton->add_option("-r,--root", opts.newton.roots, "Add a polynomial root and corresponding color")
             ->type_name("REAL IMAG R G B");
