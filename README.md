@@ -1,14 +1,20 @@
 # fractals
 
 This repo contains some code that I made exploring fractals.
-Note that the *bitmap_image.hpp* file is an open source file that I did not write and the remaining contents of *src/deps/* are from a course that I took on graphics taught by Dr. David Millman at Montana State University.
 
 Here are some cool fractals that I made using various methods.
 
- * *src/points* contains fractals made using points
- * *src/lines* uses the turtles library combined with recursion to make some fractals
- * *src/v1* creates fractals by coloring the complex plane and outputs the image to a bitmap
- * *src/v2* same as *src/v1* except we adapt the method to glsl shaders for real-time user interaction
+ * `fractalgen` generates fractals using various methods of coloring the complex plane
+ * `mandelview` renders the mandelbrot set on the GPU with realtime controls for exploration
+ * `code/python/points/` contains python scripts that generate fractals using points
+ * `code/python/lines/` uses the turtles library combined with recursion to make some fractals
+
+## Attribution
+
+* Open source dependencies: CMake, CLI11, stb, GLFW, glad, glm, stf
+* `code/deps/csci441` contains code from a course that I took on graphics taught by Dr. David Millman at Montana State University
+
+## Images
 
 **Tetration**
 
