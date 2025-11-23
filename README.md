@@ -18,44 +18,37 @@ Here are some cool fractals that I made using various methods.
 
 **Tetration**
 
-![powertower-yellow](./img/powertower/powertower-yellow-2000.bmp)
-![powertower-bw](./img/powertower/powertower-bw-2000.bmp)
-
+![powertower-black-and-yellow](./img/readme/powertower-black-and-yellow.png)
+![powertower-white-and-black](./img/readme/powertower-white-and-black.png)
 
 **Mandelbrot**
 
-![mandelbrot-darkblue](./img/mandelbrot/mandelbrot-darkblue-2000.bmp)
-![mandelbrot-purple](./img/mandelbrot/mandelbrot-purple-2000.bmp)
-![mandelbrot-bw](./img/mandelbrot/mandelbrot-bw-2000.bmp)
+![mandelbrot-blue](./img/readme/mandelbrot-blue.png)
+![mandelbrot-purple](./img/readme/mandelbrot-purple.png)
+![mandelbrot-black](./img/readme/mandelbrot-black.png)
 
-![mandelbrot-bw-spiralzoom](./img/mandelbrot/mandelbrot-bw-spiralzoom-4000.bmp)
-![mandelbrot-green-diagonalright](./img/mandelbrot/mandelbrot-green-diagonalrightzoom-4000.bmp)
-![mandelbrot-teal-spikyzoom](./img/mandelbrot/mandelbrot-teal-spikyzoom-2000.bmp)
+![mandelbrot-black-spiral](./img/readme/mandelbrot-black-spiral.png)
+![mandelbrot-green-diagonal](./img/readme/mandelbrot-green-diagonal.png)
+![mandelbrot-teal-spiky](./img/readme/mandelbrot-teal-spiky.png)
 
-![mandelbrot-hsv-spiralzoom](./img/mandelbrot/mandelbrot-hsv-spiralzoom-2000.bmp)
-![mandelbrot-hsv-spikyzoom](./img/mandelbrot/mandelbrot-hsv-spikyzoom-4000.bmp)
-![mandelbrot-hsv-curlzoom](./img/mandelbrot/mandelbrot-hsv-curlzoom-4000.bmp)
-
-**Teardrop (rotating Mandelbrot on the Riemann sphere)**
-
-![teardrop-rgb-darkgreen](./img/teardrop/teardrop-darkgreen-4000.bmp)
+![mandelbrot-green-teardrop](./img/readme/mandelbrot-green-teardrop.png)
 
 **Newton**
 
-![newton-rgb](./img/newton/newton-z-cubed-minus-1-rgb-2000.bmp)
-![newton-pcp](./img/newton/newton-1-pcp-2000.bmp)
-![newton-green](./img/newton/newton-2-green-2000.bmp)
-![newton-blue](./img/newton/newton-3-blue-2000.bmp)
+![newton-rgb](./img/readme/newton-rgb.png)
+![newton-pcp](./img/readme/newton-pcp.png)
+![newton-green](./img/readme/newton-green.png)
+![newton-blue](./img/readme/newton-blue.png)
 
 **Koch**
 
-![koch-red](./img/koch/koch-line-red-4.png)
-![koch-green](./img/koch/koch-line-green-5.png)
-![koch-pink](./img/koch/koch-snowflake-pink-4.png)
-![koch-purple](./img/koch/koch-snowflake-purple-4.png)
+![koch-red](./img/readme/koch-line-red-4.png)
+![koch-green](./img/readme/koch-line-green-5.png)
+![koch-pink](./img/readme/koch-snowflake-pink-4.png)
+![koch-purple](./img/readme/koch-snowflake-purple-4.png)
 
 **Sierpinski**
 
-![sierpinski-orange](./img/sierpinski/sierpinski-orange-6.png)
-![sierpinski-white](./img/sierpinski/sierpinski-white-7.png)
-![sierpinski-green](./img/sierpinski/sierpinski-green-2500.png)
+![sierpinski-orange](./img/readme/sierpinski-orange-6.png)
+![sierpinski-white](./img/readme/sierpinski-white-7.png)
+![sierpinski-green](./img/readme/sierpinski-green-2500.png)
