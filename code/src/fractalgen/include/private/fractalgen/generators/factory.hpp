@@ -17,7 +17,6 @@ namespace fractalgen::generators
         newton,
     };
 
-    // TODO (stouff) consider removing this struct and just using options
     struct config
     {
         types type;

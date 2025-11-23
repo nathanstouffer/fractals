@@ -3,7 +3,6 @@
 namespace fractalgen
 {
 
-    // TODO (stouff) probably replace this with stf::rgba
     struct rgb_t
     {
         unsigned char r;
