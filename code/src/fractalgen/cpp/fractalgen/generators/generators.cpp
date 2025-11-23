@@ -1,5 +1,6 @@
 #include "fractalgen/generators/generators.hpp"
 
+#include <chrono>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -10,8 +11,14 @@ namespace fractalgen::generators
 
     static constexpr int c_thread_count = 16;
 
-    static constexpr int c_supersample_sqrt = 8;
+    static constexpr int c_supersample_sqrt = 4;
     static constexpr double c_inset = 1.0 / (c_supersample_sqrt + 1);
+
+    static int now_seconds()
+    {
+        auto now = std::chrono::high_resolution_clock::now();
+        return std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch()).count();
+    }
 
     static void color_pixels(generator const& gen, window_t const& window, int min_j, int max_j, std::vector<rgb_t>& pixels, std::vector<bool>& status)
     {
@@ -47,7 +54,7 @@ namespace fractalgen::generators
     {
         std::vector<bool> status(window.width * window.height, false);
 
-        time_t start = std::time(NULL);                                             // get start time
+        time_t start = now_seconds();                                             // get start time
 
         std::vector<rgb_t> pixels;
         pixels.resize(window.width * window.height);
@@ -94,7 +101,7 @@ namespace fractalgen::generators
 
             // add duration
             {
-                time_t current = std::time(NULL);
+                time_t current = now_seconds();
                 stream << " -- " << current - start << " seconds elapsed";
             }
 
@@ -123,13 +130,13 @@ namespace fractalgen::generators
         int g = 0;
         int b = 0;
         double intial_x = window.bounds.min.x + i * window.delta_x + window.inset_x;
-        double intial_y = window.bounds.min.y + j * window.delta_y + window.inset_y;
+        double intial_y = window.bounds.max.y - j * window.delta_y + window.inset_y;
         for (size_t u = 0; u < c_supersample_sqrt; ++u)
         {
             for (size_t v = 0; v < c_supersample_sqrt; ++v)
             {
                 double x = intial_x + u * window.inset_x;
-                double y = intial_y + v * window.inset_y;
+                double y = intial_y - v * window.inset_y;
                 std::complex<double> z(x, y);
                 if (m_phi != stfd::constants::zero)
                 {

@@ -7,9 +7,9 @@ namespace mandelview
 
     int main(int argc, char** argv)
     {
-        CLI::App app{"mandelview is a tool the dynamically renders the mandelbrot set on the GPU.", "mandelview"};
+        CLI::App app{"mandelview is a tool that dynamically renders the mandelbrot using the GPU.", "mandelview"};
 
-        std::array<uint8_t, 3> color;
+        std::array<uint8_t, 3> color = { 0, 128, 128 };
         app.add_option("-c,--color", color, "The color (0-255) assigned to diverging inputs. Format: R G B")
             ->type_name("R G B")
             ->capture_default_str();
